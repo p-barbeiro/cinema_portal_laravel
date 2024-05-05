@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         try {
             // View::share adds data (variables) that are shared through all views (like global data)
-            View::share('courses', Course::all());
         } catch (\Exception $e) {
             // If no Database exists, or Course table does not exist yet, an error will occour
             // This will ignore this error to avoid problems before migration is correctly executed
