@@ -17,3 +17,12 @@
 `DB_PORT=3306`
 `DB_DATABASE=InetAppsProject`
 `DB_USERNAME=root`
+
+### pdf
+composer require spatie/laravel-pdf
+
+### QR Code
+composer require simplesoftwareio/simple-qrcode
+
+### charts
+composer require laraveldaily/laravel-charts
