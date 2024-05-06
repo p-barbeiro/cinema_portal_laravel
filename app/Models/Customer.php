@@ -13,7 +13,7 @@ class Customer extends Model
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class,'id');
     }
 
     public function purchases(): HasMany
@@ -21,3 +21,4 @@ class Customer extends Model
         return $this->hasMany(Purchase::class);
     }
 }
+
