@@ -15,7 +15,7 @@ class User extends Model
 
     public function customer(): HasOne
     {
-        return $this->hasOne(Customer::class);
+        return $this->hasOne(Customer::class,'id');
     }
 
     public function theater(): BelongsTo
