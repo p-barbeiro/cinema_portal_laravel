@@ -11,8 +11,8 @@
 > - [Node.js 20.12.2](https://nodejs.org/en/download/)
 > - [Composer 2.7.3](https://getcomposer.org/download/)
 
+### .env database configuration
 ~~~
-# Laragon
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -21,17 +21,21 @@ DB_USERNAME=root
 DB_PASSWORD=root
 ~~~
 
-### pdf
+### PDF Creator
+~~~
 composer require spatie/laravel-pdf
-
-https://spatie.be/docs/laravel-pdf/v1/introduction
+~~~
+[Documentation](https://spatie.be/docs/laravel-pdf/v1/introduction)
 
 ### QR Code
+~~~
 composer require simplesoftwareio/simple-qrcode
+~~~
+[Documentation](https://github.com/SimpleSoftwareIO/simple-qrcode)
 
-https://github.com/SimpleSoftwareIO/simple-qrcode
-
-### charts
+### Laravel Charts
+~~~
 composer require laraveldaily/laravel-charts
+~~~
+[Documentation](https://charts.erik.cat/)
 
-https://charts.erik.cat/
