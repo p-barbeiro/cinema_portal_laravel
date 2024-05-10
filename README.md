@@ -24,8 +24,14 @@ DB_PASSWORD=root
 ### pdf
 composer require spatie/laravel-pdf
 
+https://spatie.be/docs/laravel-pdf/v1/introduction
+
 ### QR Code
 composer require simplesoftwareio/simple-qrcode
 
+https://github.com/SimpleSoftwareIO/simple-qrcode
+
 ### charts
 composer require laraveldaily/laravel-charts
+
+https://charts.erik.cat/
