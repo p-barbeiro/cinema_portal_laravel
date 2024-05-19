@@ -8,7 +8,7 @@
 /vendor
 .env
 .env.backup
-.env.production
+.env.production.
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -20,6 +20,5 @@ yarn-error.log
 /.vscode
 /database
 /PDF
-storage/app/seed_info.log
-storage/app/pdf_purchases
-storage/app/ticket_qrcodes
+/storage # public is individual
+
