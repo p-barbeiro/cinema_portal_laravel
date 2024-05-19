@@ -1,0 +1,845 @@
+1.2.7)  ----------------------------- -----------------------------
+php artisan migrate:fresh
+
+sail art migrate:fresh
+
+
+1.2.8)  ----------------------------- -----------------------------
+php artisan db:seed
+
+sail art db:seed
+
+3.1) ----------------------------- -----------------------------
+php artisan make:model Course
+
+sail art make:model Course
+
+
+3.3) ----------------------------- -----------------------------
+php artisan make:controller CourseController
+
+sail art make:controller CourseController
+
+
+
+3.5) ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Course;
+use Illuminate\View\View;
+
+class CourseController extends Controller
+{
+    public function index(): View
+    {
+        $allCourses = Course::all();
+        return view('courses.index')->with('courses', $allCourses);
+    }
+}
+
+
+
+3.7) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Courses</title>
+</head>
+<body>
+    @dump($courses)
+</body>
+</html>
+
+
+
+3.8) ----------------------------- -----------------------------
+
+<?php
+
+use App\Http\Controllers\CourseController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('courses', [CourseController::class, 'index']);
+
+
+
+3.10) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Courses</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Abbreviation</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Nº Semesters</th>
+                <th>Nº Places</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($courses as $course)
+                <tr>
+                    <td>{{ $course->abbreviation }}</td>
+                    <td>{{ $course->name }}</td>
+                    <td>{{ $course->type }}</td>
+                    <td>{{ $course->semesters }}</td>
+                    <td>{{ $course->places }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+4.1) ----------------------------- -----------------------------
+
+composer require laravel/telescope --dev
+
+php artisan telescope:install
+
+php artisan migrate
+sail art migrate
+
+
+
+4.6) ----------------------------- -----------------------------
+
+TELESCOPE_ENABLED=false
+
+
+
+4.8) ----------------------------- -----------------------------
+
+TELESCOPE_ENABLED=true
+
+
+4.11) ----------------------------- -----------------------------
+
+php artisan telescope:clear
+
+sail art telescope:clear
+
+
+
+4.12) ----------------------------- -----------------------------
+
+composer require fruitcake/laravel-telescope-toolbar --dev
+
+php artisan vendor:publish --provider="Fruitcake\\TelescopeToolbar\\ToolbarServiceProvider"
+
+
+
+4.14) ----------------------------- -----------------------------
+
+APP_DEBUG=false
+
+
+4.15) ----------------------------- -----------------------------
+
+APP_DEBUG=true
+
+
+4.16) ----------------------------- -----------------------------
+
+TELESCOPE_TOOLBAR_ENABLED=false
+
+
+4.17) ----------------------------- -----------------------------
+
+TELESCOPE_TOOLBAR_ENABLED=true
+
+
+4.18) ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Course;
+use Illuminate\View\View;
+
+class CourseController extends Controller
+{
+    public function index(): View
+    {
+        $allCourses = Course::all();
+        debug($allCourses);
+        return view('courses.index')->with('courses', $allCourses);
+    }
+}
+
+
+
+5.2) ----------------------------- -----------------------------
+
+Route::get('courses/create', [CourseController::class, 'create']);
+Route::post('courses', [CourseController::class, 'store']);
+
+
+5.3) ----------------------------- -----------------------------
+
+class CourseController extends Controller
+{
+    . . .
+    public function create(): View
+    {
+        return view('courses.create');
+    }
+}
+
+
+
+5.4) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Course</title>
+</head>
+<body>
+    <h2>New Course</h2>
+    <form method="POST" action="/courses">
+        @csrf
+        <div>
+            <label for="inputAbbreviation">Abbreviation</label>
+            <input type="text" name="abbreviation" id="inputAbbreviation" >
+        </div>
+        <div>
+            <label for="inputName">Name</label>
+            <input type="text" name="name" id="inputName" >
+        </div>
+        <div>
+            <label for="inputName_pt">Name (PT)</label>
+            <input type="text" name="name_pt" id="inputName_pt" >
+        </div>
+        <div>
+            <label for="inputType">Type of course</label>
+            <select name="type" id="inputType">
+                <option>Degree</option>
+                <option>Master</option>
+                <option>TESP</option>
+            </select>
+        </div>
+        <div>
+            <label for="inputSemesters">Semesters</label>
+            <input type="text" name="semesters" id="inputSemesters">
+        </div>
+        <div>
+            <label for="inputECTS">ECTS</label>
+            <input type="text" name="ECTS" id="inputECTS">
+        </div>
+        <div>
+            <label for="inputPlaces">Places</label>
+            <input type="text" name="places" id="inputPlaces">
+        </div>
+        <div>
+            <label for="inputContact">Contact</label>
+            <input type="text" name="contact" id="inputContact">
+        </div>
+        <div>
+            <label for="inputObjectives">Objectives</label>
+            <textarea name="objectives" id="inputObjectives" rows=10></textarea>
+        </div>
+        <div>
+            <label for="inputObjectives_pt">Objectives (PT)</label>
+            <textarea name="objectives_pt" id="inputObjectives_pt" rows=10></textarea>
+        </div>
+        <div>
+            <button type="submit" name="ok">Save new course</button>
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+5.5) ----------------------------- -----------------------------
+
+. . .
+use Illuminate\Http\RedirectResponse;
+. . .
+class CourseController extends Controller
+{
+    . . .
+    public function store(Request $request): RedirectResponse
+    {
+        Course::create($request->all());
+        return redirect('/courses');
+    }
+}
+
+
+
+5.9) ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Course extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'abbreviation',
+        'name',
+        'name_pt',
+        'type',
+        'semesters',
+        'ECTS',
+        'places',
+        'contact',
+        'objectives',
+        'objectives_pt',
+    ];
+}
+
+
+
+5.12) ----------------------------- -----------------------------
+
+class Course extends Model
+{
+    . . .
+    public $timestamps = false;
+}
+
+
+
+5.17) ----------------------------- -----------------------------
+
+class Course extends Model
+{
+    . . .
+    protected $fillable = . . .
+
+    public $timestamps = false;
+    protected $primaryKey = 'abbreviation';
+    public $incrementing = false;
+    protected $keyType = 'string';
+}
+
+
+
+5.19) ----------------------------- -----------------------------
+
+Route::get('courses/{course}/edit', [CourseController::class, 'edit']);
+Route::put('courses/{course}', [CourseController::class, 'update']);
+
+
+
+5.20) ----------------------------- -----------------------------
+
+class CourseController extends Controller
+{
+    . . .
+
+    public function edit(Course $course): View
+    {
+        return view('courses.edit')->with('course', $course);
+    }
+
+    public function update(Request $request, Course $course): RedirectResponse
+    {
+        $course->update($request->all());
+        return redirect('/courses');
+    }
+}
+
+
+
+5.21) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Course</title>
+</head>
+<body>
+    <h2>Update course "{{ $course->name }}"</h2>
+
+    <form method="POST" action="/courses/{{$course->abbreviation}}">
+        @csrf
+        @method('PUT')
+        <div>
+            <label for="inputAbbreviation">Abbreviation</label>
+            <input type="text" name="abbreviation" id="inputAbbreviation"
+                   value="{{$course->abbreviation}}">
+        </div>
+        <div>
+            <label for="inputName">Name</label>
+            <input type="text" name="name" id="inputName" value="{{$course->name}}">
+        </div>
+        <div>
+            <label for="inputName_pt">Name (PT)</label>
+            <input type="text" name="name_pt" id="inputName_pt"
+                   value="{{$course->name_pt}}">
+        </div>
+        <div>
+            <label for="inputType">Type of course</label>
+            <select name="type" id="inputType">
+                <option {{$course->type == 'Degree' ? 'selected' : ''}}>Degree</option>
+                <option {{$course->type == 'Master' ? 'selected' : ''}}>Master</option>
+                <option {{$course->type == 'TESP' ? 'selected' : ''}}>TESP</option>
+            </select>
+        </div>
+        <div>
+            <label for="inputSemesters">Semesters</label>
+            <input type="text" name="semesters" id="inputSemesters"
+                   value="{{$course->semesters}}">
+        </div>
+        <div>
+            <label for="inputECTS">ECTS</label>
+            <input type="text" name="ECTS" id="inputECTS" value="{{$course->ECTS}}">
+        </div>
+        <div>
+            <label for="inputPlaces">Places</label>
+            <input type="text" name="places" id="inputPlaces" value="{{$course->places}}">
+        </div>
+        <div>
+            <label for="inputContact">Contact</label>
+            <input type="text" name="contact" id="inputContact"
+                   value="{{$course->contact}}">
+        </div>
+        <div>
+            <label for="inputObjectives">Objectives</label>
+            <textarea name="objectives" id="inputObjectives" rows=10>
+                 {{$course->objectives}}
+            </textarea>
+        </div>
+        <div>
+            <label for="inputObjectives_pt">Objectives (PT)</label>
+            <textarea name="objectives_pt" id="inputObjectives_pt" rows=10>
+                  {{$course->objectives_pt}}
+            </textarea>
+        </div>
+        <div>
+            <button type="submit" name="ok">Save course</button>
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+6.1) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+   . . .
+<body>
+    <h1>List of courses</h1>
+    <p><a href="/courses/create">Create a new course</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Abbreviation</th>
+                 . . .
+                <th>Nº Places</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($courses as $course)
+                <tr>
+                    <td>{{ $course->abbreviation }}</td>
+                    . . .
+                    <td>{{ $course->places }}</td>
+                    <td>
+                        <a href="/courses/{{$course->abbreviation}}/edit">Update</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+6.5) ----------------------------- -----------------------------
+
+<?php
+
+use App\Http\Controllers\CourseController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
+
+Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('courses/create', [CourseController::class, 'create'])->name('courses.create');
+Route::post('courses', [CourseController::class, 'store'])->name('courses.store');
+Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+
+
+
+6.6) ----------------------------- -----------------------------
+
+php artisan route:list
+
+sail art route:list
+
+
+6.7) ----------------------------- -----------------------------
+
+    . . .
+    <p><a href="{{ route('courses.create') }}">Create a new course</a></p>
+    . . .
+    <a href="{{ route('courses.edit', ['course' => $course]) }}">Update</a>
+    . . .
+
+
+
+6.9) ----------------------------- -----------------------------
+
+<?php
+. . .
+class CourseController extends Controller
+{
+    public function store(Request $request): RedirectResponse
+    {
+        . . .
+        return redirect()->route('courses.index');
+    }
+
+    public function update(Request $request, Course $course): RedirectResponse
+    {
+        . . .
+        return redirect()->route('courses.index');
+    }
+}
+
+
+
+6.11) ----------------------------- -----------------------------
+
+<form method="POST" action="{{ route('courses.store') }}">
+
+
+6.12) ----------------------------- -----------------------------
+
+<form method="POST" action="{{ route('courses.update', ['course' => $course]) }}">
+
+
+7.1) ----------------------------- -----------------------------
+
+<div>
+    <label for="inputAbbreviation">Abbreviation</label>
+    <input type="text" name="abbreviation" id="inputAbbreviation"
+           value="{{$course->abbreviation}}">
+</div>
+<div>
+    <label for="inputName">Name</label>
+    <input type="text" name="name" id="inputName" value="{{$course->name}}">
+</div>
+<div>
+    <label for="inputName_pt">Name (PT)</label>
+    <input type="text" name="name_pt" id="inputName_pt" value="{{$course->name_pt}}">
+</div>
+<div>
+    <label for="inputType">Type of course</label>
+    <select name="type" id="inputType">
+        <option {{$course->type == 'Degree' ? 'selected' : ''}}>Degree</option>
+        <option {{$course->type == 'Master' ? 'selected' : ''}}>Master</option>
+        <option {{$course->type == 'TESP' ? 'selected' : ''}}>TESP</option>
+    </select>
+</div>
+<div>
+    <label for="inputSemesters">Semesters</label>
+    <input type="text" name="semesters" id="inputSemesters" value="{{$course->semesters}}">
+</div>
+<div>
+    <label for="inputECTS">ECTS</label>
+    <input type="text" name="ECTS" id="inputECTS" value="{{$course->ECTS}}">
+</div>
+<div>
+    <label for="inputPlaces">Places</label>
+    <input type="text" name="places" id="inputPlaces" value="{{$course->places}}">
+</div>
+<div>
+    <label for="inputContact">Contact</label>
+    <input type="text" name="contact" id="inputContact" value="{{$course->contact}}">
+</div>
+<div>
+    <label for="inputObjectives">Objectives</label>
+    <textarea name="objectives" id="inputObjectives" rows=10>
+         {{$course->objectives}}
+    </textarea>
+</div>
+<div>
+    <label for="inputObjectives_pt">Objectives (PT)</label>
+    <textarea name="objectives_pt" id="inputObjectives_pt" rows=10>
+         {{$course->objectives_pt}}
+   </textarea>
+</div>
+
+
+
+7.2) ----------------------------- -----------------------------
+
+    <form method="POST" action="{{ route('courses.update', ['course' => $course]) }}">
+        @csrf
+        @method('PUT')
+        @include('courses.shared.fields')
+        <div>
+            <button type="submit" name="ok">Save course</button>
+        </div>
+    </form>
+
+
+
+7.3) ----------------------------- -----------------------------
+
+    <form method="POST" action="{{ route('courses.store') }}">
+        @csrf
+        @include('courses.shared.fields')
+        <div>
+            <button type="submit" name="ok">Save new course</button>
+        </div>
+    </form>
+
+
+
+7.5) ----------------------------- -----------------------------
+
+public function create(): View
+{
+    $newCourse = new Course();
+    return view('courses.create')->withCourse($newCourse);
+}
+
+
+
+8.1) ----------------------------- -----------------------------
+
+Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+
+
+
+8.2) ----------------------------- -----------------------------
+
+public function destroy(Course $course): RedirectResponse
+{
+    $course->delete();
+    return redirect()->route('courses.index');
+}
+
+
+
+
+8.3) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+   . . .
+    <table>
+        <thead>
+            <tr>
+                . . .
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($courses as $course)
+                <tr>
+                    . . .
+                    <td>
+                        <a href="{{ route('courses.edit',  ['course' => $course]) }}">Update</a>
+                    </td>
+                    <td>
+                      <form method="POST"
+                            action="{{ route('courses.destroy', ['course' => $course]) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" name="delete">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+
+8.6) ----------------------------- -----------------------------
+
+Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+
+
+
+8.7) ----------------------------- -----------------------------
+
+    public function show(Course $course): View
+    {
+        return view('courses.show')->with('course', $course);
+    }
+
+
+
+
+8.8) ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Course</title>
+</head>
+<body>
+    <h2>Course "{{ $course->name }}"</h2>
+    <div>
+        @include('courses.shared.fields')
+    </div>
+</body>
+</html>
+
+
+
+
+8.9) ----------------------------- -----------------------------
+
+<table>
+    <thead>
+        <tr>
+            . . .
+            <th>Nº Places</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($courses as $course)
+            <tr>
+                . . .
+                <td>{{ $course->places }}</td>
+                <td>
+                    <a href="{{ route('courses.show', ['course' => $course]) }}">View</a>
+                </td>
+                <td>
+                    <a href="{{ route('courses.edit', ['course' => $course]) }}">Update</a>
+                </td>
+                . . .
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+
+
+8.12) ----------------------------- -----------------------------
+
+    <div>
+        @include('courses.shared.fields', ['readonlyData' => true])
+    </div>
+
+
+
+
+8.13) ----------------------------- -----------------------------
+
+@php
+    $disabledStr = $readonlyData ?? false ? 'disabled' : '';
+@endphp
+. . .
+<input type="text" name="abbreviation" id="inputAbbreviation" {{ $disabledStr }} value="…">
+. . .
+<input type="text" name="name" id="inputName" {{ $disabledStr }} value="…">
+. . .
+<input type="text" name="name_pt" id="inputName_pt" {{ $disabledStr }} value="…">
+. . .
+<select name="type" id="inputType" {{ $disabledStr }}>
+. . .
+<input type="text" name="semesters" id="inputSemesters" {{ $disabledStr }} value="…">
+. . .
+<input type="text" name="ECTS" id="inputECTS" {{ $disabledStr }} value="…">
+. . .
+<input type="text" name="places" id="inputPlaces" {{ $disabledStr }} value="…">
+. . .
+<input type="text" name="contact" id="inputContact" {{ $disabledStr }} value="…">
+. . .
+<textarea name="objectives" id="inputObjectives" {{ $disabledStr }} rows=10>…
+. . .
+<textarea name="objectives_pt" id="inputObjectives_pt" {{ $disabledStr }} rows=10>…
+. . .
+
+
+
+
+9.1) ----------------------------- -----------------------------
+
+php artisan make:controller DisciplineController --resource
+
+sail art make:controller DisciplineController --resource
+
+
+
+9.2) ----------------------------- -----------------------------
+
+// REPLACE THESE 7 ROUTES:
+// Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+// Route::get('courses/create', [CourseController::class, 'create'])->name('courses.create');
+// Route::post('courses', [CourseController::class, 'store'])->name('courses.store');
+// Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+// Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+// Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+// Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+
+// WITH A SINGLE LINE OF CODE:
+Route::resource('courses', CourseController::class);
+
+
+
+
+9.4) ----------------------------- -----------------------------
+
+php artisan route:list
+
+sail art route:list

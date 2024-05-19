@@ -1,0 +1,1847 @@
+
+3)  ----------------------------- -----------------------------
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+
+
+
+5)  ----------------------------- -----------------------------
+
+composer update
+
+
+6)  ----------------------------- -----------------------------
+
+php artisan migrate:fresh
+
+php artisan db:seed
+
+
+
+7)  ----------------------------- -----------------------------
+
+php artisan storage:link
+
+
+12)  ----------------------------- -----------------------------
+
+composer update
+
+
+
+14)  ----------------------------- -----------------------------
+
+
+./vendor/bin/sail up -d
+
+sail up -d
+
+
+
+15)  ----------------------------- -----------------------------
+
+sail php artisan migrate:fresh
+
+sail php artisan db:seed
+
+
+16)  ----------------------------- -----------------------------
+
+sail php artisan storage:link
+
+
+23)  ----------------------------- -----------------------------
+
+php artisan storage:link
+
+
+24)  ----------------------------- -----------------------------
+
+./vendor/bin/sail up -d
+
+sail up -d
+
+
+sail php artisan storage:link
+
+
+
+
+36)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'Teacher "' . $teacher->user->name . '"')
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
+                    <x-button
+                        href="{{ route('teachers.create', ['teacher' => $teacher]) }}"
+                        text="New"
+                        type="success"/>
+                    <x-button
+                        href="{{ route('teachers.show', ['teacher' => $teacher]) }}"
+                        text="View"
+                        type="info"/>
+                    <form method="POST" action="{{ route('teachers.destroy', ['teacher' => $teacher]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            element="submit"
+                            text="Delete"
+                            type="danger"/>
+                    </form>
+                </div>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Edit teacher "{{ $teacher->user->name }}"
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300  mb-6">
+                        Click on "Save" button to store the information.
+                    </p>
+                </header>
+
+                <form method="POST" action="{{ route('teachers.update', ['teacher' => $teacher]) }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    @include('teachers.shared.fields', ['mode' => 'edit'])
+                    <div class="flex mt-6">
+                        <x-button element="submit" type="dark" text="Save" class="uppercase"/>
+                        <x-button element="a" type="light" text="Cancel" class="uppercase ms-4"
+                                    href="{{ url()->full() }}"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+
+
+
+
+37)  ----------------------------- -----------------------------
+
+
+@extends('layouts.main')
+
+@section('header-title', 'New Teacher')
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        New teacher
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300  mb-6">
+                        Click on "Save" button to store the information.
+                    </p>
+                </header>
+
+                <form method="POST" action="{{ route('teachers.store') }}"
+                        enctype="multipart/form-data">
+                    @csrf
+                    @include('teachers.shared.fields', ['mode' => 'create'])
+                    <div class="flex mt-6">
+                        <x-button element="submit" type="dark" text="Save new teacher" class="uppercase"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+
+
+
+
+
+38)  ----------------------------- -----------------------------
+
+@php
+    $mode = $mode ?? 'edit';
+    $readonly = $mode == 'show';
+@endphp
+
+<div class="flex flex-wrap space-x-8">
+    <div class="grow mt-6 space-y-4">
+        <x-field.input name="name" label="Name" :readonly="$readonly"
+                        value="{{ old('name', $teacher->user->name) }}"/>
+        <x-field.input name="email" type="email" label="Email" :readonly="$readonly"
+                        value="{{ old('email', $teacher->user->email) }}"/>
+        <x-field.radiogroup name="gender" label="Gender" :readonly="$readonly"
+            value="{{ old('gender', $teacher->user->gender) }}"
+            :options="['M' => 'Masculine', 'F' => 'Feminine']"/>
+        <x-field.select name="department" label="Department" :readonly="$readonly"
+            value="{{ old('department', $teacher->department) }}"
+            :options="$departments"/>
+        <div class="flex space-x-4">
+            <x-field.input name="office" label="Office" :readonly="$readonly"
+                        value="{{ old('office', $teacher->office) }}"/>
+            <x-field.input name="extension" label="Extension" :readonly="$readonly"
+                        value="{{ old('extension', $teacher->extension) }}"/>
+            <x-field.input name="locker" label="Locker" :readonly="$readonly"
+                        value="{{ old('locker', $teacher->locker) }}"/>
+        </div>
+        <x-field.checkbox name="admin" label="Administrator" :readonly="$readonly"
+                        value="{{ old('admin', $teacher->user->admin) }}"/>
+    </div>
+    <div class="pb-6">
+        <x-field.image
+            name="photo_file"
+            label="Photo"
+            width="md"
+            :readonly="$readonly"
+            deleteTitle="Delete Photo"
+            :deleteAllow="true"
+            :imageUrl="$teacher->user->photoFullUrl"/>
+    </div>
+</div>
+
+
+
+
+
+
+
+43)  ----------------------------- -----------------------------
+
+
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Teacher;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class TeacherFormRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        // Adds the user information (from the teacher route parameter) to the Request
+        // if it is a post, user = null
+        if (strtolower($this->getMethod()) == 'post') {
+            $this->merge([
+                'user' => null,
+            ]);
+        } else {
+            $this->merge([
+                'user' => $this->route('teacher')->user,
+            ]);
+        }
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->user?->id)
+            ],
+            'gender' => 'required|in:M,F',
+            'department' => 'required|max:20|exists:departments,abbreviation',
+            'office' => 'required|string|max:50',
+            'extension' => 'required|string|max:20',
+            'locker' => 'required|string|max:20',
+            'admin' => 'required|boolean',
+            'photo_file' => 'sometimes|image|max:4096', // maxsize = 4Mb
+        ];
+    }
+}
+
+
+
+
+
+
+
+44)  ----------------------------- -----------------------------
+
+    public function store(TeacherFormRequest $request): RedirectResponse
+    {
+        $validatedData = $request->validated();
+        $newTeacher = DB::transaction(function () use ($validatedData, $request) {
+            $newUser = new User();
+            $newUser->type = 'T';
+            $newUser->name = $validatedData['name'];
+            $newUser->email = $validatedData['email'];
+            $newUser->admin = $validatedData['admin'];
+            $newUser->gender = $validatedData['gender'];
+            // Initial password is always 123
+            $newUser->password =bcrypt('123');
+            $newUser->save();
+            $newTeacher = new Teacher();
+            $newTeacher->user_id = $newUser->id;
+            $newTeacher->department = $validatedData['department'];
+            $newTeacher->office = $validatedData['office'];
+            $newTeacher->extension = $validatedData['extension'];
+            $newTeacher->locker = $validatedData['locker'];
+            $newTeacher->save();
+            // File store is the last thing to execute!
+            // files do not rollback, so the probability of having
+            // a pending file (not referenced by any teacher)
+            // is reduced by being the last operation
+            if ($request->hasFile('photo_file')) {
+                $path = $request->photo_file->store('public/photos');
+                $newUser->photo_url = basename($path);
+                $newUser->save();
+            }
+            return $newTeacher;
+        });
+        $url = route('teachers.show', ['teacher' => $newTeacher]);
+        $htmlMessage = "Teacher <a href='$url'><u>{$newTeacher->user->name}</u></a> has been created successfully!";
+        return redirect()->route('teachers.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
+    }
+
+
+
+
+
+47)  ----------------------------- -----------------------------
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Teacher;
+use App\Models\User;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\TeacherFormRequest;
+use App\Models\Department;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
+class TeacherController extends Controller
+{
+    public function index(Request $request): View
+    {
+        $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
+        $departments = array_merge([null => 'Any department'], $departments);
+        $filterByDepartment = $request->query('department');
+        $filterByName = $request->query('name');
+        $teachersQuery = Teacher::query();
+        if ($filterByDepartment !== null) {
+            $teachersQuery->where('department', $filterByDepartment);
+        }
+        // Next 3 lines are required when sorting by name:
+        // ->join is necessary so that we have access to the users.name - to be able to order by "users.name"
+        // ->select avoids bringing to many fields (that may conflict with each other)
+
+        $teachersQuery
+            ->join('users', 'users.id', '=', 'teachers.user_id')
+            ->select('teachers.*')
+            ->orderBy('users.name');
+
+        // Since we are joining teachers and users, we can simplify the code to search by name
+        if ($filterByName !== null) {
+            $teachersQuery
+                ->where('users.type', 'T')
+                ->where('users.name', 'like', "%$filterByName%");
+        }
+        // Next line were used to filter by name, when there were no join clauses
+        // if ($filterByName !== null) {
+        //     $usersIds = User::where('type', 'T')
+        //         ->where('name', 'like', "%$filterByName%")
+        //         ->pluck('id')
+        //         ->toArray();
+        //     $teachersIds = Teacher::whereIntegerInRaw('user_id', $usersIds)
+        //         ->pluck('id')
+        //         ->toArray();
+        //     $teachersQuery->whereIntegerInRaw('teachers.id', $teachersIds);
+        // }
+
+        $teachers = $teachersQuery
+            ->with('user')
+            ->with('departmentRef')
+            ->paginate(20)
+            ->withQueryString();
+        return view(
+            'teachers.index',
+            compact('departments', 'teachers', 'filterByDepartment', 'filterByName')
+        );
+    }
+
+    public function create(): View
+    {
+        $newTeacher = new Teacher();
+        // Next 2 lines ensure that the expression $newTeacher->user->name is valid
+        $newUser = new User();
+        $newUser->type = 'T';
+        $newTeacher->user = $newUser;
+        $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
+        $newTeacher->department = 'DEI';
+        return view('teachers.create')
+            ->with('departments', $departments)
+            ->with('teacher', $newTeacher);
+    }
+
+    public function store(TeacherFormRequest $request): RedirectResponse
+    {
+        $validatedData = $request->validated();
+        $newTeacher = DB::transaction(function () use ($validatedData, $request) {
+            $newUser = new User();
+            $newUser->type = 'T';
+            $newUser->name = $validatedData['name'];
+            $newUser->email = $validatedData['email'];
+            $newUser->admin = $validatedData['admin'];
+            $newUser->gender = $validatedData['gender'];
+            // Initial password is always 123
+            $newUser->password =bcrypt('123');
+            $newUser->save();
+            $newTeacher = new Teacher();
+            $newTeacher->user_id = $newUser->id;
+            $newTeacher->department = $validatedData['department'];
+            $newTeacher->office = $validatedData['office'];
+            $newTeacher->extension = $validatedData['extension'];
+            $newTeacher->locker = $validatedData['locker'];
+            $newTeacher->save();
+            // File store is the last thing to execute!
+            // files do not rollback, so the probability of having
+            // a pending file (not referenced by any teacher)
+            // is reduced by being the last operation
+            if ($request->hasFile('photo_file')) {
+                $path = $request->photo_file->store('public/photos');
+                $newUser->photo_url = basename($path);
+                $newUser->save();
+            }
+            return $newTeacher;
+        });
+        $url = route('teachers.show', ['teacher' => $newTeacher]);
+        $htmlMessage = "Teacher <a href='$url'><u>{$newTeacher->user->name}</u></a> has been created successfully!";
+        return redirect()->route('teachers.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
+    }
+
+    public function edit(Teacher $teacher): View
+    {
+        $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
+        return view('teachers.edit')
+            ->with('departments', $departments)
+            ->with('teacher', $teacher);
+    }
+
+    public function update(TeacherFormRequest $request, Teacher $teacher): RedirectResponse
+    {
+        $validatedData = $request->validated();
+        $teacher = DB::transaction(function () use ($validatedData, $teacher, $request) {
+            $teacher->department = $validatedData['department'];
+            $teacher->office = $validatedData['office'];
+            $teacher->extension = $validatedData['extension'];
+            $teacher->locker = $validatedData['locker'];
+            $teacher->save();
+            $teacher->user->type = 'T';
+            $teacher->user->name = $validatedData['name'];
+            $teacher->user->email = $validatedData['email'];
+            $teacher->user->admin = $validatedData['admin'];
+            $teacher->user->gender = $validatedData['gender'];
+            $teacher->user->save();
+            if ($request->hasFile('photo_file')) {
+                // Delete previous file (if any)
+                if ($teacher->user->photo_url &&
+                    Storage::fileExists('public/photos/' . $teacher->user->photo_url)) {
+                        Storage::delete('public/photos/' . $teacher->user->photo_url);
+                }
+                $path = $request->photo_file->store('public/photos');
+                $teacher->user->photo_url = basename($path);
+                $teacher->user->save();
+            }
+            return $teacher;
+        });
+        $url = route('teachers.show', ['teacher' => $teacher]);
+        $htmlMessage = "Teacher <a href='$url'><u>{$teacher->user->name}</u></a> has been updated successfully!";
+        return redirect()->route('teachers.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
+    }
+
+    public function destroy(Teacher $teacher): RedirectResponse
+    {
+        try {
+            $url = route('teachers.show', ['teacher' => $teacher]);
+            $totalTeachersDisciplines = DB::scalar(
+                'select count(*) from teachers_disciplines where teacher_id = ?',
+                [$teacher->id]
+            );
+            if ($totalTeachersDisciplines == 0) {
+                DB::transaction(function () use ($teacher) {
+                    $teacher->delete();
+                    $teacher->user->delete();
+                });
+                $alertType = 'success';
+                $alertMsg = "Teacher {$teacher->user->name} has been deleted successfully!";
+            } else {
+                $alertType = 'warning';
+                $gender = $teacher->user->gender == 'M' ? 'he' : 'she';
+                $justification = match (true) {
+                    $totalTeachersDisciplines <= 0 => "",
+                    $totalTeachersDisciplines == 1 => "$gender teaches 1 discipline",
+                    $totalTeachersDisciplines > 1 => "$gender teaches $totalTeachersDisciplines disciplines",
+                };
+                $alertMsg = "Teacher <a href='$url'><u>{$teacher->user->name}</u></a> cannot be deleted because $justification.";
+            }
+        } catch (\Exception $error) {
+            debug($error);
+            $alertType = 'danger';
+            $alertMsg = "It was not possible to delete the teacher
+                            <a href='$url'><u>{$teacher->user->name}</u></a>
+                            because there was an error with the operation!";
+        }
+        return redirect()->route('teachers.index')
+            ->with('alert-type', $alertType)
+            ->with('alert-msg', $alertMsg);
+    }
+
+    public function show(Teacher $teacher): View
+    {
+        $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
+        return view('teachers.show')
+            ->with('departments', $departments)
+            ->with('teacher', $teacher);
+    }
+}
+
+
+
+
+50)  ----------------------------- -----------------------------
+
+@php
+    $mode = $mode ?? 'edit';
+    $readonly = $mode == 'show';
+@endphp
+
+<div class="flex flex-wrap space-x-8">
+    <div class="grow mt-6 space-y-4">
+        <x-field.input name="name" label="Name" :readonly="$readonly"
+                        value="{{ old('name', $teacher->user->name) }}"/>
+        <x-field.input name="email" type="email" label="Email" :readonly="$readonly"
+                        value="{{ old('email', $teacher->user->email) }}"/>
+        <x-field.radiogroup name="gender" label="Gender" :readonly="$readonly"
+            value="{{ old('gender', $teacher->user->gender) }}"
+            :options="['M' => 'Masculine', 'F' => 'Feminine']"/>
+        <x-field.select name="department" label="Department" :readonly="$readonly"
+            value="{{ old('department', $teacher->department) }}"
+            :options="$departments"/>
+        <div class="flex space-x-4">
+            <x-field.input name="office" label="Office" :readonly="$readonly"
+                        value="{{ old('office', $teacher->office) }}"/>
+            <x-field.input name="extension" label="Extension" :readonly="$readonly"
+                        value="{{ old('extension', $teacher->extension) }}"/>
+            <x-field.input name="locker" label="Locker" :readonly="$readonly"
+                        value="{{ old('locker', $teacher->locker) }}"/>
+        </div>
+        <x-field.checkbox name="admin" label="Administrator" :readonly="$readonly"
+                        value="{{ old('admin', $teacher->user->admin) }}"/>
+    </div>
+    <div class="pb-6">
+        <x-field.image
+            name="photo_file"
+            label="Photo"
+            width="md"
+            :readonly="$readonly"
+            deleteTitle="Delete Photo"
+            :deleteAllow="($mode == 'edit') && ($teacher->user->photo_url)"
+            deleteForm="form_to_delete_photo"
+            :imageUrl="$teacher->user->photoFullUrl"/>
+    </div>
+</div>
+
+
+
+
+
+
+
+52)  ----------------------------- -----------------------------
+
+<?php
+
+use App\Http\Controllers\AdministrativeController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
+use Illuminate\Support\Facades\Route;
+
+Route::view('/', 'home')->name('home');
+
+Route::get('courses/showcase', [CourseController::class, 'showCase'])->name('courses.showcase');
+Route::get('courses/{course}/curriculum', [CourseController::class, 'showCurriculum'])->name('courses.curriculum');
+Route::resource('courses', CourseController::class);
+
+Route::resource('departments', DepartmentController::class);
+
+Route::resource('disciplines', DisciplineController::class);
+
+Route::delete('teachers/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
+    ->name('teachers.photo.destroy');
+Route::resource('teachers', TeacherController::class);
+
+Route::resource('students', StudentController::class);
+
+Route::resource('administratives', AdministrativeController::class);
+
+
+
+
+53)  ----------------------------- -----------------------------
+
+
+    public function destroyPhoto(Teacher $teacher): RedirectResponse
+    {
+        if ($teacher->user->photo_url) {
+            if (Storage::fileExists('public/photos/' . $teacher->user->photo_url)) {
+                Storage::delete('public/photos/' . $teacher->user->photo_url);
+            }
+            $teacher->user->photo_url = null;
+            $teacher->user->save();
+        return redirect()->back()
+            ->with('alert-type', 'success')
+            ->with('alert-msg', "Photo of teacher {$teacher->user->name} has been deleted.");
+        }
+        return redirect()->back();
+    }
+
+
+
+54)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'Teacher "' . $teacher->user->name . '"')
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
+                    <x-button
+                        href="{{ route('teachers.create', ['teacher' => $teacher]) }}"
+                        text="New"
+                        type="success"/>
+                    <x-button
+                        href="{{ route('teachers.show', ['teacher' => $teacher]) }}"
+                        text="View"
+                        type="info"/>
+                    <form method="POST" action="{{ route('teachers.destroy', ['teacher' => $teacher]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            element="submit"
+                            text="Delete"
+                            type="danger"/>
+                    </form>
+                </div>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Edit teacher "{{ $teacher->user->name }}"
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300  mb-6">
+                        Click on "Save" button to store the information.
+                    </p>
+                </header>
+
+                <form method="POST" action="{{ route('teachers.update', ['teacher' => $teacher]) }}"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    @include('teachers.shared.fields', ['mode' => 'edit'])
+                    <div class="flex mt-6">
+                        <x-button element="submit" type="dark" text="Save" class="uppercase"/>
+                        <x-button element="a" type="light" text="Cancel" class="uppercase ms-4"
+                                    href="{{ url()->full() }}"/>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+<form class="hidden" id="form_to_delete_photo"
+    method="POST" action="{{ route('teachers.photo.destroy', ['teacher' => $teacher]) }}">
+    @csrf
+    @method('DELETE')
+</form>
+@endsection
+
+
+
+
+
+
+57)  ----------------------------- -----------------------------
+
+
+php artisan make:controller CartController
+
+
+
+
+
+
+59)  ----------------------------- -----------------------------
+
+<?php
+
+use App\Http\Controllers\AdministrativeController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\DisciplineController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\CartController;
+use Illuminate\Support\Facades\Route;
+
+Route::view('/', 'home')->name('home');
+
+Route::get('courses/showcase', [CourseController::class, 'showCase'])->name('courses.showcase');
+Route::get('courses/{course}/curriculum', [CourseController::class, 'showCurriculum'])->name('courses.curriculum');
+Route::resource('courses', CourseController::class);
+
+Route::resource('departments', DepartmentController::class);
+
+Route::resource('disciplines', DisciplineController::class);
+
+Route::delete('teachers/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
+    ->name('teachers.photo.destroy');
+Route::resource('teachers', TeacherController::class);
+
+Route::resource('students', StudentController::class);
+
+Route::resource('administratives', AdministrativeController::class);
+
+// Add a discipline to the cart:
+Route::post('cart/{discipline}', [CartController::class, 'addToCart'])
+    ->name('cart.add');
+// Remove a discipline from the cart:
+Route::delete('cart/{discipline}', [CartController::class, 'removeFromCart'])
+    ->name('cart.remove');
+// Show the cart:
+Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+// Confirm (store) the cart and save disciplines registration on the database:
+Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm');
+// Clear the cart:
+Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+
+
+
+
+60)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Models\Discipline;
+
+class CartController extends Controller
+{
+    public function show(): View
+    {
+        $cart = session('cart', null);
+        return view('cart.show', compact('cart'));
+    }
+
+    public function addToCart(Request $request, Discipline $discipline): RedirectResponse
+    {
+        $cart = session('cart', null);
+        if (!$cart) {
+            $cart = collect([$discipline]);
+            $request->session()->put('cart', $cart);
+        } else {
+            if ($cart->firstWhere('id', $discipline->id)) {
+                $alertType = 'warning';
+                $url = route('disciplines.show', ['discipline' => $discipline]);
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not added to the cart because it is already there!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $cart->push($discipline);
+            }
+        }
+        $alertType = 'success';
+        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was added to the cart.";
+        return back()
+            ->with('alert-msg', $htmlMessage)
+            ->with('alert-type', $alertType);
+    }
+}
+
+
+
+
+61)  ----------------------------- -----------------------------
+
+
+
+php artisan make:component Table/IconMinus.php
+
+php artisan make:component Table/IconAddCart.php
+
+
+62)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\View\Components\Table;
+
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class IconMinus extends Component
+{
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(
+        public string $action = '#',
+        public string $method = 'DELETE',
+    )
+    {
+        //
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.table.icon-minus');
+    }
+}
+
+
+
+
+
+63)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\View\Components\Table;
+
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class IconAddCart extends Component
+{
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(
+        public string $action = '#',
+        public string $method = 'POST',
+    )
+    {
+        //
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.table.icon-add-cart');
+    }
+}
+
+
+
+
+64)  ----------------------------- -----------------------------
+
+<div {{ $attributes->merge(['class' => 'hover:text-red-600']) }}>
+    <form method="POST" action="{{ $action }}"  class="w-6 h-6">
+        @csrf
+        @if(strtoupper($method) != 'POST')
+            @method(strtoupper($method))
+        @endif
+        <button type="submit" name="minus" class="w-6 h-6">
+            <svg  class="hover:stroke-2 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </button>
+    </form>
+</div>
+
+
+
+
+
+
+65)  ----------------------------- -----------------------------
+
+<div {{ $attributes->merge(['class' => 'hover:text-blue-600']) }}>
+    <form method="POST" action="{{ $action }}"  class="w-6 h-6">
+        @csrf
+        @if(strtoupper($method) != 'POST')
+            @method(strtoupper($method))
+        @endif
+        <button type="submit" name="add_cart" class="w-6 h-6">
+            <svg class="hover:stroke-2 w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
+            </svg>
+        </button>
+    </form>
+</div>
+
+
+
+
+
+66)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\View\Components\Disciplines;
+
+use Closure;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+class Table extends Component
+{
+    /**
+     * Create a new component instance.
+     */
+    public function __construct(
+        public object $disciplines,
+        public bool $showCourse = true,
+        public bool $showView = true,
+        public bool $showEdit = true,
+        public bool $showDelete = true,
+        public bool $showAddToCart = false,
+        public bool $showRemoveFromCart = false,
+    )
+    {
+        //
+    }
+
+    /**
+     * Get the view / contents that represent the component.
+     */
+    public function render(): View|Closure|string
+    {
+        return view('components.disciplines.table');
+    }
+}
+
+
+
+
+
+
+
+67)  ----------------------------- -----------------------------
+
+<div {{ $attributes }}>
+    <table class="table-auto border-collapse">
+        <thead>
+        <tr class="border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
+            <th class="px-2 py-2 text-left hidden sm:table-cell">Abbreviation</th>
+            <th class="px-2 py-2 text-left">Name</th>
+            @if($showCourse)
+                <th class="px-2 py-2 text-left hidden md:table-cell">Course</th>
+            @endif
+            <th class="px-2 py-2 text-right hidden md:table-cell">Year</th>
+            <th class="px-2 py-2 text-right hidden md:table-cell">Semester</th>
+            <th class="px-2 py-2 text-right hidden lg:table-cell">ECTS</th>
+            <th class="px-2 py-2 text-right hidden lg:table-cell">Hours</th>
+            <th class="px-2 py-2 text-center hidden lg:table-cell">Optional</th>
+            @if($showView)
+                <th></th>
+            @endif
+            @if($showEdit)
+                <th></th>
+            @endif
+            @if($showDelete)
+                <th></th>
+            @endif
+            @if($showAddToCart)
+                <th></th>
+            @endif
+            @if($showRemoveFromCart)
+                <th></th>
+            @endif
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($disciplines as $discipline)
+            <tr class="border-b border-b-gray-400 dark:border-b-gray-500">
+                <td class="px-2 py-2 text-left hidden sm:table-cell">{{ $discipline->abbreviation }}</td>
+                <td class="px-2 py-2 text-left">{{ $discipline->name }}</td>
+                @if($showCourse)
+                    <td class="px-2 py-2 text-left hidden md:table-cell">{{ $discipline->courseRef->name }}</td>
+                @endif
+                <td class="px-2 py-2 text-right hidden md:table-cell">{{ $discipline->year }}</td>
+                <td class="px-2 py-2 text-right hidden md:table-cell">{{ $discipline->semesterDescription }}</td>
+                <td class="px-2 py-2 text-right hidden lg:table-cell">{{ $discipline->ECTS }}</td>
+                <td class="px-2 py-2 text-right hidden lg:table-cell">{{ $discipline->hours }}</td>
+                <td class="px-2 py-2 text-center hidden lg:table-cell">{{ $discipline->optional ? 'optional' : '' }}</td>
+                @if($showView)
+                    <td>
+                        <x-table.icon-show class="ps-3 px-0.5"
+                        href="{{ route('disciplines.show', ['discipline' => $discipline]) }}"/>
+                    </td>
+                @endif
+                @if($showEdit)
+                    <td>
+                        <x-table.icon-edit class="px-0.5"
+                        href="{{ route('disciplines.edit', ['discipline' => $discipline]) }}"/>
+                    </td>
+                @endif
+                @if($showDelete)
+                    <td>
+                        <x-table.icon-delete class="px-0.5"
+                        action="{{ route('disciplines.destroy', ['discipline' => $discipline]) }}"/>
+                    </td>
+                @endif
+                @if($showAddToCart)
+                    <td>
+                        <x-table.icon-add-cart class="px-0.5"
+                            method="post"
+                            action="{{ route('cart.add', ['discipline' => $discipline]) }}"/>
+                    </td>
+                @endif
+                @if($showRemoveFromCart)
+                    <td>
+                        <x-table.icon-minus class="px-0.5"
+                            method="delete"
+                            action="{{ route('cart.remove', ['discipline' => $discipline]) }}"/>
+                    </td>
+                @endif
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+68)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'List of Disciplines')
+
+@section('main')
+    <div class="flex justify-center">
+        <div class="my-4 p-6 bg-white dark:bg-gray-900 overflow-hidden
+                    shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+            <x-disciplines.filter-card
+                :filterAction="route('disciplines.index')"
+                :resetUrl="route('disciplines.index')"
+                :courses="$courses->pluck('fullName', 'abbreviation')->toArray()"
+                :course="old('course', $filterByCourse)"
+                :year="old('year', $filterByYear)"
+                :semester="old('semester', $filterBySemester)"
+                :teacher="old('teacher', $filterByTeacher)"
+                class="mb-6"
+                />
+            <div class="flex items-center gap-4 mb-4">
+                <x-button
+                    href="{{ route('disciplines.create') }}"
+                    text="Create a new discipline"
+                    type="success"/>
+            </div>
+            <div class="font-base text-sm text-gray-700 dark:text-gray-300">
+            <x-disciplines.table :disciplines="$disciplines"
+                :showCourse="true"
+                :showView="true"
+                :showEdit="true"
+                :showDelete="true"
+                :showAddToCart="true"
+                />
+            </div>
+            <div class="mt-4">
+                {{ $disciplines->links() }}
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+
+
+69)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'Teacher "' . $teacher->user->name . '"')
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
+                    <x-button
+                        href="{{ route('teachers.create', ['teacher' => $teacher]) }}"
+                        text="New"
+                        type="success"/>
+                    <x-button
+                        href="{{ route('teachers.edit', ['teacher' => $teacher]) }}"
+                        text="Edit"
+                        type="primary"/>
+                    <form method="POST" action="{{ route('teachers.destroy', ['teacher' => $teacher]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            element="submit"
+                            text="Delete"
+                            type="danger"/>
+                    </form>
+                </div>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Teacher "{{ $teacher->user->name }}"
+                    </h2>
+                </header>
+                @include('teachers.shared.fields', ['mode' => 'show'])
+
+                <h3 class="pt-16 pb-4 text-2xl font-medium text-gray-900 dark:text-gray-100">
+                    Disciplines
+                </h3>
+                <x-disciplines.table :disciplines="$teacher->disciplines"
+                    :showView="true"
+                    :showEdit="false"
+                    :showDelete="false"
+                    :showAddToCart="true"
+                    class="pt-4"
+                    />
+
+            </section>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+
+
+
+
+
+70)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'Student "' . $student->user->name . '"')
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
+                    <x-button
+                        href="{{ route('students.create', ['student' => $student]) }}"
+                        text="New"
+                        type="success"/>
+                    <x-button
+                        href="{{ route('students.edit', ['student' => $student]) }}"
+                        text="Edit"
+                        type="primary"/>
+                    <form method="POST" action="{{ route('students.destroy', ['student' => $student]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            element="submit"
+                            text="Delete"
+                            type="danger"/>
+                    </form>
+                </div>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Student "{{ $student->user->name }}"
+                    </h2>
+                </header>
+                @include('students.shared.fields', ['mode' => 'show'])
+
+                <h3 class="pt-16 pb-4 text-2xl font-medium text-gray-900 dark:text-gray-100">
+                    Disciplines
+                </h3>
+                <x-disciplines.table :disciplines="$student->disciplines"
+                    :showView="true"
+                    :showEdit="false"
+                    :showDelete="false"
+                    :showAddToCart="true"
+                    class="pt-4"
+                    />
+            </section>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+
+
+
+
+73)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', $discipline->name)
+
+@section('main')
+<div class="flex flex-col space-y-6">
+    <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
+        <div class="max-full">
+            <section>
+                <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
+                    <x-button
+                        href="{{ route('disciplines.create', ['discipline' => $discipline]) }}"
+                        text="New"
+                        type="success"/>
+                    <x-button
+                        href="{{ route('disciplines.edit', ['discipline' => $discipline]) }}"
+                        text="Edit"
+                        type="primary"/>
+                    <form method="POST" action="{{ route('disciplines.destroy', ['discipline' => $discipline]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            element="submit"
+                            text="Delete"
+                            type="danger"/>
+                    </form>
+                    <form method="POST" action="{{ route('cart.add', ['discipline' => $discipline]) }}">
+                        @csrf
+                        <x-button
+                            element="submit"
+                            text="Add to cart"
+                            type="dark"/>
+                    </form>
+                </div>
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Discipline "{{ $discipline->name }}"
+                    </h2>
+                </header>
+                <div class="mt-6 space-y-4">
+                    @include('disciplines.shared.fields', ['mode' => 'show'])
+                </div>
+                <h3 class="pt-16 pb-4 text-2xl font-medium text-gray-900 dark:text-gray-100">
+                    Teachers
+                </h3>
+                <x-teachers.table :teachers="$discipline->teachers"
+                    :showView="true"
+                    :showEdit="false"
+                    :showDelete="false"
+                    class="pt-4"
+                    />
+            </section>
+        </div>
+    </div>
+</div>
+@endsection
+
+
+
+
+
+
+
+75)  ----------------------------- -----------------------------
+
+@extends('layouts.main')
+
+@section('header-title', 'Shopping Cart')
+
+@section('main')
+    <div class="flex justify-center">
+        <div class="my-4 p-6 bg-white dark:bg-gray-900 overflow-hidden
+                    shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+            @empty($cart)
+                <h3 class="text-xl w-96 text-center">Cart is Empty</h3>
+            @else
+            <div class="font-base text-sm text-gray-700 dark:text-gray-300">
+                <x-disciplines.table :disciplines="$cart"
+                    :showView="false"
+                    :showEdit="false"
+                    :showDelete="false"
+                    :showAddCart="false"
+                    :showRemoveFromCart="true"
+                    />
+            </div>
+            <div class="mt-12">
+                <div class="flex justify-between space-x-12 items-end">
+                    <div>
+                        <h3 class="mb-4 text-xl">Shopping Cart Confirmation </h3>
+                        <form action="{{ route('cart.confirm') }}" method="post">
+                            @csrf
+                                <x-field.input name="student_number" label="Student Number" width="lg"
+                                                :readonly="false"
+                                                value="{{ old('student_number') }}"/>
+                                <x-button element="submit" type="dark" text="Confirm" class="mt-4"/>
+                        </form>
+                    </div>
+                    <div>
+                        <form action="{{ route('cart.destroy') }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <x-button element="submit" type="danger" text="Clear Cart" class="mt-4"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endempty
+        </div>
+    </div>
+@endsection
+
+
+
+
+77)  ----------------------------- -----------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Department of Computer Engineering</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts AND CSS Fileds -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-800">
+
+        <!-- Navigation Menu -->
+        <nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+            <!-- Navigation Menu Full Container -->
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <!-- Logo + Menu Items + Hamburger -->
+                <div class="relative flex flex-col sm:flex-row px-6 sm:px-0 grow justify-between">
+                    <!-- Logo -->
+                    <div class="shrink-0 -ms-4">
+                        <a href="{{ route('home')}}">
+                            <div class="h-16 w-40 bg-cover bg-[url('../img/politecnico_h.svg')] dark:bg-[url('../img/politecnico_h_white.svg')]"></div>
+                        </a>
+                    </div>
+
+                    <!-- Menu Items -->
+                    <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
+                    invisible h-0 sm:visible sm:h-auto">
+                        <!-- Menu Item: Courses -->
+                        <x-menus.menu-item
+                            content="Courses"
+                            href="{{ route('courses.showcase') }}"
+                            selected="{{ Route::currentRouteName() == 'courses.showcase'}}"
+                        />
+
+                        <!-- Menu Item: Curricula -->
+                        <x-menus.submenu-full-width
+                            content="Curricula"
+                            selectable="1"
+                            selected="0"
+                            uniqueName="submenu_curricula">
+                            @foreach ($courses as $course)
+                                <x-menus.submenu-item
+                                :content="$course->fullName"
+                                selectable="1"
+                                selected="0"
+                                href="{{ route('courses.curriculum', ['course' => $course]) }}"/>
+                            @endforeach
+                        </x-menus.submenu-full-width>
+
+                        <!-- Menu Item: Disciplines -->
+                        <x-menus.menu-item
+                            content="Disciplines"
+                            selectable="1"
+                            href="{{ route('disciplines.index') }}"
+                            selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                            />
+
+                        <!-- Menu Item: Teachers -->
+                        <x-menus.menu-item
+                            content="Teachers"
+                            selectable="1"
+                            href="{{ route('teachers.index') }}"
+                            selected="{{ Route::currentRouteName() == 'teachers.index'}}"
+                            />
+
+                        <!-- Menu Item: Others -->
+                        <x-menus.submenu
+                            selectable="0"
+                            uniqueName="submenu_others"
+                            content="More">
+                                <x-menus.submenu-item
+                                    content="Students"
+                                    selectable="0"
+                                    href="{{ route('students.index') }}" />
+                                <x-menus.submenu-item
+                                    content="Administratives"
+                                    selectable="0"
+                                    href="{{ route('administratives.index') }}" />
+                                <hr>
+                                <x-menus.submenu-item
+                                    content="Departments"
+                                    selectable="0"
+                                    href="{{ route('departments.index') }}"/>
+                                <x-menus.submenu-item
+                                    content="Course Management"
+                                    href="{{ route('courses.index') }}"/>
+                        </x-menus.submenu>
+
+                        <div class="grow"></div>
+
+                        <!-- Menu Item: Cart -->
+                        @if (session('cart'))
+                            <x-menus.cart
+                                :href="route('cart.show')"
+                                selectable="1"
+                                selected="{{ Route::currentRouteName() == 'cart.show'}}"
+                                :total="session('cart')->count()"/>
+                        @endif
+
+                        <x-menus.submenu
+                            selectable="0"
+                            uniqueName="submenu_user"
+                            >
+                            <x-slot:content>
+                                <div class="pe-1">
+                                    <img src="{{ Vite::asset('resources/img/photos/photo_example.jpeg') }}" class="w-11 h-11 min-w-11 min-h-11 rounded-full">
+                                </div>
+                                {{-- ATENÇÃO - ALTERAR FORMULA DE CALCULO DAS LARGURAS MÁXIMAS QUANDO O MENU FOR ALTERADO --}}
+                                <div class="ps-1 sm:max-w-[calc(100vw-39rem)] md:max-w-[calc(100vw-41rem)] lg:max-w-[calc(100vw-46rem)] xl:max-w-[34rem] truncate">
+                                    João Miguel da Silva Pereira Antunes
+                                </div>
+                            </x-slot>
+                            <x-menus.submenu-item
+                                content="My Disciplines"
+                                selectable="0"
+                                href="#"/>
+                            <x-menus.submenu-item
+                                content="My Teachers"
+                                selectable="0"
+                                href="#"/>
+                            <x-menus.submenu-item
+                                content="My Students"
+                                selectable="0"
+                                href="#"/>
+                            <hr>
+                            <x-menus.submenu-item
+                                content="Profile"
+                                selectable="0"
+                                href="#"/>
+                            <x-menus.submenu-item
+                                content="Change Password"
+                                selectable="0"
+                                href="#"/>
+                            <hr>
+                            <x-menus.submenu-item
+                                content="Log Out"
+                                selectable="0"
+                                href="#"/>
+                        </x-menus.submenu>
+                    </div>
+                    <!-- Hamburger -->
+                    <div class="absolute right-0 top-0 flex sm:hidden pt-3 pe-3 text-black dark:text-gray-50">
+                        <button id="hamburger_btn">
+                            <svg class="h-8 w-8" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path id="hamburger_btn_open" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                                <path class="invisible" id="hamburger_btn_close" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Heading -->
+        <header class="bg-white dark:bg-gray-900 shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h4 class="mb-1 text-base text-gray-500 dark:text-gray-400 leading-tight">
+                    Department of Computer Engineering
+                </h4>
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    @yield('header-title')
+                </h2>
+            </div>
+        </header>
+
+        <main>
+            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                @if (session('alert-msg'))
+                    <x-alert type="{{ session('alert-type') ?? 'info' }}">
+                        {!! session('alert-msg') !!}
+                    </x-alert>
+                @endif
+                @if (!$errors->isEmpty())
+                        <x-alert type="warning" message="Operation failed because there are validation errors!"/>
+                @endif
+                @yield('main')
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+78)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Models\Discipline;
+
+class CartController extends Controller
+{
+    public function show(): View
+    {
+        $cart = session('cart', null);
+        return view('cart.show', compact('cart'));
+    }
+
+    public function addToCart(Request $request, Discipline $discipline): RedirectResponse
+    {
+        $cart = session('cart', null);
+        if (!$cart) {
+            $cart = collect([$discipline]);
+            $request->session()->put('cart', $cart);
+        } else {
+            if ($cart->firstWhere('id', $discipline->id)) {
+                $alertType = 'warning';
+                $url = route('disciplines.show', ['discipline' => $discipline]);
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not added to the cart because it is already there!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $cart->push($discipline);
+            }
+        }
+        $alertType = 'success';
+        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was added to the cart.";
+        return back()
+            ->with('alert-msg', $htmlMessage)
+            ->with('alert-type', $alertType);
+    }
+
+    public function removeFromCart(Request $request, Discipline $discipline): RedirectResponse
+    {
+        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $cart = session('cart', null);
+        if (!$cart) {
+            $alertType = 'warning';
+            $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart is empty!";
+            return back()
+                ->with('alert-msg', $htmlMessage)
+                ->with('alert-type', $alertType);
+        } else {
+            $element = $cart->firstWhere('id', $discipline->id);
+            if ($element) {
+                $cart->forget($cart->search($element));
+                if ($cart->count() == 0) {
+                    $request->session()->forget('cart');
+                }
+                $alertType = 'success';
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was removed from the cart.";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $alertType = 'warning';
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart does not include it!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            }
+        }
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->session()->forget('cart');
+        return back()
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Shopping Cart has been cleared');
+    }
+
+}
+
+
+
+
+
+
+
+81)  ----------------------------- -----------------------------
+
+php artisan make:request CartConfirmationFormRequest
+
+
+
+
+
+82)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class CartConfirmationFormRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'student_number' => 'required|exists:students,number'
+        ];
+    }
+}
+
+
+
+
+83)  ----------------------------- -----------------------------
+
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\CartConfirmationFormRequest;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use App\Models\Discipline;
+use App\Models\Student;
+
+class CartController extends Controller
+{
+    public function show(): View
+    {
+        $cart = session('cart', null);
+        return view('cart.show', compact('cart'));
+    }
+
+    public function addToCart(Request $request, Discipline $discipline): RedirectResponse
+    {
+        $cart = session('cart', null);
+        if (!$cart) {
+            $cart = collect([$discipline]);
+            $request->session()->put('cart', $cart);
+        } else {
+            if ($cart->firstWhere('id', $discipline->id)) {
+                $alertType = 'warning';
+                $url = route('disciplines.show', ['discipline' => $discipline]);
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not added to the cart because it is already there!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $cart->push($discipline);
+            }
+        }
+        $alertType = 'success';
+        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was added to the cart.";
+        return back()
+            ->with('alert-msg', $htmlMessage)
+            ->with('alert-type', $alertType);
+    }
+
+    public function removeFromCart(Request $request, Discipline $discipline): RedirectResponse
+    {
+        $url = route('disciplines.show', ['discipline' => $discipline]);
+        $cart = session('cart', null);
+        if (!$cart) {
+            $alertType = 'warning';
+            $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart is empty!";
+            return back()
+                ->with('alert-msg', $htmlMessage)
+                ->with('alert-type', $alertType);
+        } else {
+            $element = $cart->firstWhere('id', $discipline->id);
+            if ($element) {
+                $cart->forget($cart->search($element));
+                if ($cart->count() == 0) {
+                    $request->session()->forget('cart');
+                }
+                $alertType = 'success';
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was removed from the cart.";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $alertType = 'warning';
+                $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
+                <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart does not include it!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            }
+        }
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->session()->forget('cart');
+        return back()
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Shopping Cart has been cleared');
+    }
+
+
+    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
+    {
+        $cart = session('cart', null);
+        if (!$cart || ($cart->count() == 0)) {
+            return back()
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Cart was not confirmed, because cart is empty!");
+        } else {
+            $student = Student::where('number', $request->validated()['student_number'])->first();
+            if (!$student) {
+                return back()
+                    ->with('alert-type', 'danger')
+                    ->with('alert-msg', "Student number does not exist on the database!");
+            }
+            $insertDisciplines = [];
+            $disciplinesOfStudent = $student->disciplines;
+            $ignored = 0;
+            foreach ($cart as $discipline) {
+                $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
+                if ($exist) {
+                    $ignored++;
+                } else {
+                    $insertDisciplines[$discipline->id] = [
+                        "discipline_id" => $discipline->id,
+                        "repeating" => 0,
+                        "grade" => null,
+                    ];
+                }
+            }
+            $ignoredStr = match($ignored) {
+                0 => "",
+                1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
+                default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
+            };
+            $totalInserted = count($insertDisciplines);
+            $totalInsertedStr = match($totalInserted) {
+                0 => "",
+                1 => "1 discipline registration was added to the student",
+                default => "$totalInserted disciplines registrations were added to the student",
+
+            };
+            if ($totalInserted == 0) {
+                $request->session()->forget('cart');
+                return back()
+                    ->with('alert-type', 'danger')
+                    ->with('alert-msg', "No registration was added to the student!$ignoredStr");
+            } else {
+                DB::transaction(function () use ($student, $insertDisciplines) {
+                    $student->disciplines()->attach($insertDisciplines);
+                });
+                $request->session()->forget('cart');
+                if ($ignored == 0) {
+                    return redirect()->route('students.show', ['student' => $student])
+                        ->with('alert-type', 'success')
+                        ->with('alert-msg', "$totalInsertedStr.");
+                } else {
+                    return redirect()->route('students.show', ['student' => $student])
+                        ->with('alert-type', 'warning')
+                        ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
+                }
+            }
+        }
+    }
+}
