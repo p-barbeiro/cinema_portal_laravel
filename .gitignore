@@ -20,3 +20,6 @@ yarn-error.log
 /.vscode
 /database
 /PDF
+storage/app/seed_info.log
+storage/app/pdf_purchases
+storage/app/ticket_qrcodes
