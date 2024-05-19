@@ -20,8 +20,4 @@ yarn-error.log
 /.vscode
 /database
 /PDF
-/storage/*
-!/storage/framework
-!/storage/framework/cache
-!/storage/framework/sessions
-!/storage/framework/view
+/storage

@@ -8,9 +8,9 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "laraveldaily/laravel-charts": "^0.2.3",
-        "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/laravel-pdf": "^1.5"
+        "laraveldaily/laravel-charts": "*",
+        "simplesoftwareio/simple-qrcode": "*",
+        "spatie/laravel-pdf": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
