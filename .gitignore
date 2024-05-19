@@ -20,5 +20,8 @@ yarn-error.log
 /.vscode
 /database
 /PDF
-/storage # public is individual
-
+/storage/*
+!/storage/framework
+!/storage/framework/cache
+!/storage/framework/sessions
+!/storage/framework/view
