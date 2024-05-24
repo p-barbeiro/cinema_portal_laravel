@@ -19,6 +19,4 @@ yarn-error.log
 /.idea
 /.vscode
 /database
-/PDF
-/storage # public is individual
-
+/storage
