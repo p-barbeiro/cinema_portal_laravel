@@ -4,6 +4,6 @@
 
 @section('main')
     <div class="flex flex-col">
-        @each('courses.shared.card', $courses, 'course')
+        @each('courses.shared.card', $courses, 'movie')
     </div>
 @endsection

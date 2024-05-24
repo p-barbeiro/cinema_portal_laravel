@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CourseController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CartController;
 use App\Models\Discipline;
+use App\Models\Movie;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\Course;
@@ -19,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
-Route::get('courses/showcase', [CourseController::class, 'showCase'])
-    ->name('courses.showcase')
-    ->can('viewShowCase', Course::class);
+Route::get('movies/showcase', [MovieController::class, 'showCase'])
+    ->name('movies.showcase')
+    ->can('viewShowCase', Movie::class);
 
 Route::get('courses/{course}/curriculum', [CourseController::class, 'showCurriculum'])
     ->name('courses.curriculum')
@@ -119,7 +121,7 @@ Route::middleware('can:use-cart')->group(function () {
 
 
 //Course show is public.
-Route::resource('courses', CourseController::class)->only(['show']);
+Route::resource('movies', CourseController::class)->only(['show']);
 
 //Disciplines index and show are public
 Route::resource('disciplines', DisciplineController::class)->only(['index', 'show']);

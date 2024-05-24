@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class MovieController extends Controller
 {
 
-    public static function getMoviesInExhibition()
+    public function showCase(): View
     {
-        return Movie::join('screenings', 'movies.id', '=', 'screenings.movie_id')
-            ->where('screenings.date', '>=', now())
-            ->where('screenings.date', '<=', now()->addWeeks(2))
-            ->select('movies.*')
-            ->distinct()
-            ->get();
+        return view('movies.showcase');
     }
 }

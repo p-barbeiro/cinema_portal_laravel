@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class Movie extends Model
 {
@@ -22,4 +23,21 @@ class Movie extends Model
         return $this->belongsTo(Genre::class, 'genre_code', 'code');
     }
 
+    public function getPoster()
+    {
+        if ($this->poster_filename && Storage::exists("public/posters/{$this->poster_filename}")) {
+            return asset("storage/posters/{$this->poster_filename}");
+        } else {
+            return asset("storage/posters/_no_poster_1.png");
+        }
+    }
+
+    public function getTrailerEmbedUrl()
+    {
+            $fullUrl = $this->trailer_url;
+            $videoID = substr($fullUrl, strpos($fullUrl, "watch?v=")+8, 11);
+
+            return "https://www.youtube.com/embed/".$videoID."?";
+
+    }
 }
