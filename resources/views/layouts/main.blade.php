@@ -24,58 +24,33 @@
             <!-- Logo + Menu Items + Hamburger -->
             <div class="relative flex flex-col sm:flex-row px-6 sm:px-0 grow justify-between">
                 <!-- Logo -->
-                <div class="shrink-0 -ms-4">
+                <div class="shrink-0 -ms-4 mr-4">
                     <a href="{{ route('home')}}">
                         <div
-                            class="h-16 w-40 bg-cover bg-[url('../img/cinemagic.svg')] dark:bg-[url('../img/cinemagic.svg')]"></div>
+                            class="h-16 w-40 bg-cover bg-[url('../img/cinemagic.svg')] dark:bg-[url('../img/cinemagic_dark.svg')]"></div>
                     </a>
                 </div>
 
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
                     invisible h-0 sm:visible sm:h-auto">
-                    <!-- Menu Item: Whats On -->
+
+                    <!-- Menu Item: What's On -->
                     @can('viewShowcase', App\Models\Movie::class)
                         <x-menus.menu-item
-                            content="Whats On"
+                            content="What's On"
                             href="{{ route('movies.showcase') }}"
                             selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                         />
                     @endcan
 
-                    <!-- Menu Item: Curricula -->
-                    @can('viewCurriculum', App\Models\Course::class)
-                        <x-menus.submenu-full-width
-                            content="Curricula"
-                            selectable="1"
-                            selected="0"
-                            uniqueName="submenu_curricula">
-                            @foreach ($movies as $movie)
-                                <x-menus.submenu-item
-                                    :content="$movie->title"
-                                    selectable="1"
-                                    selected="0"
-                                    href="{{ route('movies.show', ['movie' => $movie]) }}"/>
-                            @endforeach
-                        </x-menus.submenu-full-width>
-                    @endcan
-                    <!-- Menu Item: Disciplines -->
+                    <!-- Menu Item: Theaters -->
                     @can('viewAny', App\Models\Discipline::class)
                         <x-menus.menu-item
-                            content="Disciplines"
+                            content="Theaters"
                             selectable="1"
                             href="{{ route('disciplines.index') }}"
                             selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                        />
-                    @endcan
-
-                    <!-- Menu Item: Teachers -->
-                    @can('viewAny', App\Models\Teacher::class)
-                        <x-menus.menu-item
-                            content="Teachers"
-                            selectable="1"
-                            href="{{ route('teachers.index') }}"
-                            selected="{{ Route::currentRouteName() == 'teachers.index'}}"
                         />
                     @endcan
 
@@ -86,33 +61,33 @@
                         Gate::check('viewAny', App\Models\Department::class) ||
                         Gate::check('viewAny', App\Models\Course::class)
                         )
-                        <!-- Menu Item: Others -->
+                        <!-- Menu Item: Administration -->
                         <x-menus.submenu
                             selectable="0"
                             uniqueName="submenu_others"
-                            content="More">
+                            content="Administration">
                             @can('viewAny', App\Models\Student::class)
                                 <x-menus.submenu-item
-                                    content="Students"
+                                    content="Movies"
                                     selectable="0"
                                     href="{{ route('students.index') }}"/>
                             @endcan
                             @can('viewAny', App\Models\User::class)
                                 <x-menus.submenu-item
-                                    content="Administratives"
+                                    content="Users"
                                     selectable="0"
                                     href="{{ route('administratives.index') }}"/>
                             @endcan
                             <hr>
                             @can('viewAny', App\Models\Department::class)
                                 <x-menus.submenu-item
-                                    content="Departments"
+                                    content="Statistics"
                                     selectable="0"
                                     href="{{ route('departments.index') }}"/>
                             @endcan
                             @can('viewAny', App\Models\Course::class)
                                 <x-menus.submenu-item
-                                    content="Course Management"
+                                    content="Configurations"
                                     href="{{ route('courses.index') }}"/>
                             @endcan
                         </x-menus.submenu>
@@ -147,25 +122,6 @@
                                     {{ Auth::user()->name }}
                                 </div>
                                 </x-slot>
-                                @can('viewMy', App\Models\Discipline::class)
-                                    <x-menus.submenu-item
-                                        content="My Disciplines"
-                                        selectable="0"
-                                        href="{{ route('disciplines.my') }}"/>
-                                @endcan
-                                @can('viewMy', App\Models\Teacher::class)
-                                    <x-menus.submenu-item
-                                        content="My Teachers"
-                                        selectable="0"
-                                        href="{{ route('teachers.my') }}"/>
-                                @endcan
-                                @can('viewMy', App\Models\Student::class)
-                                    <x-menus.submenu-item
-                                        content="My Students"
-                                        selectable="0"
-                                        href="{{ route('students.my') }}"/>
-                                    <hr>
-                                @endcan
                                 @auth
                                     <hr>
                                     <x-menus.submenu-item
@@ -177,7 +133,11 @@
                                     'S' => route('students.edit', ['student' => Auth::user()->student]),
                                     'E' => route('students.edit', ['student' => Auth::user()->student]),
                                 }"/>
-                                    <x-menus.submenu-item
+                                <x-menus.submenu-item
+                                    content="My Purchases"
+                                    selectable="0"
+                                    href="{{ route('profile.edit.password') }}"/>
+                                <x-menus.submenu-item
                                         content="Change Password"
                                         selectable="0"
                                         href="{{ route('profile.edit.password') }}"/>
@@ -221,7 +181,7 @@
     <header class="bg-white dark:bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h4 class="mb-1 text-base text-gray-500 dark:text-gray-400 leading-tight">
-                Department of Computer Engineering
+                Cinemagic Theatres
             </h4>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 @yield('header-title')
