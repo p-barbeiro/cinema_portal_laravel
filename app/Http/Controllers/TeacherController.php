@@ -38,11 +38,11 @@ class TeacherController extends \Illuminate\Routing\Controller
         // ->select avoids bringing to many fields (that may conflict with each other)
 
         $teachersQuery
-            ->join('users', 'users.id', '=', 'teachers.user_id')
-            ->select('teachers.*')
+            ->join('users', 'users.id', '=', 'users.user_id')
+            ->select('users.*')
             ->orderBy('users.name');
 
-        // Since we are joining teachers and users, we can simplify the code to search by name
+        // Since we are joining users and users, we can simplify the code to search by name
         if ($filterByName !== null) {
             $teachersQuery
                 ->where('users.type', 'T')
@@ -57,7 +57,7 @@ class TeacherController extends \Illuminate\Routing\Controller
         //     $teachersIds = Teacher::whereIntegerInRaw('user_id', $usersIds)
         //         ->pluck('id')
         //         ->toArray();
-        //     $teachersQuery->whereIntegerInRaw('teachers.id', $teachersIds);
+        //     $teachersQuery->whereIntegerInRaw('users.id', $teachersIds);
         // }
 
         $teachers = $teachersQuery
@@ -66,7 +66,7 @@ class TeacherController extends \Illuminate\Routing\Controller
             ->paginate(20)
             ->withQueryString();
         return view(
-            'teachers.index',
+            'users.index',
             compact('departments', 'teachers', 'filterByDepartment', 'filterByName')
         );
     }
@@ -75,24 +75,24 @@ class TeacherController extends \Illuminate\Routing\Controller
     {
         $idDisciplines = $request->user()?->student?->disciplines?->pluck('id')?->toArray();
         if (empty($idDisciplines)) {
-            return view('teachers.my')->with('teachers', new Collection);
+            return view('users.my')->with('users', new Collection);
         }
-        $teachersQuery = Teacher::join('users', 'users.id', '=', 'teachers.user_id')
-            ->select('teachers.*')
+        $teachersQuery = Teacher::join('users', 'users.id', '=', 'users.user_id')
+            ->select('users.*')
             ->orderBy('users.name');
         $teachers = $teachersQuery
-            ->join('teachers_disciplines', 'teachers_disciplines.teacher_id', '=', 'teachers.id')
+            ->join('teachers_disciplines', 'teachers_disciplines.teacher_id', '=', 'users.id')
             ->whereIntegerInRaw('teachers_disciplines.discipline_id', $idDisciplines)
             ->with('user', 'departmentRef')
             ->get();
-        return view('teachers.my',compact('teachers'));
+        return view('users.my',compact('teachers'));
     }
 
 
     public function show(Teacher $teacher): View
     {
         $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
-        return view('teachers.show')
+        return view('users.show')
         ->with('departments', $departments)
             ->with('teacher', $teacher);
     }
@@ -106,7 +106,7 @@ class TeacherController extends \Illuminate\Routing\Controller
         $newTeacher->user = $newUser;
         $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
         $newTeacher->department = 'DEI';
-        return view('teachers.create')
+        return view('users.create')
             ->with('departments', $departments)
             ->with('teacher', $newTeacher);
     }
@@ -147,9 +147,9 @@ class TeacherController extends \Illuminate\Routing\Controller
             return $newTeacher;
         });
         $newTeacher->user->sendEmailVerificationNotification();
-        $url = route('teachers.show', ['teacher' => $newTeacher]);
+        $url = route('users.show', ['teacher' => $newTeacher]);
         $htmlMessage = "Teacher <a href='$url'><u>{$newTeacher->user->name}</u></a> has been created successfully!";
-        return redirect()->route('teachers.index')
+        return redirect()->route('users.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
@@ -157,7 +157,7 @@ class TeacherController extends \Illuminate\Routing\Controller
     public function edit(Teacher $teacher): View
     {
         $departments = Department::orderBy('name')->pluck('name', 'abbreviation')->toArray();
-        return view('teachers.edit')
+        return view('users.edit')
             ->with('departments', $departments)
             ->with('teacher', $teacher);
     }
@@ -193,10 +193,10 @@ class TeacherController extends \Illuminate\Routing\Controller
             }
             return $teacher;
         });
-        $url = route('teachers.show', ['teacher' => $teacher]);
+        $url = route('users.show', ['teacher' => $teacher]);
         $htmlMessage = "Teacher <a href='$url'><u>{$teacher->user->name}</u></a> has been updated successfully!";
         if ($request->user()->can('viewAny', Teacher::class)) {
-            return redirect()->route('teachers.index')
+            return redirect()->route('users.index')
                 ->with('alert-type', 'success')
                 ->with('alert-msg', $htmlMessage);
         }
@@ -208,7 +208,7 @@ class TeacherController extends \Illuminate\Routing\Controller
     public function destroy(Teacher $teacher): RedirectResponse
     {
         try {
-            $url = route('teachers.show', ['teacher' => $teacher]);
+            $url = route('users.show', ['teacher' => $teacher]);
             $totalTeachersDisciplines = $teacher->disciplines()->count();
             if ($totalTeachersDisciplines == 0) {
                 DB::transaction(function () use ($teacher) {
@@ -239,7 +239,7 @@ class TeacherController extends \Illuminate\Routing\Controller
                             <a href='$url'><u>{$teacher->user->name}</u></a>
                             because there was an error with the operation!";
         }
-        return redirect()->route('teachers.index')
+        return redirect()->route('users.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }

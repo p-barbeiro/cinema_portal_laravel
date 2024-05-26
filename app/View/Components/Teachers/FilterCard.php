@@ -27,6 +27,6 @@ class FilterCard extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.teachers.filter-card');
+        return view('components.users.filter-card');
     }
 }

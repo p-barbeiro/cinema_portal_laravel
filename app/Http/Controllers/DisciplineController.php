@@ -39,8 +39,8 @@ class DisciplineController extends \Illuminate\Routing\Controller
             $disciplinesQuery->where('semester', $filterBySemester);
         }
         if ($filterByTeacher !== null) {
-            $disciplinesQuery->with('teachers.user')->whereHas(
-                'teachers.user',
+            $disciplinesQuery->with('users.user')->whereHas(
+                'users.user',
                 function ($userQuery) use ($filterByTeacher) {
                     $userQuery->where('name', 'LIKE', '%' . $filterByTeacher . '%');
                 }
@@ -169,7 +169,7 @@ class DisciplineController extends \Illuminate\Routing\Controller
                 $teachersStr = match (true) {
                     $totalTeachers <= 0 => "",
                     $totalTeachers == 1 => "it already has 1 teacher",
-                    $totalTeachers > 1 => "it already has $totalTeachers teachers",
+                    $totalTeachers > 1 => "it already has $totalTeachers users",
                 };
                 $justification = $studentsStr && $teachersStr
                     ? "$teachersStr and $studentsStr"

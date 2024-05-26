@@ -38,7 +38,7 @@
                     @can('view', $teacher)
                         <td>
                             <x-table.icon-show class="ps-3 px-0.5"
-                            href="{{ route('teachers.show', ['teacher' => $teacher]) }}"/>
+                            href="{{ route('users.show', ['teacher' => $teacher]) }}"/>
                         </td>
                     @else
                         <td></td>
@@ -48,7 +48,7 @@
                     @can('update', $teacher)
                         <td>
                             <x-table.icon-edit class="px-0.5"
-                            href="{{ route('teachers.edit', ['teacher' => $teacher]) }}"/>
+                            href="{{ route('users.edit', ['teacher' => $teacher]) }}"/>
                         </td>
                     @else
                         <td></td>
@@ -58,7 +58,7 @@
                     @can('delete', $teacher)
                         <td>
                             <x-table.icon-delete class="px-0.5"
-                            action="{{ route('teachers.destroy', ['teacher' => $teacher]) }}"/>
+                            action="{{ route('users.destroy', ['teacher' => $teacher]) }}"/>
                         </td>
                     @else
                         <td></td>
