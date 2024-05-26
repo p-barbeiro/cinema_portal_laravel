@@ -36,63 +36,54 @@
                     invisible h-0 sm:visible sm:h-auto">
 
                     <!-- Menu Item: What's On -->
-                    @can('viewShowcase', App\Models\Movie::class)
-                        <x-menus.menu-item
-                            content="What's On"
-                            href="{{ route('movies.showcase') }}"
-                            selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
-                        />
-                    @endcan
+                    <x-menus.menu-item
+                        content="What's On"
+                        href="{{ route('movies.showcase') }}"
+                        selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
+                    />
 
-                    <!-- Menu Item: Theaters -->
-                    @can('viewAny', App\Models\Discipline::class)
-                        <x-menus.menu-item
-                            content="Theaters"
-                            selectable="1"
-                            href="{{ route('disciplines.index') }}"
-                            selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                        />
-                    @endcan
-
-                    {{-- If user has any of the 4 menu options previlege, then it should show the submenu --}}
-                    @if(
-                        Gate::check('viewAny', App\Models\Student::class) ||
-                        Gate::check('viewAny', App\Models\User::class) ||
-                        Gate::check('viewAny', App\Models\Department::class) ||
-                        Gate::check('viewAny', App\Models\Course::class)
-                        )
-                        <!-- Menu Item: Administration -->
-                        <x-menus.submenu
-                            selectable="0"
-                            uniqueName="submenu_others"
-                            content="Administration">
-                            @can('viewAny', App\Models\Student::class)
-                                <x-menus.submenu-item
-                                    content="Movies"
-                                    selectable="0"
-                                    href="{{ route('movies.index') }}"/>
-                            @endcan
-                            @can('viewAny', App\Models\User::class)
-                                <x-menus.submenu-item
-                                    content="Users"
-                                    selectable="0"
-                                    href="{{ route('administratives.index') }}"/>
-                            @endcan
-                            <hr>
-                            @can('viewAny', App\Models\Department::class)
-                                <x-menus.submenu-item
-                                    content="Statistics"
-                                    selectable="0"
-                                    href="{{ route('departments.index') }}"/>
-                            @endcan
-                            @can('viewAny', App\Models\Course::class)
-                                <x-menus.submenu-item
-                                    content="Configurations"
-                                    href="{{ route('courses.index') }}"/>
-                            @endcan
-                        </x-menus.submenu>
-                    @endif
-
+                    <!-- Menu Item: Screenings if(employee || admin)-->
+                    <x-menus.menu-item
+                        content="Screenings"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
+                    <!-- Menu Item: Theaters-->
+                    <x-menus.menu-item
+                        content="Theaters"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
+                    <!-- Menu Item: Movies-->
+                    <x-menus.menu-item
+                        content="Movies"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
+                    <!-- Menu Item: Employees-->
+                    <x-menus.menu-item
+                        content="Employees"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
+                    <!-- Menu Item: Customers-->
+                    <x-menus.menu-item
+                        content="Customers"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
+                    <!-- Menu Item: Settings-->
+                    <x-menus.menu-item
+                        content="Settings"
+                        selectable="1"
+                        href="{{ route('disciplines.index') }}"
+                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                    />
                     <div class="grow"></div>
 
                     <!-- Menu Item: Cart -->
@@ -121,36 +112,36 @@
                                     class="ps-1 sm:max-w-[calc(100vw-39rem)] md:max-w-[calc(100vw-41rem)] lg:max-w-[calc(100vw-46rem)] xl:max-w-[34rem] truncate">
                                     {{ Auth::user()->name }}
                                 </div>
-                                </x-slot>
-                                @auth
-                                    <hr>
-                                    <x-menus.submenu-item
-                                        content="Profile"
-                                        selectable="0"
-                                        :href="match(Auth::user()->type) {
+                            </x-slot>
+                            @auth
+                                <hr>
+                                <x-menus.submenu-item
+                                    content="Profile"
+                                    selectable="0"
+                                    :href="match(Auth::user()->type) {
                                     'A' => route('administratives.edit', ['administrative' => Auth::user()]),
                                     'T' => route('teachers.edit', ['teacher' => Auth::user()->teacher]),
                                     'S' => route('students.edit', ['student' => Auth::user()->student]),
                                     'E' => route('students.edit', ['student' => Auth::user()->student]),
                                 }"/>
                                 <x-menus.submenu-item
-                                    content="My Purchases"
+                                    content="Purchases"
                                     selectable="0"
                                     href="{{ route('profile.edit.password') }}"/>
                                 <x-menus.submenu-item
-                                        content="Change Password"
-                                        selectable="0"
-                                        href="{{ route('profile.edit.password') }}"/>
-                                @endauth
-                                <hr>
-                                <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
-                                      class="hidden">
-                                    @csrf
-                                </form>
-                                <x-menus.submenu-item
-                                    content="Log Out"
+                                    content="Change Password"
                                     selectable="0"
-                                    form="form_to_logout_from_menu"/>
+                                    href="{{ route('profile.edit.password') }}"/>
+                            @endauth
+                            <hr>
+                            <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
+                                  class="hidden">
+                                @csrf
+                            </form>
+                            <x-menus.submenu-item
+                                content="Log Out"
+                                selectable="0"
+                                form="form_to_logout_from_menu"/>
                         </x-menus.submenu>
                     @else
                         <!-- Menu Item: Login -->
@@ -159,6 +150,12 @@
                             selectable="1"
                             href="{{ route('login') }}"
                             selected="{{ Route::currentRouteName() == 'login'}}"
+                        />
+                        <x-menus.menu-item
+                            content="Sign Up"
+                            selectable="1"
+                            href="{{ route('register') }}"
+                            selected="{{ Route::currentRouteName() == 'register'}}"
                         />
                     @endauth
                 </div>
@@ -204,26 +201,26 @@
     </main>
 
 </div>
-    <footer
-        class="left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-900 dark:border-gray-600">
+<footer
+    class="left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-900 dark:border-gray-600">
     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="{{route('home')}}"
                                                                                     class="hover:underline">Cinemagic</a>. Diogo Abegão, João Parreira, Pedro Barbeiro.
     </span>
-        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-            <li>
-                <a href="#" class="hover:underline me-4 md:me-6">About</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
-            </li>
-            <li>
-                <a href="#" class="hover:underline">Contact</a>
-            </li>
-        </ul>
-    </footer>
+    <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">About</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline">Contact</a>
+        </li>
+    </ul>
+</footer>
 
 
 </body>

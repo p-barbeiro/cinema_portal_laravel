@@ -15,8 +15,8 @@
                        value="{{ old('year', $movie->year) }}"/>
         <x-field.input name="synopsis" label="Synopsis" :readonly="$readonly"
                        value="{{ old('synopsis', $movie->synopsis) }}"/>
-
-        <iframe allowfullscreen="" height="315" src="{{$movie->getTrailerEmbedUrl()}}" width="420"></iframe>
+        <iframe allowfullscreen="" height="315" src="{{$movie->getTrailerEmbedUrl()}}"
+                width="420"></iframe>
 
         {{--            <x-field.input name="ECTS" label="Nº ECTS" width="sm" :readonly="$readonly"--}}
         {{--                            value="{{ old('ECTS', $course->ECTS) }}"/>--}}
