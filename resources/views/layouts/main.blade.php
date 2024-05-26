@@ -34,35 +34,59 @@
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
                     invisible h-0 sm:visible sm:h-auto">
-
                     <!-- Menu Item: What's On -->
                     <x-menus.menu-item
                         content="What's On"
                         href="{{ route('movies.showcase') }}"
                         selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
-
-                    <!-- Menu Item: Screenings if(employee || admin)-->
+                    <!-- Menu Item: Screenings if(employee)-->
                     <x-menus.menu-item
                         content="Screenings"
                         selectable="1"
                         href="{{ route('disciplines.index') }}"
                         selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
                     />
-                    <!-- Menu Item: Theaters-->
-                    <x-menus.menu-item
-                        content="Theaters"
-                        selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                    />
-                    <!-- Menu Item: Movies-->
-                    <x-menus.menu-item
-                        content="Movies"
-                        selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                    />
+                    <!-- Menu Item: Movies -->
+                    <x-menus.submenu
+                        selectable="0"
+                        uniqueName="submenu_movies"
+                        content="Movies">
+                        <x-menus.submenu-item
+                            content="Theaters"
+                            selectable="0"
+                            href="{{ route('students.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Movies"
+                            selectable="0"
+                            href="{{ route('administratives.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Genres"
+                            selectable="0"
+                            href="{{ route('departments.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Screenings"
+                            selectable="0"
+                            href="{{ route('departments.index') }}"/>
+                    </x-menus.submenu>
+                    <!-- Menu Item: Users -->
+                    <x-menus.submenu
+                        selectable="0"
+                        uniqueName="submenu_users"
+                        content="Users">
+                        <x-menus.submenu-item
+                            content="Customers"
+                            selectable="0"
+                            href="{{ route('students.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Employees"
+                            selectable="0"
+                            href="{{ route('administratives.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Admins"
+                            selectable="0"
+                            href="{{ route('departments.index') }}"/>
+                    </x-menus.submenu>
                     <!-- Menu Item: Statistics-->
                     <x-menus.menu-item
                         content="Statistics"
@@ -70,24 +94,6 @@
                         href="{{ route('disciplines.index') }}"
                         selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
                     />
-                    <!-- Menu Item: Users -->
-                    <x-menus.submenu
-                        selectable="0"
-                        uniqueName="submenu_others"
-                        content="Users">
-                            <x-menus.submenu-item
-                                content="Customers"
-                                selectable="0"
-                                href="{{ route('students.index') }}" />
-                            <x-menus.submenu-item
-                                content="Employees"
-                                selectable="0"
-                                href="{{ route('administratives.index') }}" />
-                            <x-menus.submenu-item
-                                content="Admins"
-                                selectable="0"
-                                href="{{ route('departments.index') }}"/>
-                    </x-menus.submenu>
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
                         content="Settings"
