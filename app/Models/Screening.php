@@ -25,4 +25,14 @@ class Screening extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function getFormattedDateAttribute()
+    {
+        return date('d.M : l', strtotime($this->date));
+    }
+
+    public function getFormattedTimeAttribute()
+    {
+        return date('H:i', strtotime($this->start_time));
+    }
 }
