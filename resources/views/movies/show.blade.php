@@ -16,7 +16,7 @@
                     @endcan
                     @can('update', $movie)
                     <x-button
-                        href="{{ route('courses.edit', ['movie' => $movie]) }}"
+                        href="{{ route('movies.edit', ['movie' => $movie]) }}"
                         text="Edit"
                         type="primary"/>
                     @endcan
@@ -31,11 +31,6 @@
                     </form>
                     @endcan
                 </div>
-                <header>
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">
-                        {{ $movie->title }}
-                    </h2>
-                </header>
                 <div class="mt-6 space-y-4">
                     @include('movies.shared.fields', ['mode' => 'show'])
                 </div>

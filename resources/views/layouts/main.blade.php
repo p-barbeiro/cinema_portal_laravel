@@ -70,7 +70,7 @@
                                 <x-menus.submenu-item
                                     content="Movies"
                                     selectable="0"
-                                    href="{{ route('students.index') }}"/>
+                                    href="{{ route('movies.index') }}"/>
                             @endcan
                             @can('viewAny', App\Models\User::class)
                                 <x-menus.submenu-item

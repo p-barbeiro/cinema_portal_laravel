@@ -50,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
                     ->select('movies.*')
                     ->distinct()
                     ->orderBy('movies.title')
+                    ->with('genre')
                     ->get());
         } catch (\Exception $e) {
             // If no Database exists, or Course table does not exist yet, an error will occour

@@ -17,13 +17,26 @@ use App\Models\Course;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-/* ----- PUBLIC ROUTES ----- */
+/* ----- Public Routes ----- */
 
+// homepage
 Route::view('/', 'home')->name('home');
 
+// Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])
     ->name('movies.showcase')
     ->can('viewShowCase', Movie::class);
+
+//Discipline resource routes are protected by DisciplinePolicy on the controller
+//Disciplines index and show are public ->except(['index', 'show'])
+Route::resource('movies', MovieController::class);
+
+//-------------
+
+
+
+
+
 
 Route::get('courses/{course}/curriculum', [CourseController::class, 'showCurriculum'])
     ->name('courses.curriculum')
@@ -119,9 +132,6 @@ Route::middleware('can:use-cart')->group(function () {
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
 });
 
-
-//Course show is public.
-Route::resource('movies', CourseController::class)->only(['show']);
 
 //Disciplines index and show are public
 Route::resource('disciplines', DisciplineController::class)->only(['index', 'show']);
