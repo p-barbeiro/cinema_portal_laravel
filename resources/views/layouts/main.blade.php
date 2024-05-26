@@ -160,6 +160,12 @@
                             href="{{ route('login') }}"
                             selected="{{ Route::currentRouteName() == 'login'}}"
                         />
+                        <x-menus.menu-item
+                            content="Sign Up"
+                            selectable="1"
+                            href="{{ route('register') }}"
+                            selected="{{ Route::currentRouteName() == 'register'}}"
+                        />
                     @endauth
                 </div>
                 <!-- Hamburger -->
