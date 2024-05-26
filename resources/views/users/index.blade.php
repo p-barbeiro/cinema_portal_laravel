@@ -7,8 +7,8 @@
         <div class="my-4 p-6 bg-white dark:bg-gray-900 overflow-hidden
                     shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
             <x-teachers.filter-card
-                :filterAction="route('teachers.index')"
-                :resetUrl="route('teachers.index')"
+                :filterAction="route('users.index')"
+                :resetUrl="route('users.index')"
                 :departments="$departments"
                 :department="old('department', $filterByDepartment)"
                 :name="old('name', $filterByName)"
@@ -17,7 +17,7 @@
             @can('create', App\Models\Teacher::class)
                 <div class="flex items-center gap-4 mb-4">
                     <x-button
-                        href="{{ route('teachers.create') }}"
+                        href="{{ route('users.create') }}"
                         text="Create a new teacher"
                         type="success"/>
                 </div>

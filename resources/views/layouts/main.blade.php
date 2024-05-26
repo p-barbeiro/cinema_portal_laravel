@@ -63,20 +63,31 @@
                         href="{{ route('disciplines.index') }}"
                         selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
                     />
-                    <!-- Menu Item: Employees-->
+                    <!-- Menu Item: Statistics-->
                     <x-menus.menu-item
-                        content="Employees"
+                        content="Statistics"
                         selectable="1"
                         href="{{ route('disciplines.index') }}"
                         selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
                     />
-                    <!-- Menu Item: Customers-->
-                    <x-menus.menu-item
-                        content="Customers"
-                        selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                    />
+                    <!-- Menu Item: Users -->
+                    <x-menus.submenu
+                        selectable="0"
+                        uniqueName="submenu_others"
+                        content="Users">
+                            <x-menus.submenu-item
+                                content="Customers"
+                                selectable="0"
+                                href="{{ route('students.index') }}" />
+                            <x-menus.submenu-item
+                                content="Employees"
+                                selectable="0"
+                                href="{{ route('administratives.index') }}" />
+                            <x-menus.submenu-item
+                                content="Admins"
+                                selectable="0"
+                                href="{{ route('departments.index') }}"/>
+                    </x-menus.submenu>
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
                         content="Settings"
@@ -120,7 +131,7 @@
                                     selectable="0"
                                     :href="match(Auth::user()->type) {
                                     'A' => route('administratives.edit', ['administrative' => Auth::user()]),
-                                    'T' => route('teachers.edit', ['teacher' => Auth::user()->teacher]),
+                                    'T' => route('users.edit', ['teacher' => Auth::user()->teacher]),
                                     'S' => route('students.edit', ['student' => Auth::user()->student]),
                                     'E' => route('students.edit', ['student' => Auth::user()->student]),
                                 }"/>

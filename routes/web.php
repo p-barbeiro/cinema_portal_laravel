@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdministrativeController;
 use App\Http\Controllers\CourseController;
@@ -83,16 +84,23 @@ Route::middleware('auth', 'verified')->group(function () {
     //Disciplines index and show are public
     Route::resource('disciplines', DisciplineController::class)->except(['index', 'show']);
 
-    Route::get('teachers/my', [TeacherController::class, 'myTeachers'])
-        ->name('teachers.my')
+    Route::get('users/my', [TeacherController::class, 'myTeachers'])
+        ->name('users.my')
         ->can('viewMy', Teacher::class);
 
-    Route::delete('teachers/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
-        ->name('teachers.photo.destroy')
+    Route::delete('users/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
+        ->name('users.photo.destroy')
         ->can('update', 'teacher');
 
-    //Teacher resource routes are protected by TeacherPolicy on the controller
-    Route::resource('teachers', TeacherController::class);
+    //Registered users resource routes are protected by RegisteredUserPolicy on the controller
+    Route::resource('students', StudentController::class);
+
+    Route::delete('administratives/{administrative}/photo', [AdministrativeController::class, 'destroyPhoto'])
+        ->name('administratives.photo.destroy')
+        ->can('update', 'administrative');
+
+    //Employees resource routes are protected by EmployeesPolicy on the controller
+    Route::resource('users', TeacherController::class);
 
     Route::get('students/my', [StudentController::class, 'myStudents'])
         ->name('students.my')
@@ -100,12 +108,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('students/{student}/photo', [StudentController::class, 'destroyPhoto'])
         ->name('students.photo.destroy')
         ->can('update', 'student');
-    //Student resource routes are protected by StudentPolicy on the controller
-    Route::resource('students', StudentController::class);
-
-    Route::delete('administratives/{administrative}/photo', [AdministrativeController::class, 'destroyPhoto'])
-        ->name('administratives.photo.destroy')
-        ->can('update', 'administrative');
 
     //Admnistrative resource routes are protected by AdministrativePolicy on the controller
     Route::resource('administratives', AdministrativeController::class);

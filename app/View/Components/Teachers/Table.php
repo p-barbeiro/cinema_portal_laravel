@@ -27,6 +27,6 @@ class Table extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.teachers.table');
+        return view('components.users.table');
     }
 }

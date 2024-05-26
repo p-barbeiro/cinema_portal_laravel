@@ -74,7 +74,7 @@ class DepartmentController extends \Illuminate\Routing\Controller
                 $justification = match (true) {
                     $totalTeachers <= 0 => "",
                     $totalTeachers == 1 => "there is 1 teacher in the department",
-                    $totalTeachers > 1 => "there are $totalTeachers teachers in the department",
+                    $totalTeachers > 1 => "there are $totalTeachers users in the department",
                 };
                 $alertMsg = "Department <a href='$url'><u>{$department->name}</u></a> ({$department->abbreviation}) cannot be deleted because $justification.";
             }
