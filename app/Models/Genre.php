@@ -11,7 +11,6 @@ class Genre extends Model
     use HasFactory;
 
     public $timestamps = false;
-
     protected $primaryKey = 'code';
     protected $keyType = 'string';
     public $incrementing = false;
@@ -20,4 +19,12 @@ class Genre extends Model
     {
         return $this->hasMany(Movie::class,'genre_code','code');
     }
+
+    protected $fillable = [
+        'code',
+        'name',
+        'custom',
+        'deleted_at',
+    ];
+
 }

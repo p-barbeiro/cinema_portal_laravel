@@ -55,19 +55,19 @@
                         <x-menus.submenu-item
                             content="Theaters"
                             selectable="0"
-                            href="{{ route('students.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                         <x-menus.submenu-item
                             content="Movies"
                             selectable="0"
-                            href="{{ route('administratives.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                         <x-menus.submenu-item
                             content="Genres"
                             selectable="0"
-                            href="{{ route('departments.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                         <x-menus.submenu-item
                             content="Screenings"
                             selectable="0"
-                            href="{{ route('departments.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                     </x-menus.submenu>
                     <!-- Menu Item: Users -->
                     <x-menus.submenu
@@ -77,29 +77,29 @@
                         <x-menus.submenu-item
                             content="Customers"
                             selectable="0"
-                            href="{{ route('students.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                         <x-menus.submenu-item
                             content="Employees"
                             selectable="0"
-                            href="{{ route('administratives.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                         <x-menus.submenu-item
                             content="Admins"
                             selectable="0"
-                            href="{{ route('departments.index') }}"/>
+                            href="{{ route('movies.showcase') }}"/>
                     </x-menus.submenu>
                     <!-- Menu Item: Statistics-->
                     <x-menus.menu-item
                         content="Statistics"
                         selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                        href="{{ route('movies.showcase') }}"
+                        selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
                         content="Settings"
                         selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
+                        href="{{ route('movies.showcase') }}"
+                        selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
                     <div class="grow"></div>
 
@@ -135,16 +135,11 @@
                                 <x-menus.submenu-item
                                     content="Profile"
                                     selectable="0"
-                                    :href="match(Auth::user()->type) {
-                                    'A' => route('administratives.edit', ['administrative' => Auth::user()]),
-                                    'T' => route('users.edit', ['teacher' => Auth::user()->teacher]),
-                                    'S' => route('students.edit', ['student' => Auth::user()->student]),
-                                    'E' => route('students.edit', ['student' => Auth::user()->student]),
-                                }"/>
+                                    href=" {{ route('users') }}"/>
                                 <x-menus.submenu-item
                                     content="Purchases"
                                     selectable="0"
-                                    href="{{ route('profile.edit.password') }}"/>
+                                    href="{{ route('movies.showcase') }}"/>
                                 <x-menus.submenu-item
                                     content="Change Password"
                                     selectable="0"

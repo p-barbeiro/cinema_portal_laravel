@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'List of Teachers')
+@section('header-title', 'List of users')
 
 @section('main')
     <div class="flex justify-center">
@@ -14,14 +14,14 @@
                 :name="old('name', $filterByName)"
                 class="mb-6"
                 />
-            @can('create', App\Models\Teacher::class)
+
                 <div class="flex items-center gap-4 mb-4">
                     <x-button
                         href="{{ route('users.create') }}"
                         text="Create a new teacher"
                         type="success"/>
                 </div>
-            @endcan
+
             <div class="font-base text-sm text-gray-700 dark:text-gray-300">
                 <x-teachers.table :teachers="$teachers"
                     :showDepartment="true"

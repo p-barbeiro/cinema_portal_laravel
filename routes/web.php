@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\GenreController;
 use App\Models\Discipline;
 use App\Models\Movie;
 use App\Models\Teacher;
@@ -139,3 +140,19 @@ Route::middleware('can:use-cart')->group(function () {
 Route::resource('disciplines', DisciplineController::class)->only(['index', 'show']);
 
 require __DIR__ . '/auth.php';
+
+// Users
+Route::get('users', [UsersController::class, 'index'])->name('users.index');
+Route::get('users/create', [UsersController::class, 'create'])->name('users.create');
+Route::post('users', [UsersController::class, 'store'])->name('users.store');
+Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update');
+
+// Genres
+Route::get('genres', [GenreController::class, 'index'])->name('genres.index');
+Route::get('genres/create', [GenreController::class, 'create'])->name('genres.create');
+Route::post('genres', [GenreController::class, 'store'])->name('genres.store');
+Route::get('genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
+Route::put('genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
+Route::delete('genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
+Route::get('genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
