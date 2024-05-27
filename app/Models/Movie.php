@@ -34,10 +34,17 @@ class Movie extends Model
 
     public function getTrailerEmbedUrl()
     {
-            $fullUrl = $this->trailer_url;
-            $videoID = substr($fullUrl, strpos($fullUrl, "watch?v=")+8, 11);
+        $fullUrl = $this->trailer_url;
+        $videoID = substr($fullUrl, strpos($fullUrl, "watch?v=") + 8, 11);
 
-            return "https://www.youtube.com/embed/".$videoID."?";
+        return "https://www.youtube.com/embed/" . $videoID . "?";
+    }
 
+    public function getScreenings()
+    {
+        return $this->screenings
+            ->where('date', '>=', now())
+            ->where('date', '<=', now()->addWeeks(2))
+            ->sortBy('date');
     }
 }

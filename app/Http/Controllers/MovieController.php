@@ -13,7 +13,16 @@ class MovieController extends Controller
 
     public function showCase(): View
     {
-        return view('movies.showcase');
+        $movies = Movie::join('screenings', 'movies.id', '=', 'screenings.movie_id')
+            ->where('screenings.date', '>=', now())
+            ->where('screenings.date', '<=', now()->addWeeks(2))
+            ->select('movies.*')
+            ->distinct()
+            ->orderBy('movies.title')
+            ->with('genre')
+            ->get();
+
+        return view('movies.showcase')->with('movies', $movies);
     }
 
     public function index(): View
