@@ -19,6 +19,7 @@ class Input extends Component
         public bool $readonly = false,
         public bool $required = false,
         public string $width = 'full',
+        public bool $multiline = false,
     ) {
         $this->type = trim(strtolower($type));
         if (!in_array($this->type, ['text', 'password', 'number', 'email', 'date', 'time', 'datetime-local', 'month', 'week', 'range', 'color', 'file'], true)) {

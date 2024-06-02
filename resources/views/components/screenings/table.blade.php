@@ -1,10 +1,10 @@
 <div {{ $attributes }}>
-    @foreach ($screenings->groupBy('theater_id') as $theater => $screeningTheaters)
+    @foreach ($screenings->groupBy('theater_id') as $screeningTheaters)
         <table class="table-auto border-collapse dark:text-gray-200 rounded">
             <thead>
             <tr>
-                <th colspan="100%" class="px-2 py-2 text-xl">
-                    Theater: {{\App\Models\Theater::find($theater)->name?? "Unknown Theater"}}
+                <th colspan="100%" class="px-2 py-2 text-xl text-left">
+                    Theater: {{$screeningTheaters[0]->theater->name ?? 'Unknown Theater'}}
                 </th>
             </tr>
             </thead>
@@ -15,7 +15,7 @@
                 @if($loop->last)
                     <tr>
                         @endif
-                        <td class="px-2 py-2 w-40">
+                        <td class="px-2 py-2 w-40 text-left">
                             {{date('l, F j', strtotime($date))}}
                         </td>
                         @foreach ($screeningDates as $screening)

@@ -1,13 +1,3 @@
-{{--
-    NOTE: we've used the match to define multiple versions of width class,
-    to ensure that all specific width related classes are defined statically
-    on the source code - this guarantees that the Tailwind builder
-    detects the corresponding class.
-    If we had used dynamically generated classes (e.g. "w-{{ $width }}") then
-    the builder would not detect concrete values.
-    Check documentation about dynamic classes:
-    https://tailwindcss.com/docs/content-configuration#dynamic-class-names
---}}
 @php
     $widthClass = match($width) {
         'full' => 'w-full',
@@ -31,8 +21,10 @@
     <label class="block font-medium text-sm text-gray-700 dark:text-gray-300" for="id_{{ $name }}">
         {{ $label }}
     </label>
+
     <input id="id_{{ $name }}" name="{{ $name }}" type="{{ $type }}" value="{{ $value }}"
-        class="appearance-none block
+
+           class="appearance-none block
             mt-1 w-full
             bg-white dark:bg-gray-900
             text-black dark:text-gray-50
@@ -49,13 +41,14 @@
             disabled:border-dashed
             disabled:opacity-100
             disabled:select-none"
-            autofocus="autofocus"
-            @required($required)
-            @disabled($readonly)
-        >
+           autofocus="autofocus"
+        @required($required)
+        @disabled($readonly)
+    >
     @error( $name )
-        <div class="text-sm text-red-500">
-            {{ $message }}
-        </div>
+    <div class="text-sm text-red-500">
+        {{ $message }}
+    </div>
     @enderror
 </div>
+

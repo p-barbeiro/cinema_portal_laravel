@@ -2,21 +2,30 @@
     $mode = $mode ?? 'edit';
     $readonly = $mode == 'show';
 @endphp
-<div class="flex flex-wrap space-x-8">
+<div class="flex md:flex-row flex-col space-x-8">
     <div class="grow mt-6 space-y-4">
-        <x-field.input name="title" label="Title" width="md"
+        <x-field.input name="title" label="Title"
                        :readonly="$readonly || ($mode == 'edit')"
-                       value="{{ old('title', $movie->title) }}"/>
-        <x-field.input name="genre_code" label="Genre" width="md"
+                       value="{{ old('title', $movie->title)  }}"
+                       required="true"/>
+        <x-field.select name="genre_code" label="Genre"
+                        :readonly="$readonly"
+                        :options="\App\Models\Genre::all()->pluck('name', 'code')->toArray()"
+                        value="{{ old('genre_code', $movie->genre_code) }}"
+                        required="true"/>
+        <x-field.input name="year" label="Year"
                        :readonly="$readonly"
-                       value="{{ old('genre_code', $movie->genre->name) }}"/>
-        <x-field.input name="year" label="Year" width="md"
-                       :readonly="$readonly"
+                       required="true"
                        value="{{ old('year', $movie->year) }}"/>
-        <x-field.input name="synopsis" label="Synopsis" :readonly="$readonly"
-                       value="{{ old('synopsis', $movie->synopsis) }}"/>
-        <iframe allowfullscreen="" height="315" src="{{$movie->getTrailerEmbedUrl()}}"
-                width="420"></iframe>
+        <x-field.text-area name="synopsis" label="Synopsis"
+                           :readonly="$readonly"
+                           required="true"
+                           value="{{ old('synopsis', $movie->synopsis) }}"/>
+        @if($mode == 'edit')
+            <x-field.input name="trailer_url" label="Trailer URL"
+                           :readonly="$readonly"
+                           value="{{ old('trailer_url', $movie->trailer_url) }}"/>
+        @endif
 
         {{--            <x-field.input name="ECTS" label="Nº ECTS" width="sm" :readonly="$readonly"--}}
         {{--                            value="{{ old('ECTS', $course->ECTS) }}"/>--}}
@@ -28,16 +37,29 @@
         {{--                        :readonly="$readonly"--}}
         {{--                        value="{{ old('objectives_pt', $course->objectives_pt) }}"/>--}}
         {{--    </div>--}}
-        {{--    <div class="pb-6">--}}
-        {{--        <x-field.image--}}
-        {{--            name="image_file"--}}
-        {{--            label="Course Image"--}}
-        {{--            width="md"--}}
-        {{--            :readonly="$readonly"--}}
-        {{--            deleteTitle="Delete Image"--}}
-        {{--            :deleteAllow="($mode == 'edit') && ($course->imageExists)"--}}
-        {{--            deleteForm="form_to_delete_image"--}}
-        {{--            :imageUrl="$course->imageUrl"/>--}}
-        {{--    </div>--}}
     </div>
+    <div>
+        <x-field.image
+            name="movie_poster"
+            label="Poster"
+            width="md"
+            :readonly="$readonly"
+            deleteTitle="Remove Poster"
+            :deleteAllow="($mode == 'edit') && ($movie->poster_filename)"
+            deleteForm="form_to_delete_photo"
+            :imageUrl="$movie->getPoster()"/>
+        @if($mode != 'edit')
+
+            @if($movie->trailer_url)
+
+                <x-button
+                    href="{{ $movie->trailer_url }}"
+                    class="mt-6"
+                    text="Watch Trailer"
+                    type="info"/>
+            @endif
+
+        @endif
+    </div>
+
 </div>

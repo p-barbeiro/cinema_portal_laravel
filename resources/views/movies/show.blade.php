@@ -12,13 +12,13 @@
                         <x-button
                             href="{{ route('movies.create') }}"
                             text="New"
-                            type="success"/>
+                            type="secondary"/>
                     @endcan
                     @can('update', $movie)
                     <x-button
                         href="{{ route('movies.edit', ['movie' => $movie]) }}"
                         text="Edit"
-                        type="primary"/>
+                        type="secondary"/>
                     @endcan
                     @can('delete', $movie)
                     <form method="POST" action="{{ route('movies.destroy', ['movie' => $movie]) }}">
@@ -27,7 +27,7 @@
                         <x-button
                             element="submit"
                             text="Delete"
-                            type="danger"/>
+                            type="secondary"/>
                     </form>
                     @endcan
                 </div>

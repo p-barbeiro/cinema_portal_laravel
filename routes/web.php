@@ -141,13 +141,6 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
 
 require __DIR__ . '/auth.php';
 
-// Users
-Route::get('users', [UsersController::class, 'index'])->name('users.index');
-Route::get('users/create', [UsersController::class, 'create'])->name('users.create');
-Route::post('users', [UsersController::class, 'store'])->name('users.store');
-Route::get('users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-Route::put('users/{user}', [UsersController::class, 'update'])->name('users.update');
-
 // Genres
 Route::get('genres', [GenreController::class, 'index'])->name('genres.index');
 Route::get('genres/create', [GenreController::class, 'create'])->name('genres.create');

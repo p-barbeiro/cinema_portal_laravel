@@ -4,9 +4,8 @@
         <tr class="border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
             <th class="px-2 py-2 text-center lg:table-cell">Poster</th>
             <th class="px-2 py-2 text-center">Name</th>
-            <th class="px-2 py-2 text-center">Genre</th>
+            <th class="px-2 py-2 text-center hidden sm:table-cell">Genre</th>
             <th class="px-2 py-2 text-center hidden sm:table-cell">Year</th>
-            {{--            trailer--}}
             <th></th>
             @if($showView)
                 <th></th>
@@ -26,7 +25,7 @@
                     <img class="object-center aspect-auto w-32 h-40 rounded" src="{{ $movie->getPoster() }}"
                          alt="{{ $movie->title }}">
                 </td>
-                <td class="px-2 py-2 text-left">
+                <td class="px-2 py-2 text-left text-justify">
                     <div class="font-bold">
                         {{ $movie->title }}
                     </div>
@@ -35,7 +34,7 @@
                         {{$movie->synopsis}}
                     </div>
                 </td>
-                <td class="px-2 py-2 text-left">{{ $movie->genre->name }}</td>
+                <td class="px-2 py-2 text-left hidden sm:table-cell">{{ $movie->genre->name }}</td>
                 <td class="px-2 py-2 text-right hidden sm:table-cell">{{ $movie->year }}</td>
                 <td>
                     @if($movie?->trailer_url)

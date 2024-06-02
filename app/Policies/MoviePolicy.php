@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Course;
 use App\Models\User;
 use App\Models\Movie;
 

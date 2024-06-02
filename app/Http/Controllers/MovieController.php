@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Discipline;
+use App\Models\Genre;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,29 +14,57 @@ class MovieController extends Controller
 
     public function showCase(): View
     {
-        $movies = Movie::join('screenings', 'movies.id', '=', 'screenings.movie_id')
-            ->where('screenings.date', '>=', now())
-            ->where('screenings.date', '<=', now()->addWeeks(2))
-            ->select('movies.*')
-            ->distinct()
-            ->orderBy('movies.title')
-            ->with('genre')
+
+        $movies = Movie::whereHas('screenings', function ($query) {
+            $query
+                ->where('date', '>=', now())
+                ->where('date', '<=', now()->addWeeks(2));
+        })
+            ->orderBy('title')
+            ->with('screenings', 'genre', 'screenings.theater')
             ->get();
 
         return view('movies.showcase')->with('movies', $movies);
     }
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $allMovies = Movie::orderBy('title')->orderBy('year')->with('genre')->paginate(20)->withQueryString();
+        $filterByGenre = $request->genre;
+        $filterByYear = $request->year;
+        $filterByName = $request->title;
 
-        return view('movies.index')->with('allMovies', $allMovies);
+        $moviesQuery = Movie::query();
+        if ($filterByGenre !== null) {
+            $moviesQuery->where('genre_code', $filterByGenre);
+        }
+        if ($filterByYear !== null) {
+            $moviesQuery->where('year', $filterByYear);
+        }
+        if ($filterByName !== null) {
+            $moviesQuery->where('title', 'LIKE', '%' . $filterByName . '%')
+                ->orderBy('year');
+        }
+
+        $allMovies = $moviesQuery
+            ->orderBy('title')
+            ->with('genre')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('movies.index', compact('allMovies', 'filterByGenre', 'filterByYear', 'filterByName'));
     }
 
     public function create(): View
     {
         $movie = new Movie();
         return view('movies.create')
+            ->with('movie', $movie);
+    }
+
+    public function edit(): View
+    {
+        $movie = new Movie();
+        return view('movies.edit')
             ->with('movie', $movie);
     }
 

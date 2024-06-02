@@ -51,7 +51,7 @@
                     <x-menus.submenu
                         selectable="0"
                         uniqueName="submenu_movies"
-                        content="Movies">
+                        content="Administration">
                         <x-menus.submenu-item
                             content="Theaters"
                             selectable="0"
@@ -59,11 +59,11 @@
                         <x-menus.submenu-item
                             content="Movies"
                             selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
+                            href="{{ route('movies.index') }}"/>
                         <x-menus.submenu-item
                             content="Genres"
                             selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
+                            href="{{ route('genres.index') }}"/>
                         <x-menus.submenu-item
                             content="Screenings"
                             selectable="0"
@@ -92,14 +92,12 @@
                         content="Statistics"
                         selectable="1"
                         href="{{ route('movies.showcase') }}"
-                        selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
                         content="Settings"
                         selectable="1"
                         href="{{ route('movies.showcase') }}"
-                        selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
                     <div class="grow"></div>
 
@@ -135,7 +133,7 @@
                                 <x-menus.submenu-item
                                     content="Profile"
                                     selectable="0"
-                                    href=" {{ route('users') }}"/>
+                                    href=" #"/>
                                 <x-menus.submenu-item
                                     content="Purchases"
                                     selectable="0"
