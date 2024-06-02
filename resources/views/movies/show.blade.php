@@ -8,12 +8,6 @@
         <div class="max-full">
             <section>
                 <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
-                    @can('create', App\Models\Movie::class)
-                        <x-button
-                            href="{{ route('movies.create') }}"
-                            text="New"
-                            type="secondary"/>
-                    @endcan
                     @can('update', $movie)
                     <x-button
                         href="{{ route('movies.edit', ['movie' => $movie]) }}"
@@ -31,14 +25,10 @@
                     </form>
                     @endcan
                 </div>
-                <div class="mt-6 space-y-4">
+                <hr>
+                <div class="mt-6 space-y-4 mt-5">
                     @include('movies.shared.fields', ['mode' => 'show'])
                 </div>
-                @can('viewCurriculum', App\Models\Movie::class)
-                    <h3 class="pt-16 pb-4 text-2xl font-medium text-gray-900 dark:text-gray-100">
-                        Curriculum
-                    </h3>
-                @endcan
             </section>
         </div>
     </div>

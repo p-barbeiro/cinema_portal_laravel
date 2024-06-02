@@ -26,49 +26,24 @@ Route::view('/', 'home')->name('home');
 
 // Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])
-    ->name('movies.showcase')
-    ->can('viewShowCase', Movie::class);
+    ->name('movies.showcase');
 
-//Discipline resource routes are protected by DisciplinePolicy on the controller
-//Disciplines index and show are public ->except(['index', 'show'])
-Route::resource('movies', MovieController::class);
+/* ----- Rotas para utilizadores autenticados e não verificados ------ */
 
-//-------------
-
-
-
-
-
-
-Route::get('courses/{course}/curriculum', [CourseController::class, 'showCurriculum'])
-    ->name('courses.curriculum')
-    ->can('viewCurriculum', Course::class);
-
-
-/* ----- Non-Verified users ----- */
 Route::middleware('auth')->group(function () {
     Route::get('/password', [ProfileController::class, 'editPassword'])->name('profile.edit.password');
 });
 
-/* ----- Verified users ----- */
+/* ----- Rotas para utilizadores autenticados e verificados ------ */
+
 Route::middleware('auth', 'verified')->group(function () {
-
-
-// CHECK THIS -------- -------- -------- --------
-    /* ----- Non-Verified users ----- */
-    // Route::middleware('auth')->group(function () {
-    //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    //     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // });
-// CHECK THIS -------- -------- -------- --------
-
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
-    Route::delete('courses/{course}/image', [CourseController::class, 'destroyImage'])
-        ->name('courses.image.destroy')
-        ->can('update', Course::class);
+    Route::resource('movies', MovieController::class);
+
+    Route::delete('movies/{movie}/image', [MovieController::class, 'destroyImage'])
+        ->name('movies.image.destroy');
 
     //Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)

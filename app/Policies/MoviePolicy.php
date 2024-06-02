@@ -20,9 +20,14 @@ class MoviePolicy
         return true;
     }
 
+    public function viewAny(User $user): bool
+    {
+        return false;
+    }
+
     public function view(?User $user, Movie $movie): bool
     {
-        return true;
+        return false;
     }
 
     public function create(User $user): bool

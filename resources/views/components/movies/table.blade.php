@@ -26,8 +26,9 @@
                          alt="{{ $movie->title }}">
                 </td>
                 <td class="px-2 py-2 text-left text-justify">
-                    <div class="font-bold">
-                        {{ $movie->title }}
+                    <div class="text-lg">
+                        <a href="{{ route('movies.show', ['movie' => $movie]) }}" class="hover:font-bold hover:underline">
+                        {{ $movie->title }}</a>
                     </div>
                     <br>
                     <div>

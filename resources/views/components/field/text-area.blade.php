@@ -59,12 +59,9 @@
             autofocus="autofocus"
             @required($required)
             @disabled($readonly)
-        >
-        {{ $value }}
-    </textarea>
+        >{{ $value }}</textarea>
     @error( $name )
-        <div class="text-sm text-red-500">
-            {{ $message }}
+        <div class="text-sm text-red-500">{{ $message }}
         </div>
     @enderror
 </div>

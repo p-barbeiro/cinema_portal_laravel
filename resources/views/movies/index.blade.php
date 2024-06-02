@@ -17,7 +17,6 @@
             />
             <hr>
 
-
             @can('create', App\Models\Movie::class)
                 <div class="flex justify-end gap-4 my-4">
                     <x-button
@@ -26,6 +25,7 @@
                         type="secondary"/>
                 </div>
             @endcan
+
             @if($allMovies->count() > 0)
                 <div class="font-base text-sm text-gray-700 dark:text-gray-300">
                     <x-movies.table :movies="$allMovies"

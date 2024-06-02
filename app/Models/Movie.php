@@ -13,6 +13,15 @@ class Movie extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'genre_code',
+        'year',
+        'poster_filename',
+        'synopsis',
+        'trailer_url',
+    ];
+
     public function screenings(): HasMany
     {
         return $this->hasMany(Screening::class);
@@ -30,6 +39,11 @@ class Movie extends Model
         } else {
             return asset("storage/posters/_no_poster_1.png");
         }
+    }
+
+    public function getImageExistsAttribute()
+    {
+        return Storage::exists("public/posters/{$this->poster_filename}");
     }
 
     public function getTrailerEmbedUrl()
