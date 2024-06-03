@@ -5,6 +5,7 @@
             <tr>
                 <th colspan="100%" class="px-2 py-2 text-xl text-left">
                     Theater: {{$screeningTheaters[0]->theater->name ?? 'Unknown Theater'}}
+                    {{--                    {{debug($screeningTheaters[0]->theater->name . ":" . $screeningTheaters[0]->theater->seats->count())}}--}}
                 </th>
             </tr>
             </thead>
@@ -20,8 +21,13 @@
                         </td>
                         @foreach ($screeningDates as $screening)
                             <td class="px-2 py-2 text-center dark:text-gray-400">
-                                <a class="font-extrabold hover:underline underline-offset-2"
-                                   href="#">{{date('H:i', strtotime($screening->start_time))}}</a>
+                                @if($screening->isSoldOut())
+                                    <a class="font-extrabold text-red-800 line-through"
+                                       href="#">{{date('H:i', strtotime($screening->start_time))}}</a>
+                                @else
+                                    <a class="font-extrabold hover:underline underline-offset-2"
+                                       href="#">{{date('H:i', strtotime($screening->start_time))}}</a>
+                                @endif
                             </td>
                         @endforeach
                     </tr>

@@ -26,6 +26,16 @@ class Screening extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    public function isSoldOut()
+    {
+        return $this->tickets->count() >= $this->theater->seats->count();
+    }
+
+    public function getRemainingSeats()
+    {
+        return $this->theater->seats->count() - $this->tickets->count();
+    }
+
     public function getFormattedDateAttribute()
     {
         return date('d.M : l', strtotime($this->date));

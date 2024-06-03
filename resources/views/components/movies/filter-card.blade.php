@@ -3,7 +3,7 @@
         <div class="flex justify-between space-x-3">
             <div class="grow flex flex-col space-y-2">
                 <div>
-                    <x-field.input name="title" label="Title" class="grow"
+                    <x-field.input name="title" label="{{$searchPlaceholder}}" class="grow"
                                    value="{{ $title }}"/>
                 </div>
 
@@ -11,9 +11,13 @@
                     <x-field.select name="genre" label="Genre"
                                     value="{{ $genre }}"
                                     :options="$listGenres"/>
-                    <x-field.select name="year" label="Year"
-                                    value="{{ $year }}"
-                                    :options="$listYears"/>
+
+                    @if($yearShow)
+                        <x-field.select name="year" label="Year"
+                                        value="{{ $year }}"
+                                        :options="$listYears"/>
+                    @endif
+
                 </div>
             </div>
             <div class="grow-0 flex flex-col space-y-3 justify-start">

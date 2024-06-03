@@ -18,13 +18,15 @@ class FilterCard extends Component
         public ?string $title = null,
         public ?int    $year = null,
         public ?string $genre = null,
+        public bool    $yearShow = true,
+        public string  $searchPlaceholder = 'Search by title',
     )
     {
         $genres = Genre::pluck('name', 'code')?->toArray();
         $this->listGenres = (array_merge([null => 'Any Genre'], $genres));
 
-        $years = Movie::pluck('year','year')->unique()->sortDesc()->toArray();
-        $this->listYears = [null => 'Any Year']+ $years;
+        $years = Movie::pluck('year', 'year')->unique()->sortDesc()->toArray();
+        $this->listYears = [null => 'Any Year'] + $years;
 
     }
 

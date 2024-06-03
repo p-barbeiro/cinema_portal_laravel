@@ -51,7 +51,7 @@
                     <x-menus.submenu
                         selectable="0"
                         uniqueName="submenu_movies"
-                        content="Administration">
+                        content="Management">
                         <x-menus.submenu-item
                             content="Theaters"
                             selectable="0"

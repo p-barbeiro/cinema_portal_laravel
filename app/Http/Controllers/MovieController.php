@@ -20,19 +20,38 @@ class MovieController extends \Illuminate\Routing\Controller
         $this->authorizeResource(Movie::class);
     }
 
-    public function showCase(): View
+    public function showCase(Request $request): View
     {
 
-        $movies = Movie::whereHas('screenings', function ($query) {
-            $query
-                ->where('date', '>=', now())
-                ->where('date', '<=', now()->addWeeks(2));
-        })
-            ->orderBy('title')
-            ->with('screenings', 'genre', 'screenings.theater')
-            ->get();
+        $filterByGenre = $request->genre;
+        $filterByName = $request->title;
 
-        return view('movies.showcase')->with('movies', $movies);
+        $moviesQuery = Movie::query();
+        if ($filterByGenre !== null) {
+            $moviesQuery->where('genre_code', $filterByGenre);
+        }
+        //search by title or synopsis
+        if ($filterByName !== null) {
+            $moviesQuery->where(function ($query) use ($filterByName) {
+                $query
+                    ->where('title', 'LIKE', '%' . $filterByName . '%')
+                    ->orWhere('synopsis', 'LIKE', '%' . $filterByName . '%');
+            })
+                ->orderBy('year');
+        }
+
+        $movies = $moviesQuery
+            ->whereHas('screenings', function ($query) {
+                $query
+                    ->where('date', '>=', now())
+                    ->where('date', '<=', now()->addWeeks(2));
+            })
+            ->orderBy('title')
+            ->with('screenings', 'genre', 'screenings.theater', 'screenings.tickets', 'screenings.theater.seats')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('movies.showcase', compact('movies', 'filterByGenre', 'filterByName'));
     }
 
     public function index(Request $request): View
@@ -48,6 +67,7 @@ class MovieController extends \Illuminate\Routing\Controller
         if ($filterByYear !== null) {
             $moviesQuery->where('year', $filterByYear);
         }
+        //search by title
         if ($filterByName !== null) {
             $moviesQuery->where('title', 'LIKE', '%' . $filterByName . '%')
                 ->orderBy('year');
@@ -95,7 +115,7 @@ class MovieController extends \Illuminate\Routing\Controller
         }
 
         $htmlMessage = "Movie <span class='font-bold'>'{$movie->title}'</span> has been updated successfully!";
-        return redirect()->route('movies.show'  , ['movie' => $movie])
+        return redirect()->route('movies.show', ['movie' => $movie])
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
