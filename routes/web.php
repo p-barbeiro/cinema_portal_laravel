@@ -21,12 +21,15 @@ use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
 
-// homepage
+// Homepage
 Route::view('/', 'home')->name('home');
+Route::redirect('/', 'movies/showcase');
 
 // Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])
     ->name('movies.showcase');
+
+
 
 /* ----- Rotas para utilizadores autenticados e não verificados ------ */
 
@@ -34,16 +37,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/password', [ProfileController::class, 'editPassword'])->name('profile.edit.password');
 });
 
+
+
 /* ----- Rotas para utilizadores autenticados e verificados ------ */
 
 Route::middleware('auth', 'verified')->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
+    /* Movies routes */
     Route::resource('movies', MovieController::class);
 
     Route::delete('movies/{movie}/image', [MovieController::class, 'destroyImage'])
         ->name('movies.image.destroy');
+
+    /* Genres routes */
+    Route::resource('genres', GenreController::class)->except(['show']);
+
+
+
+
+
+
 
     //Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
@@ -116,11 +131,11 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
 
 require __DIR__ . '/auth.php';
 
-// Genres
-Route::get('genres', [GenreController::class, 'index'])->name('genres.index');
-Route::get('genres/create', [GenreController::class, 'create'])->name('genres.create');
-Route::post('genres', [GenreController::class, 'store'])->name('genres.store');
-Route::get('genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
-Route::put('genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
-Route::delete('genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
-Route::get('genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
+//// Genres
+//Route::get('genres', [GenreController::class, 'index'])->name('genres.index');
+//Route::get('genres/create', [GenreController::class, 'create'])->name('genres.create');
+//Route::post('genres', [GenreController::class, 'store'])->name('genres.store');
+//Route::get('genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
+//Route::put('genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
+//Route::delete('genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
+//Route::get('genres/{genre}', [GenreController::class, 'show'])->name('genres.show');

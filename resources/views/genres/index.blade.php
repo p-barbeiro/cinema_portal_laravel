@@ -1,58 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>genres</title>
-    <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-    </style>
-</head>
-<body>
-<h1>List of genres</h1>
-<p><a href="{{ route('genres.create') }}">Create a new genre</a></p>
-<table>
-    <thead>
-    <tr>
-        <th>Abbreviation</th>
-        <th>Name</th>
-        <th>Custom</th>
-        <th>Deleted At</th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach ($genres as $genre)
-        <tr>
-            <td>{{ $genre->code }}</td>
-            <td>{{ $genre->name }}</td>
-            <td>{{ $genre->custom }}</td>
-            <td>{{ $genre->deleted_at }}</td>
-            <td>
-                <a href="{{ route('genres.show', ['genre' => $genre]) }}">View</a>
-            </td>
-            <td>
-                <a href="{{ route('genres.edit', ['genre' => $genre]) }}">Update</a>
-            </td>
-            <td>
-                <form method="POST"
-                      action="{{ route('genres.destroy', ['genre' => $genre]) }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" name="delete">Delete</button>
-                </form>
-            </td>
-        </tr>
-    @endforeach
-    </tbody>
-</table>
-</body>
-</html>
+@extends('layouts.main')
+
+@section('header-title', 'All Genres')
+
+@section('main')
+    <div class="flex justify-center">
+        <div class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden
+                    shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+
+            @can('create', App\Models\Genre::class)
+                <div class="flex justify-end gap-4 my-4">
+                    <x-button
+                        href="{{ route('genres.create') }}"
+                        text="Add Genre"
+                        type="secondary"/>
+                </div>
+            @endcan
+
+            <div class="font-base text-sm text-gray-700 dark:text-gray-300">
+                <x-genres.table :genres="$genres"
+                                :showEdit="true"
+                                :showDelete="true"/>
+            </div>
+            <div class="mt-4">
+                {{ $genres->links() }}
+            </div>
+        </div>
+    </div>
+@endsection

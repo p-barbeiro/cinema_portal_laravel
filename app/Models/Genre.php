@@ -17,14 +17,12 @@ class Genre extends Model
 
     public function movies(): HasMany
     {
-        return $this->hasMany(Movie::class,'genre_code','code');
+        return $this->hasMany(Movie::class, 'genre_code', 'code');
     }
 
     protected $fillable = [
         'code',
         'name',
-        'custom',
-        'deleted_at',
     ];
 
 }
