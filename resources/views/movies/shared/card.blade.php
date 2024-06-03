@@ -3,18 +3,26 @@
         class="flex flex-col md:flex-row-reverse h-auto border border-gray-200 shadow rounded-none sm:rounded-xl bg-white dark:bg-gray-900 dark:border-gray-700 my-5 p-5 md:p-0">
 
         <div class="place-content-center h-auto p-5 md:p-5 md:ps-0 mx-auto md:m-0">
-            <a class=""
-               href="{{ route('movies.show', ['movie' => $movie]) }}">
-                <img class="object-center aspect-auto mx-auto rounded-md md:min-h-96 md:min-w-80 md:max-w-64"
-                     src="{{ $movie->getPoster() }}">
-            </a>
+            <img class="object-center aspect-auto mx-auto rounded-md md:min-h-96 md:min-w-80 md:max-w-64"
+                 src="{{ $movie->getPoster() }}">
         </div>
 
         <div class="w-full p-5 text-center md:min-h-96 md:text-left space-y-1 flex flex-col">
-            <a class="text-2xl font-bold text-gray-800 dark:text-gray-200 leading-tight"
-               href="{{ route('movies.show', ['movie' => $movie]) }}">
-                {{ $movie->title }}
-            </a>
+
+            <div class="flex flex-row justify-between">
+                <span
+                    class="text-2xl font-bold text-gray-800 dark:text-gray-200 leading-tight">{{ $movie->title }}</span>
+                <div class="flex flex-row">
+                    @can('view', $movie)
+                        <x-table.icon-show class="px-0.5"
+                                           href="{{ route('movies.show', ['movie' => $movie]) }}"/>
+                    @endcan
+                    @can('update', $movie)
+                        <x-table.icon-edit class="px-0.5"
+                                           href="{{ route('movies.edit', ['movie' => $movie]) }}"/>
+                    @endcan
+                </div>
+            </div>
             <hr>
             <figcaption class="font-medium">
                 <div
@@ -34,6 +42,7 @@
             <p class="font-base text-base space-x-6 text-gray-700 dark:text-gray-300 md:mb-5">
                 <x-screenings.table :screenings="$movie->getScreenings()"/>
             </p>
+
         </div>
 
     </figure>

@@ -131,7 +131,7 @@ class MovieController extends \Illuminate\Routing\Controller
         }
 
         $url = route('movies.show', ['movie' => $newMovie]);
-        $htmlMessage = "Movie <a href='$url'><u>{$newMovie->title}</u></a>has been created successfully!";
+        $htmlMessage = "Movie <a href='$url'><u>{$newMovie->title}</u></a> has been created successfully!";
         return redirect()->route('movies.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
