@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -54,7 +55,8 @@ Route::middleware('auth', 'verified')->group(function () {
     /* Genres routes */
     Route::resource('genres', GenreController::class)->except(['show']);
 
-
+    /* Configurations routes */
+    Route::resource('configurations', ConfigurationController::class)->only(['show', 'update', 'edit']);
 
 
 
@@ -135,7 +137,9 @@ require __DIR__ . '/auth.php';
 //Route::get('genres', [GenreController::class, 'index'])->name('genres.index');
 //Route::get('genres/create', [GenreController::class, 'create'])->name('genres.create');
 //Route::post('genres', [GenreController::class, 'store'])->name('genres.store');
+
 //Route::get('genres/{genre}/edit', [GenreController::class, 'edit'])->name('genres.edit');
 //Route::put('genres/{genre}', [GenreController::class, 'update'])->name('genres.update');
-//Route::delete('genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');
 //Route::get('genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
+
+//Route::delete('genres/{genre}', [GenreController::class, 'destroy'])->name('genres.destroy');

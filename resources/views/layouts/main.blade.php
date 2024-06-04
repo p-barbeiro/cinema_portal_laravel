@@ -34,12 +34,14 @@
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
                     invisible h-0 sm:visible sm:h-auto">
+
                     <!-- Menu Item: What's On -->
                     <x-menus.menu-item
                         content="What's On"
                         href="{{ route('movies.showcase') }}"
                         selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
+
                     <!-- Menu Item: Screenings if(employee)-->
                     <x-menus.menu-item
                         content="Screenings"
@@ -47,6 +49,7 @@
                         href="{{ route('disciplines.index') }}"
                         selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
                     />
+
                     <!-- Menu Item: Movies -->
                     <x-menus.submenu
                         selectable="0"
@@ -59,7 +62,8 @@
                         <x-menus.submenu-item
                             content="Movies"
                             selectable="0"
-                            href="{{ route('movies.index') }}"/>
+                            href="{{ route('movies.index') }}"
+                        />
                         <x-menus.submenu-item
                             content="Genres"
                             selectable="0"
@@ -69,6 +73,7 @@
                             selectable="0"
                             href="{{ route('movies.showcase') }}"/>
                     </x-menus.submenu>
+
                     <!-- Menu Item: Users -->
                     <x-menus.submenu
                         selectable="0"
@@ -95,9 +100,10 @@
                     />
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
-                        content="Settings"
+                        content="Configurations"
                         selectable="1"
-                        href="{{ route('movies.showcase') }}"
+                        href="{{ route('configurations.show', ['configuration' => '1']) }}"
+                        selected="{{ Route::currentRouteName() == 'configurations.show'}}"
                     />
                     <div class="grow"></div>
 
@@ -127,31 +133,31 @@
                                     class="ps-1 sm:max-w-[calc(100vw-39rem)] md:max-w-[calc(100vw-41rem)] lg:max-w-[calc(100vw-46rem)] xl:max-w-[34rem] truncate">
                                     {{ Auth::user()->name }}
                                 </div>
-                            </x-slot>
-                            @auth
+                                </x-slot>
+                                @auth
+                                    <hr>
+                                    <x-menus.submenu-item
+                                        content="Profile"
+                                        selectable="0"
+                                        href=" #"/>
+                                    <x-menus.submenu-item
+                                        content="Purchases"
+                                        selectable="0"
+                                        href="{{ route('movies.showcase') }}"/>
+                                    <x-menus.submenu-item
+                                        content="Change Password"
+                                        selectable="0"
+                                        href="{{ route('profile.edit.password') }}"/>
+                                @endauth
                                 <hr>
+                                <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
+                                      class="hidden">
+                                    @csrf
+                                </form>
                                 <x-menus.submenu-item
-                                    content="Profile"
+                                    content="Log Out"
                                     selectable="0"
-                                    href=" #"/>
-                                <x-menus.submenu-item
-                                    content="Purchases"
-                                    selectable="0"
-                                    href="{{ route('movies.showcase') }}"/>
-                                <x-menus.submenu-item
-                                    content="Change Password"
-                                    selectable="0"
-                                    href="{{ route('profile.edit.password') }}"/>
-                            @endauth
-                            <hr>
-                            <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
-                                  class="hidden">
-                                @csrf
-                            </form>
-                            <x-menus.submenu-item
-                                content="Log Out"
-                                selectable="0"
-                                form="form_to_logout_from_menu"/>
+                                    form="form_to_logout_from_menu"/>
                         </x-menus.submenu>
                     @else
                         <!-- Menu Item: Login -->

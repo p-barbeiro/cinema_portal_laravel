@@ -40,7 +40,9 @@ class GenreController extends \Illuminate\Routing\Controller
     {
         $newGenre = Genre::create($request->validated());
 
+        // Convert the genre code to uppercase
         $newGenre->code = strtoupper($newGenre->code);
+        $newGenre->save();
 
         $htmlMessage = "Genre '{$newGenre->name}' has been created successfully!";
         return redirect()->route('genres.index')
