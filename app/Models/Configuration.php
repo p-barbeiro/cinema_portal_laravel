@@ -11,4 +11,9 @@ class Configuration extends Model
 
     public $timestamps = false;
     protected $table = 'configuration';
+
+    protected $fillable = [
+        'ticket_price',
+        'registered_customer_ticket_discount'
+    ];
 }
