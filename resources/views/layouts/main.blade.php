@@ -42,23 +42,15 @@
                         selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
 
-                    <!-- Menu Item: Screenings if(employee)-->
-                    <x-menus.menu-item
-                        content="Screenings"
-                        selectable="1"
-                        href="{{ route('disciplines.index') }}"
-                        selected="{{ Route::currentRouteName() == 'disciplines.index'}}"
-                    />
-
-                    <!-- Menu Item: Movies -->
+                    <!-- Menu Item: Admin -->
                     <x-menus.submenu
                         selectable="0"
                         uniqueName="submenu_movies"
-                        content="Management">
+                        content="Administration">
                         <x-menus.submenu-item
                             content="Theaters"
                             selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
+                            href="{{ route('theaters.index') }}"/>
                         <x-menus.submenu-item
                             content="Movies"
                             selectable="0"
@@ -72,22 +64,22 @@
                             content="Screenings"
                             selectable="0"
                             href="{{ route('movies.showcase') }}"/>
+                        <hr>
+                        <x-menus.submenu-item
+                            content="Customers"
+                            selectable="0"
+                            href="{{ route('customers.index') }}"/>
+                        <x-menus.submenu-item
+                            content="Staff"
+                            selectable="0"
+                            href="{{ route('users.index') }}"/>
+                        <hr>
+                        <x-menus.submenu-item
+                            content="Statistics"
+                            selectable="0"
+                            href="#"/>
                     </x-menus.submenu>
 
-                    <!-- Menu Item: Users -->
-                    <x-menus.menu-item
-                        content="Customers"
-                        selectable="1"
-                        href="{{ route('customers.index') }}"
-                        selected="{{ Route::currentRouteName() == 'customers.index'}}"
-                    />
-
-                    <!-- Menu Item: Statistics-->
-                    <x-menus.menu-item
-                        content="Statistics"
-                        selectable="1"
-                        href="{{ route('movies.showcase') }}"
-                    />
                     <!-- Menu Item: Settings-->
                     <x-menus.menu-item
                         content="Configurations"
@@ -123,32 +115,32 @@
                                     class="ps-1 sm:max-w-[calc(100vw-39rem)] md:max-w-[calc(100vw-41rem)] lg:max-w-[calc(100vw-46rem)] xl:max-w-[34rem] truncate">
                                     {{ Auth::user()->name }}
                                 </div>
-                                </x-slot>
-                                @auth
-                                    <hr>
-                                    <x-menus.submenu-item
-                                        content="Profile"
-                                        selectable="0"
-                                        href="{{route('users.edit', ['user' => Auth::user()])}}"
-                                    />
-                                    <x-menus.submenu-item
-                                        content="Purchases"
-                                        selectable="0"
-                                        href="{{ route('movies.showcase') }}"/>
-                                    <x-menus.submenu-item
-                                        content="Change Password"
-                                        selectable="0"
-                                        href="{{ route('profile.edit.password') }}"/>
-                                @endauth
+                            </x-slot>
+                            @auth
                                 <hr>
-                                <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
-                                      class="hidden">
-                                    @csrf
-                                </form>
                                 <x-menus.submenu-item
-                                    content="Log Out"
+                                    content="Profile"
                                     selectable="0"
-                                    form="form_to_logout_from_menu"/>
+                                    href="{{route('users.edit', ['user' => Auth::user()])}}"
+                                />
+                                <x-menus.submenu-item
+                                    content="Purchases"
+                                    selectable="0"
+                                    href="{{ route('customers.purchases') }}"/>
+                                <x-menus.submenu-item
+                                    content="Change Password"
+                                    selectable="0"
+                                    href="{{ route('profile.edit.password') }}"/>
+                            @endauth
+                            <hr>
+                            <x-menus.submenu-item
+                                content="Log Out"
+                                selectable="0"
+                                form="form_to_logout_from_menu"/>
+                            <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
+                                  class="hidden">
+                                @csrf
+                            </form>
                         </x-menus.submenu>
                     @else
                         <!-- Menu Item: Login -->

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -53,30 +55,24 @@ class CustomerController extends \Illuminate\Routing\Controller
         return view('users.show', ['user' => $user]);
     }
 
-    public function update(UserFormRequest $request, User $user)
-    {
-        //TODO
-        $user->update($request->validated());
-        $user->save();
-        return redirect()->route('user.edit', ['user' => $user])
-            ->with('alert-msg', 'User "' . $user->name . '" foi alterado com sucesso!')
-            ->with('alert-type', 'success');
-    }
+//    public function update(UserFormRequest $request, User $user)
+//    {
+//        //TODO
+//        $user->update($request->validated());
+//        $user->save();
+//        return redirect()->route('user.edit', ['user' => $user])
+//            ->with('alert-msg', 'User "' . $user->name . '" foi alterado com sucesso!')
+//            ->with('alert-type', 'success');
+//    }
 
-    public function destroyPhoto(User $user): RedirectResponse
+    public function purchases(Request $request): View
     {
-        if ($user->photo_filename) {
-            if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
-                Storage::delete('public/photos/' . $user->photo_filename);
-            }
-            $user->photo_filename = null;
-            $user->save();
-
-            return redirect()->back()
-                ->with('alert-type', 'success')
-                ->with('alert-msg', "Photo of {$user->name} has been deleted.");
-        }
-        return redirect()->back();
+        $user = auth()->user();
+        $purchases = Purchase::where('customer_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->with('tickets','tickets.screening','tickets.seat', 'tickets.screening.movie')
+            ->paginate(8);
+        return view('customers.purchases', compact('purchases'));
     }
 }
 

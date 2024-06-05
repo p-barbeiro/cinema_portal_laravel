@@ -76,7 +76,8 @@
                     @can('delete', $user)
                         <td>
                             <x-table.icon-delete class="px-0.5"
-                                                 action="{{ route('users.destroy', ['user' => $user]) }}"/>
+                                                 action="#"/>
+{{--                            TODO:SOFTDELETE--}}
                         </td>
                     @else
                         <td></td>

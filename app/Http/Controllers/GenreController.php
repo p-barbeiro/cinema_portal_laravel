@@ -20,14 +20,22 @@ class GenreController extends \Illuminate\Routing\Controller
         $this->authorizeResource(Genre::class);
     }
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $allGenres = Genre::query()
+        $filterByName = $request->name;
+
+        $genresQuery = Genre::query();
+        if ($filterByName !== null) {
+            $genresQuery
+                ->where('name', 'LIKE', '%' . $filterByName . '%');
+        }
+
+        $genres = $genresQuery
             ->orderBy('name')
             ->paginate(10)
             ->withQueryString();
 
-        return view('genres.index')->with('genres', $allGenres);
+        return view('genres.index', compact('genres', 'filterByName'));
     }
 
     public function create(): View

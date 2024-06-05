@@ -5,11 +5,8 @@
             <th class="px-2 py-2 text-center">Photo</th>
             <th class="px-2 py-2 text-left">Name</th>
             <th class="px-2 py-2 text-left hidden md:table-cell">Email</th>
-            <th class="px-2 py-2 text-center hidden xl:table-cell">NIF</th>
-            <th class="px-2 py-2 text-center hidden xl:table-cell">Payment Type</th>
-            @if($showView)
-                <th></th>
-            @endif
+            <th class="px-2 py-2 text-center hidden md:table-cell">NIF</th>
+            <th class="px-2 py-2 text-center hidden md:table-cell">Payment Type</th>
             @if($showEdit)
                 <th></th>
             @endif
@@ -33,9 +30,9 @@
                     </a>
                 </td>
 
-                <td class="px-2 py-2 text-center">{{ $customer->nif ?? 'Without NIF' }}</td>
+                <td class="px-2 py-2 text-center hidden md:table-cell">{{ $customer->nif ?? 'Without NIF' }}</td>
 
-                <td class="px-2 py-2 text-center">{{ $customer->payment_type ?? 'Unknown Payment Type' }}</td>
+                <td class="px-2 py-2 text-center hidden md:table-cell">{{ $customer->payment_type ?? 'Unknown Payment Type' }}</td>
 
                 @if($showView)
                     @can('view', $customer)

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'List of users')
+@section('header-title', 'Customers')
 
 @section('main')
     <div class="flex justify-center">
@@ -17,9 +17,10 @@
                 <div class="font-base text-sm text-gray-700 dark:text-gray-300">
                     <x-customer.table :customers="$customers"
                                       :showView="false"
-                                      :showEdit="true"
+                                      :showEdit="false"
                                       :showDelete="true"
                     />
+{{--                    TODO: Block user--}}
                 </div>
                 <div class="mt-4">
                     {{ $customers->links() }}

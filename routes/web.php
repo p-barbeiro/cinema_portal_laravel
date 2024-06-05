@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TheaterController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdministrativeController;
@@ -14,6 +17,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\GenreController;
 use App\Models\Discipline;
 use App\Models\Movie;
+use App\Models\Purchase;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\Course;
@@ -58,7 +62,17 @@ Route::middleware('auth', 'verified')->group(function () {
     /* Configurations routes */
     Route::resource('configurations', ConfigurationController::class)->only(['show', 'update', 'edit']);
 
+    /* Users routes */
+    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'show']);
+    Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])
+        ->name('users.photo.destroy')
+        ->can('update', 'user');
 
+    Route::resource('customers', CustomerController::class);
+    Route::get('purchases', [CustomerController::class, 'purchases'])
+        ->name('customers.purchases');
+
+    Route::resource('theaters', TheaterController::class)->only('index','store','destroy','create');
 
 
 
@@ -77,13 +91,13 @@ Route::middleware('auth', 'verified')->group(function () {
     //Disciplines index and show are public
     Route::resource('disciplines', DisciplineController::class)->except(['index', 'show']);
 
-    Route::get('users/my', [TeacherController::class, 'myTeachers'])
-        ->name('users.my')
-        ->can('viewMy', Teacher::class);
-
-    Route::delete('users/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
-        ->name('users.photo.destroy')
-        ->can('update', 'teacher');
+//    Route::get('users/my', [TeacherController::class, 'myTeachers'])
+//        ->name('users.my')
+//        ->can('viewMy', Teacher::class);
+//
+//    Route::delete('users/{teacher}/photo', [TeacherController::class, 'destroyPhoto'])
+//        ->name('users.photo.destroy')
+//        ->can('update', 'teacher');
 
     //Registered users resource routes are protected by RegisteredUserPolicy on the controller
     Route::resource('students', StudentController::class);
@@ -93,7 +107,7 @@ Route::middleware('auth', 'verified')->group(function () {
         ->can('update', 'administrative');
 
     //Employees resource routes are protected by EmployeesPolicy on the controller
-    Route::resource('users', TeacherController::class);
+//    Route::resource('users', TeacherController::class);
 
     Route::get('students/my', [StudentController::class, 'myStudents'])
         ->name('students.my')

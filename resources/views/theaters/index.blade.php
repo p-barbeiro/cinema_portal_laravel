@@ -28,14 +28,19 @@
                 </div>
             @endcan
 
-            <div class="font-base text-sm text-gray-700 dark:text-gray-300">
-                <x-theaters.table :theaters="$theaters"
-                                  :showEdit="true"
-                                  :showDelete="true"/>
-            </div>
-            <div class="mt-4">
-                {{ $theaters->links() }}
-            </div>
+            @if($theaters->count() > 0)
+                <div class="font-base text-sm text-gray-700 dark:text-gray-300">
+                    <x-theaters.table :theaters="$theaters"
+                                      :showEdit="true"
+                                      :showDelete="true"/>
+                </div>
+                <div class="mt-4">
+                    {{ $theaters->links() }}
+                </div>
+            @else
+                <div class="mt-5 flex justify-center font-bold">No Theaters found</div>
+            @endif
+
         </div>
     </div>
 @endsection

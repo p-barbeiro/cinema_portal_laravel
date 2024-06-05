@@ -8,10 +8,7 @@ class AdministrativePolicy
 {
     public function before(?User $user, string $ability): bool|null
     {
-        if ($ability == 'updateAdmin') {
-            return null;
-        }
-        if ($user?->admin) {
+        if ($user?->type === 'A') {
             return true;
         }
         return null;

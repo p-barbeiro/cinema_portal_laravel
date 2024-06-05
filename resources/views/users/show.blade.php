@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Teacher "' . $teacher->user->name . '"')
+@section('header-title', 'User "' . $user->name . '"')
 
 @section('main')
     <div class="flex flex-col space-y-6">
@@ -8,50 +8,36 @@
             <div class="max-full">
                 <section>
                     <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
-                        @can('create', App\Models\Teacher::class)
+                        @can('update', $user)
                             <x-button
-                                    href="{{ route('users.create') }}"
-                                    text="New"
-                                    type="success"/>
+                                href="{{ route('users.edit', ['user' => $user]) }}"
+                                text="Edit"
+                                type="info"/>
                         @endcan
-                        @can('update', $teacher)
-                            <x-button
-                                    href="{{ route('users.edit', ['teacher' => $teacher]) }}"
-                                    text="Edit"
-                                    type="primary"/>
-                        @endcan
-                        @can('delete', $teacher)
-                            <form method="POST" action="{{ route('users.destroy', ['teacher' => $teacher]) }}">
-                                @csrf
-                                @method('DELETE')
-                                <x-button
-                                        element="submit"
-                                        text="Delete"
-                                        type="danger"/>
-                            </form>
-                        @endcan
+                        {{--                        @can('delete', $user)--}}
+                        {{--                            <form method="POST" action="{{ route('users.destroy', ['user' => $user]) }}">--}}
+                        {{--                                @csrf--}}
+                        {{--                                @method('DELETE')--}}
+                        {{--                                <x-button--}}
+                        {{--                                        element="submit"--}}
+                        {{--                                        text="Delete"--}}
+                        {{--                                        type="danger"/>--}}
+                        {{--                            </form>--}}
+                        {{--                        @endcan--}}
                     </div>
-                    <header>
-                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            Teacher "{{ $teacher->user->name }}"
-                        </h2>
-                    </header>
-                    @include('users.shared.fields', ['mode' => 'show'])
 
-                    @can('viewAny', App\Models\Discipline::class)
-                        <h3 class="pt-16 pb-4 text-2xl font-medium text-gray-900 dark:text-gray-100">
-                            Disciplines
-                        </h3>
-                        <x-disciplines.table :disciplines="$teacher->disciplines"
-                                             :showView="true"
-                                             :showEdit="false"
-                                             :showDelete="false"
-                                             :showAddToCart="true"
-                                             class="pt-4"
-                        />
-                    @endcan
+                    <div>
+                        @include('users.shared.fields', ['mode' => 'show'])
+                    </div>
+
                 </section>
             </div>
         </div>
     </div>
+    <form class="hidden" id="form_to_delete_photo"
+          method="POST" action="{{ route('users.photo.destroy', ['user' => $user]) }}">
+        @csrf
+        @method('DELETE')
+    </form>
 @endsection
+

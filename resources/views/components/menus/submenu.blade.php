@@ -39,7 +39,7 @@
     <div id="{{$uniqueName}}" class="sm:absolute sm:-right-2 sm:top-14 sm:origin-bottom-right
                 w-full sm:w-48 bg-white dark:bg-gray-900
                 grid grid-cols-1
-                sm:rounded-md sm:ring-1 sm:ring-black sm:ring-opacity-5 sm:shadow-lg
+                sm:rounded sm:ring-1 sm:ring-black sm:ring-opacity-5 sm:shadow-lg
                 h-0 sm:h-auto
                 invisible sm:invisible sm:group-hover:visible
                 ps-6 sm:ps-0">
