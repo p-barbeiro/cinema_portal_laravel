@@ -6,7 +6,7 @@
             <div class="max-full">
                 <section>
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
-                        <div class="font-bold">
+                        <div class="font-bold dark:text-white">
                             Configuration Details
                         </div>
                         @can('update', $configs)

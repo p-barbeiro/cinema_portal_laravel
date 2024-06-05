@@ -11,9 +11,16 @@ class Customer extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id',
+        'nif',
+        'payment_type',
+        'payment_ref',
+    ];
+
     public function user(): HasOne
     {
-        return $this->hasOne(User::class,'id');
+        return $this->hasOne(User::class, 'id');
     }
 
     public function purchases(): HasMany

@@ -4,34 +4,33 @@
 
 @section('main')
     <div class="flex justify-center">
-        <div class="my-4 p-6 bg-white dark:bg-gray-900 overflow-hidden
+        <div class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden
                     shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
-            <x-teachers.filter-card
-                :filterAction="route('users.index')"
-                :resetUrl="route('users.index')"
-                :departments="$departments"
-                :department="old('department', $filterByDepartment)"
-                :name="old('name', $filterByName)"
-                class="mb-6"
-                />
+            {{--            <x-teachers.filter-card--}}
+            {{--                :filterAction="route('users.index')"--}}
+            {{--                :resetUrl="route('users.index')"--}}
+            {{--                :departments="$departments"--}}
+            {{--                :department="old('department', $filterByDepartment)"--}}
+            {{--                :name="old('name', $filterByName)"--}}
+            {{--                class="mb-6"--}}
+            {{--                />--}}
 
-                <div class="flex items-center gap-4 mb-4">
-                    <x-button
-                        href="{{ route('users.create') }}"
-                        text="Create a new teacher"
-                        type="success"/>
-                </div>
+            <div class="flex items-center gap-4 mb-4">
+                {{--                    <x-button--}}
+                {{--                        href="{{ route('users.create') }}"--}}
+                {{--                        text="Create a new teacher"--}}
+                {{--                        type="success"/>--}}
+            </div>
 
             <div class="font-base text-sm text-gray-700 dark:text-gray-300">
-                <x-teachers.table :teachers="$teachers"
-                    :showDepartment="true"
-                    :showView="true"
-                    :showEdit="true"
-                    :showDelete="true"
-                    />
+                <x-users.table :users="$users"
+                               :showView="true"
+                               :showEdit="true"
+                               :showDelete="true"
+                />
             </div>
             <div class="mt-4">
-                {{ $teachers->links() }}
+                {{ $users->links() }}
             </div>
         </div>
     </div>
