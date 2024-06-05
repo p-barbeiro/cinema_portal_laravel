@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Edit "' . $user->name . '"')
+@section('header-title', 'Edit "' . $customer->user->name . '"')
 
 @section('main')
     <div class="flex flex-col space-y-6">
@@ -8,37 +8,37 @@
             <div class="max-full">
                 <section>
                     <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
-                        @can('view', $user)
+                        @can('view', $customer)
                             <x-button
-                                    href="{{ route('users.show', ['user' => $user]) }}"
-                                    text="View"
-                                    type="info"/>
+                                href="{{ route('customers.show', ['customer' => $customer]) }}"
+                                text="View"
+                                type="info"/>
                         @endcan
-                        @can('delete', $user)
-                            <form method="POST" action="{{ route('users.destroy', ['user' => $user]) }}">
+                        @can('delete', $customer)
+                            <form method="POST" action="{{ route('customers.destroy', ['customer' => $customer]) }}">
                                 @csrf
                                 @method('DELETE')
                                 <x-button
-                                        element="submit"
-                                        text="Delete"
-                                        type="danger"/>
+                                    element="submit"
+                                    text="Delete"
+                                    type="danger"/>
                             </form>
                         @endcan
                     </div>
                     <header>
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            Edit "{{ $user->name }}"
+                            Edit "{{ $customer->user->name }}"
                         </h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300  mb-6">
                             Click on "Save" button to store the information.
                         </p>
                     </header>
 
-                    <form method="POST" action="{{ route('users.update', ['user' => $user]) }}"
+                    <form method="POST" action="{{ route('customers.update', ['customer' => $customer]) }}"
                           enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        @include('users.shared.fields', ['mode' => 'edit'])
+{{--                        @include('administratives.shared.fields', ['mode' => 'edit'])--}}
                         <div class="flex mt-6">
                             <x-button element="submit" type="dark" text="Save" class="uppercase"/>
                             <x-button element="a" type="light" text="Cancel" class="uppercase ms-4"
@@ -50,7 +50,7 @@
         </div>
     </div>
     <form class="hidden" id="form_to_delete_photo"
-          method="POST" action="{{ route('users.photo.destroy', ['user' => $user]) }}">
+          method="POST" action="{{ route('users.photo.destroy', ['user' => $customer->user]) }}">
         @csrf
         @method('DELETE')
     </form>

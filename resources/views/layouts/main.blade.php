@@ -75,23 +75,13 @@
                     </x-menus.submenu>
 
                     <!-- Menu Item: Users -->
-                    <x-menus.submenu
-                        selectable="0"
-                        uniqueName="submenu_users"
-                        content="Users">
-                        <x-menus.submenu-item
-                            content="Customers"
-                            selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
-                        <x-menus.submenu-item
-                            content="Employees"
-                            selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
-                        <x-menus.submenu-item
-                            content="Admins"
-                            selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
-                    </x-menus.submenu>
+                    <x-menus.menu-item
+                        content="Customers"
+                        selectable="1"
+                        href="{{ route('customers.index') }}"
+                        selected="{{ Route::currentRouteName() == 'customers.index'}}"
+                    />
+
                     <!-- Menu Item: Statistics-->
                     <x-menus.menu-item
                         content="Statistics"
@@ -139,7 +129,8 @@
                                     <x-menus.submenu-item
                                         content="Profile"
                                         selectable="0"
-                                        href=" #"/>
+                                        href="{{route('users.edit', ['user' => Auth::user()])}}"
+                                    />
                                     <x-menus.submenu-item
                                         content="Purchases"
                                         selectable="0"

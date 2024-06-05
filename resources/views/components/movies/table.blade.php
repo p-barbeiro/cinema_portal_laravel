@@ -20,14 +20,14 @@
         </thead>
         <tbody>
         @foreach ($movies as $movie)
-            <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500 hover:bg-gray-50">
+            <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500">
 
                 <td class="px-2 py-2 w-32">
                     <img class="object-center aspect-auto w-32 h-40 rounded" src="{{ $movie->getPoster() }}"
                          alt="{{ $movie->title }}">
                 </td>
 
-                <td class="px-2 py-2 text-left text-justify">
+                <td class="px-2 py-2 text-left">
                     <div class="text-lg">
                         <a href="{{ route('movies.show', ['movie' => $movie]) }}" class="hover:font-bold hover:underline">
                         {{ $movie->title }}</a>
