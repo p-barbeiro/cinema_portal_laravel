@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdministrativeController;
@@ -58,6 +59,7 @@ Route::middleware('auth', 'verified')->group(function () {
     /* Configurations routes */
     Route::resource('configurations', ConfigurationController::class)->only(['show', 'update', 'edit']);
 
+    Route::resource('theaters', TheaterController::class)->only(['index', 'update', 'destroy','store', 'create']);
 
 
 

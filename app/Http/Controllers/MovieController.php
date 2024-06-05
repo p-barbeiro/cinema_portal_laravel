@@ -19,7 +19,6 @@ class MovieController extends \Illuminate\Routing\Controller
     {
         $this->authorizeResource(Movie::class);
     }
-
     public function showCase(Request $request): View
     {
 
