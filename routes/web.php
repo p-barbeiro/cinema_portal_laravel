@@ -3,6 +3,7 @@
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -67,6 +68,10 @@ Route::middleware('auth', 'verified')->group(function () {
         ->can('update', 'user');
 
     Route::resource('customers', CustomerController::class);
+
+    Route::resource('screenings', ScreeningController::class);
+
+
 
 
     //Course resource routes are protected by CoursePolicy on the controller

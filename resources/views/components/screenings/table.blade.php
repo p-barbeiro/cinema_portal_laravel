@@ -1,6 +1,6 @@
 <div {{ $attributes }}>
     @foreach ($screenings->groupBy('theater_id') as $screeningTheaters)
-        <table class="table-auto border-collapse dark:text-gray-200 rounded">
+        <table class="table-auto border-collapse dark:text-gray-200 rounded w-full">
             <thead>
             <tr>
                 <th colspan="100%" class="px-2 py-2 text-xl text-left">
@@ -16,7 +16,7 @@
                 @if($loop->last)
                     <tr>
                         @endif
-                        <td class="px-2 py-2 w-40 text-left">
+                        <td class="px-2 py-2 text-left w-full">
                             {{date('l, F j', strtotime($date))}}
                         </td>
                         @foreach ($screeningDates as $screening)

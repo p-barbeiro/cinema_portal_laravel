@@ -228,8 +228,6 @@
         </li>
     </ul>
 </footer>
-
-
 </body>
 
 </html>
