@@ -38,7 +38,7 @@
                     {{ $theaters->links() }}
                 </div>
             @else
-                <div class="mt-5 flex justify-center font-bold">No Theaters found</div>
+                <div class="flex items-center justify-center font-bold">No Theaters found</div>
             @endif
 
         </div>

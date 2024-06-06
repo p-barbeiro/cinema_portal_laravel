@@ -12,7 +12,8 @@
                 :search="old('search', $filterByName)"
                 class="mb-6"
             />
-
+            <hr>
+            <br>
             @if($customers->count() > 0)
                 <div class="font-base text-sm text-gray-700 dark:text-gray-300">
                     <x-customer.table :customers="$customers"
@@ -26,7 +27,7 @@
                     {{ $customers->links() }}
                 </div>
             @else
-                <div class="flex justify-center font-bold">No Customers found</div>
+                <div class="flex items-center justify-center font-bold">No Customers found</div>
             @endif
 
         </div>

@@ -63,7 +63,7 @@
                         <x-menus.submenu-item
                             content="Screenings"
                             selectable="0"
-                            href="{{ route('movies.showcase') }}"/>
+                            href="{{ route('screenings.index') }}"/>
                         <hr>
                         <x-menus.submenu-item
                             content="Customers"
@@ -220,8 +220,6 @@
         </li>
     </ul>
 </footer>
-
-
 </body>
 
 </html>

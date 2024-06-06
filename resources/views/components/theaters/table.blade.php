@@ -5,9 +5,6 @@
             <th class="px-2 py-2 text-center lg:table-cell">Photo</th>
             <th class="px-2 py-2 text-left lg:table-cell">Theater</th>
             <th class="px-2 py-2 text-left lg:table-cell">Capacity</th>
-            @if($showEdit)
-                <th></th>
-            @endif
             @if($showDelete)
                 <th></th>
             @endif
@@ -26,8 +23,8 @@
 
                 @if($showDelete)
                     @can('delete', $theater)
-                        <td>
-                            <x-table.icon-delete class="px-0.5"
+                        <td class="max-w-5">
+                            <x-table.icon-delete class="px-0.5 flex flex-row justify-center"
                                                  action="{{ route('theaters.destroy', ['theater' => $theater]) }}"/>
                         </td>
                     @else

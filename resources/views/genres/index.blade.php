@@ -37,7 +37,7 @@
                     {{ $genres->links() }}
                 </div>
             @else
-                <div class="mt-5 flex justify-center font-bold">No Genres found</div>
+                <div class="flex items-center justify-center font-bold">No Genres found</div>
             @endif
         </div>
     </div>

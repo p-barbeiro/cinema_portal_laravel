@@ -39,7 +39,7 @@
                 {{ $allMovies->links() }}
             </div>
             @else
-                <div class="flex justify-center font-bold">No movies found</div>
+                <div class="flex items-center justify-center font-bold h-72">No movies found</div>
             @endif
 
 

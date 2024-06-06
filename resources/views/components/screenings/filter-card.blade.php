@@ -3,18 +3,16 @@
         <div class="flex justify-between space-x-3">
             <div class="grow flex flex-col space-y-2">
                 <div>
-                    <x-field.input name="title" label="{{$searchPlaceholder}}" class="grow"
+                    <x-field.input name="movie" label="Search by Movie" class="grow"
                                    value="{{ $title }}"/>
                 </div>
-                <div class="flex space-x-3">
-                    <x-field.select name="genre" label="Genre"
-                                    value="{{ $genre }}"
-                                    :options="$listGenres"/>
-                    @if($yearShow)
-                        <x-field.select name="year" label="Year"
-                                        value="{{ $year }}"
-                                        :options="$listYears"/>
-                    @endif
+                <div class="flex flex-col sm:flex-row ">
+                    <x-field.select name="theater" label="Theater"
+                                    value="{{ $theater }}"
+                                    :options="$listTheaters" class="mb-4"/>
+                    
+                    <x-field.input class="md:ms-5" name="date" type="date" value="{{$date??'Any Date'}}" label="Select a Date" placeholder="Any Date"/>
+                    
                 </div>
             </div>
             <div class="grow-0 flex flex-col space-y-3 justify-start">

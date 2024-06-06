@@ -11,6 +11,15 @@ class Screening extends Model
 {
     use HasFactory;
 
+    protected $with = ['theater.seats'];
+
+    protected $fillable = [
+        'theater_id',
+        'movie_id',
+        'date',
+        'start_time'
+    ];
+
     public function theater(): BelongsTo
     {
         return $this->belongsTo(Theater::class);
@@ -29,20 +38,5 @@ class Screening extends Model
     public function isSoldOut()
     {
         return $this->tickets->count() >= $this->theater->seats->count();
-    }
-
-    public function getRemainingSeats()
-    {
-        return $this->theater->seats->count() - $this->tickets->count();
-    }
-
-    public function getFormattedDateAttribute()
-    {
-        return date('d.M : l', strtotime($this->date));
-    }
-
-    public function getFormattedTimeAttribute()
-    {
-        return date('H:i', strtotime($this->start_time));
     }
 }

@@ -45,6 +45,11 @@
                         hover:bg-slate-200 dark:hover:bg-slate-700
                         focus:bg-slate-200 dark:focus:bg-slate-700
                         active:bg-slate-200 dark:active:bg-slate-700',
+        'light2' => 'text-gray-300 dark:text-gray-200
+                        bg-slate-50 dark:bg-slate-600
+                        hover:bg-slate-200 dark:hover:bg-slate-700
+                        focus:bg-slate-200 dark:focus:bg-slate-700
+                        active:bg-slate-200 dark:active:bg-slate-700',
         'link' => 'text-blue-500
                         border-gray-200',
         default => 'text-white dark:text-gray-900
