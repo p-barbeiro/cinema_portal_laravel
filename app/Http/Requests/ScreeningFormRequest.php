@@ -11,9 +11,9 @@ class ScreeningFormRequest extends FormRequest
         return [
             'movie_id' => 'required|exists:movies,id',
             'theater_id' => 'required|exists:theaters,id',
-            'date' => 'required|date|after:yesterday',
+            'date' => 'required|date|after_or_equal:today',
             'date_final' => 'nullable|date|after:date',
-            'start_time' => 'required',
+            'start_time' => 'required|after:' . now()->format('H:i'),
         ];
     }
 

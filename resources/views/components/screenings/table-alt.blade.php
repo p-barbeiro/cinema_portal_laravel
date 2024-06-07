@@ -11,12 +11,15 @@
 						class="px-2 py-2 text-xl font-light text-left bg-gray-50 border dark:bg-gray-800 dark:border-gray-600">
 						@endif
 						{{date('l, F j', strtotime($date))}}
+						<span class="text-xs text-right w-full">
+							{{date('Y', strtotime($date))}}
+						</span>
 					</th>
 			</tr>
 			</thead>
 			
 			<tbody>
-			@foreach ($screeningByDate->groupBy('movie_id') as $screeningHours)
+			@foreach ($screeningByDate->groupBy('theater_id') as $screeningHours)
 				@if(Carbon\Carbon::parse($date) < now()->startOfDay())
 					<tr class="border border-gray-200 dark:border-gray-700 md:w-full text-gray-400 dark:bg-gray-900 dark:text-gray-700">
 				@else
@@ -39,21 +42,26 @@
 									<x-button element="a" type="light2"
 											  text="{{date('H:i', strtotime($screening->start_time))}}"
 											  class="uppercase"
-											  href="#"/>
-									@if($screening->isSoldOut())<p class="text-xs text-gray-300">SOLD OUT</p>@endif
-								
+											  href="{{ route('screenings.show', ['screening' => $screening]) }}"
+									/>
+									@if($screening->isSoldOut())<p class="text-xs text-gray-300">SOLD OUT</p>
+							@endif
+							
 							@else
 								<td class="sm:px-2 py-2 text-center md:w-20 dark:text-gray-400 underline-offset-2">
 									<x-button element="a" type="light"
 											  text="{{date('H:i', strtotime($screening->start_time))}}"
 											  class="uppercase"
-											  href="#"/>
-									@if($screening->isSoldOut())<p class="text-xs text-red-800">SOLD OUT</p>@endif
+											  href="{{ route('screenings.show', ['screening' => $screening]) }}"
+									/>
+									@if($screening->isSoldOut())
+										<p class="text-xs text-red-800">SOLD OUT</p>
+									@endif
 									
-							@endif
+									@endif
 								</td>
 								
-						@endforeach
+								@endforeach
 					
 					</tr>
 					

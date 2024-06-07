@@ -27,7 +27,8 @@
 							@else
 								<td class="px-2 py-2 text-center dark:text-gray-400 md:min-w-20 hover:underline underline-offset-2">
 									<x-button element="a" type="light" text="{{date('H:i', strtotime($screening->start_time))}}" class="uppercase"
-											  href="#"/>
+											  href="{{ route('screenings.show', ['screening' => $screening]) }}"
+									/>
 									@endif
 								</td>
 								@endforeach

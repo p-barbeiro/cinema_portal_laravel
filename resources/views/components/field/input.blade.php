@@ -22,7 +22,7 @@
 		{{ $label }}
 	</label>
 	
-	<input id="id_{{ $name }}" name="{{ $name }}" type="{{ $type }}" value="{{ $value }} "
+	<input id="id_{{ $name }}" name="{{ $name }}" type="{{ $type }}" value="{{ $value }}"
 		   placeholder="{{ $placeholder }}"
 		   class="appearance-none block
             mt-1 w-full
