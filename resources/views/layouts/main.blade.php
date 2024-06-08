@@ -26,12 +26,11 @@
                 <!-- Logo -->
                 <div class="flex justify-start sm:justify-center items-center">
                     <a href="{{ route('home') }}">
-                        <div class="h-16 w-40 mr-2 bg-contain bg-no-repeat bg-center bg-[url('../img/cinemagic.png')] dark:bg-[url('../img/cinemagic_dark.png')]">
+                        <div
+                            class="h-16 w-40 mr-2 bg-contain bg-no-repeat bg-center bg-[url('../img/cinemagic.png')] dark:bg-[url('../img/cinemagic_dark.png')]">
                         </div>
                     </a>
                 </div>
-
-
 
 
                 <!-- Menu Items -->
@@ -111,20 +110,20 @@
                             <x-slot:content>
                                 <div class="pe-1">
                                     <img src="{{ Auth::user()->photoFullUrl}}"
-                                         class="w-11 h-11 min-w-11 min-h-11 rounded-full">
+                                         class="w-11 h-11 min-w-11 min-h-11 rounded-full" alt="user">
                                 </div>
                                 {{-- ATENÇÃO - ALTERAR FORMULA DE CALCULO DAS LARGURAS MÁXIMAS QUANDO O MENU FOR ALTERADO --}}
                                 <div
                                     class="ps-1 sm:max-w-[calc(100vw-39rem)] md:max-w-[calc(100vw-41rem)] lg:max-w-[calc(100vw-46rem)] xl:max-w-[34rem] truncate">
                                     {{ Auth::user()->name }}
                                 </div>
-                            </x-slot>
+                            </x-slot:content>
                             @auth
                                 <hr>
                                 <x-menus.submenu-item
                                     content="Profile"
                                     selectable="0"
-                                    href="{{route('users.edit', ['user' => Auth::user()])}}"
+                                    href="{{route('users.show', ['user' => Auth::user()])}}"
                                 />
                                 <x-menus.submenu-item
                                     content="Purchases"
@@ -160,6 +159,7 @@
                             selected="{{ Route::currentRouteName() == 'register'}}"
                         />
                     @endauth
+                    @include('components.darkmode_switch')
                 </div>
                 <!-- Hamburger -->
                 <div class="absolute right-0 top-0 flex sm:hidden pt-3 pe-3 text-black dark:text-gray-50">
@@ -185,19 +185,12 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 @yield('header-title')
             </h2>
+
         </div>
     </header>
 
     <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            @if (session('alert-msg'))
-                <x-alert type="{{ session('alert-type') ?? 'info' }}">
-                    {!! session('alert-msg') !!}
-                </x-alert>
-            @endif
-            @if (!$errors->isEmpty())
-                <x-alert type="warning" message="Operation failed because there are validation errors!"/>
-            @endif
             @yield('main')
         </div>
     </main>

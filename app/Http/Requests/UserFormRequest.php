@@ -8,11 +8,16 @@ class UserFormRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
             'photo_filename' => 'sometimes|image|mimes:png,jpg|max:4096', // maxsize = 4Mb
         ];
+        if (strtolower($this->getMethod()) == 'post') {
+            $rules = array_merge($rules, [
+                'email' => 'required|string|email|max:255|unique:users',
+            ]);
+        }
+        return $rules;
     }
 
     public function authorize(): bool

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFormRequest;
-use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -43,10 +42,24 @@ class UserController extends \Illuminate\Routing\Controller
 
     public function update(UserFormRequest $request, User $user)
     {
-        //TODO
         $user->update($request->validated());
-        $user->save();
-        return redirect()->route('user.edit', ['user' => $user])
+        if ($user->email != $request->email) {
+            $validated = $request->validate(['email' => 'unique:users,email']);
+            $user->update(
+                ['email' => $validated['email']]);
+        }
+
+        if ($request->hasFile('photo_filename')) {
+            if ($user->photo_filename &&
+                Storage::fileExists('public/photos/' . $user->photo_filename)) {
+                Storage::delete('public/photos/' . $user->photo_filename);
+            }
+            $path = $request->photo_filename->store('public/photos');
+            $user->photo_filename = basename($path);
+            $user->save();
+        }
+
+        return redirect()->route('users.edit', ['user' => $user])
             ->with('alert-msg', 'User "' . $user->name . '" foi alterado com sucesso!')
             ->with('alert-type', 'success');
     }
