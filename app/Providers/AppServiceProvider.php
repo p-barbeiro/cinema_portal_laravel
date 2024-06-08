@@ -6,7 +6,6 @@ use App\Models\Movie;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Course;
 use App\Models\User;
 use App\Policies\AdministrativePolicy;
 use App\Policies\UserPolicy;
