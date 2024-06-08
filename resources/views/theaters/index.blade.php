@@ -24,7 +24,7 @@
                     <x-button
                         href="{{ route('theaters.create') }}"
                         text="Add New Theater"
-                        type="secondary"/>
+                        type="dark"/>
                 </div>
             @endcan
 

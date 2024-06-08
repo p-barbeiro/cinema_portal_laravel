@@ -13,7 +13,7 @@ class ScreeningFormRequest extends FormRequest
             'theater_id' => 'required|exists:theaters,id',
             'date' => 'required|date|after_or_equal:today',
             'date_final' => 'nullable|date|after:date',
-            'start_time' => 'required|after:' . now()->format('H:i'),
+            'start_time' => 'required',
         ];
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', $screening->movie->title . " | " . $screening->date . " | " .date('H:i',strtotime($screening->start_time)) . " | " . $screening->theater->name )
+@section('header-title', ($screening?->movie?->title ?? 'Unknown Movie') . " | " . $screening?->date . " | " .date('H:i',strtotime($screening->start_time)) . " | " . ($screening?->theater?->name ?? 'Unknown Theater') )
 
 @section('main')
 	<div class="flex flex-col space-y-6">

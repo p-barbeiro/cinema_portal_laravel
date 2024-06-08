@@ -24,12 +24,15 @@
             <!-- Logo + Menu Items + Hamburger -->
             <div class="relative flex flex-col sm:flex-row px-6 sm:px-0 grow justify-between">
                 <!-- Logo -->
-                <div class="shrink-0 -ms-4 mr-4">
-                    <a href="{{ route('home')}}">
-                        <div
-                            class="h-16 w-40 bg-cover bg-[url('../img/cinemagic.svg')] dark:bg-[url('../img/cinemagic_dark.svg')]"></div>
+                <div class="flex justify-start sm:justify-center items-center">
+                    <a href="{{ route('home') }}">
+                        <div class="h-16 w-40 mr-2 bg-contain bg-no-repeat bg-center bg-[url('../img/cinemagic.png')] dark:bg-[url('../img/cinemagic_dark.png')]">
+                        </div>
                     </a>
                 </div>
+
+
+
 
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch

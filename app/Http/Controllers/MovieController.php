@@ -19,6 +19,7 @@ class MovieController extends \Illuminate\Routing\Controller
     {
         $this->authorizeResource(Movie::class);
     }
+
     public function showCase(Request $request): View
     {
 
@@ -141,7 +142,9 @@ class MovieController extends \Illuminate\Routing\Controller
         try {
             $url = route('movies.show', ['movie' => $movie]);
 
-            $screenings = Screening::where('movie_id', $movie->id)->count();
+            $screenings = Screening::where('movie_id', $movie->id)
+                ->where('date', '>=', now())
+                ->count();
             if ($screenings == 0) {
                 $movie->delete();
                 if ($movie->imageExists) {

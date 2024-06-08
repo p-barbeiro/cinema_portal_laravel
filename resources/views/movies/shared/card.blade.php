@@ -28,9 +28,9 @@
                 <div
                     class="flex justify-center md:justify-start font-base text-base space-x-6 text-gray-700 dark:text-gray-300 md:mb-5">
                     <div>Year: {{ $movie->year }} </div>
-                    <div>Genre: {{ $movie->genre->name }} </div>
+                    <div>Genre: {{ $movie->genre?->name?? 'Unknown Genre'}} </div>
                     @if($movie->trailer_url)
-                        <a href="{{ $movie->trailer_url }}" target="_blank" class="text-blue-500 font-bold">Watch
+                        <a href="{{ $movie->trailer_url }}" class="text-blue-500 font-bold">Watch
                             Trailer</a>
                     @endif
                 </div>

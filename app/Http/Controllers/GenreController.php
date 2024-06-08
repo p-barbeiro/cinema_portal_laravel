@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GenreFormRequest;
 use App\Models\Genre;
-use App\Models\Movie;
+use App\Models\Screening;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class GenreController extends \Illuminate\Routing\Controller
 {
@@ -76,19 +75,23 @@ class GenreController extends \Illuminate\Routing\Controller
     public function destroy(Genre $genre): RedirectResponse
     {
         try {
-
-            $movies = Movie::where('genre_code', $genre->code)->count();
-            if ($movies == 0) {
+            //check if there are upcoming screenings for the movies with the genre
+            $screenings = Screening::query()
+                ->whereHas('movie', function ($query) use ($genre) {
+                    $query->where('genre_code', $genre->code);
+                })
+                ->where('date', '>=', now())->count();
+            if ($screenings == 0) {
                 $genre->delete();
                 $alertType = 'success';
                 $alertMsg = "Genre {$genre->name} has been deleted successfully!";
             } else {
                 $alertType = 'warning';
-                $alertMsg = "Genre '{$genre->name}' cannot be deleted because there are movies associated.";
+                $alertMsg = "Genre '{$genre->name}' cannot be deleted because there are movies with upcoming screenings associated.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the course
+            $alertMsg = "$error It was not possible to delete the course
                             '{$genre->name}'
                             because there was an error with the operation!";
         }

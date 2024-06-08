@@ -33,7 +33,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
             $screeningsQuery->where('date', $filterByDate);
         }
         if ($filterByMovie !== null) {
-            $movies = Movie::where('title', 'LIKE', '%' . $filterByMovie . '%')->select('id')->get();
+            $movies = Movie::withTrashed(true)->where('title', 'LIKE', '%' . $filterByMovie . '%')->select('id')->get();
             $screeningsQuery->whereIN('movie_id', $movies);
         }
         if ($filterByTheater !== null) {
@@ -168,15 +168,16 @@ class ScreeningController extends \Illuminate\Routing\Controller
         $screeningId = $screening->id;
 
 //        $soldOutScreenings = DB::table('tickets')
-//            ->select('screening_id')
-//            ->where('screening_id', $screeningId)
-//            ->where('status', 'valid') // Consider only valid tickets
-//            ->groupBy('screening_id')
-//            ->havingRaw('COUNT(seat_id) >= ?', [Seat::where('theater_id', $screening->theater_id)->count()])
-//            ->get();
+//        ->select('screening_id')
+//        ->where('screening_id', $screeningId)
+//        ->where('status', 'valid') // Consider only valid tickets
+//        ->groupBy('screening_id')
+//        ->havingRaw('COUNT(seat_id) >= ?', [Seat::where('theater_id', $screening->theater_id)->count()])
+//        ->get();
 //        dd($soldOutScreenings);
 //        dd($seatMap);
 
         return view('screenings.show', compact('screening', 'seatMap', 'cols'));
     }
+
 }

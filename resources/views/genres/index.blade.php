@@ -23,7 +23,7 @@
                     <x-button
                         href="{{ route('genres.create') }}"
                         text="Add Genre"
-                        type="secondary"/>
+                        type="dark"/>
                 </div>
             @endcan
 

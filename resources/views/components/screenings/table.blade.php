@@ -9,14 +9,11 @@
 				</th>
 			</tr>
 			</thead>
-			
+
 			<tbody>
 			@foreach ($screeningTheaters->groupBy('date') as $date => $screeningDates)
-				<tr class="border-b border-b-gray-200 dark:border-b-gray-700">
-				@if($loop->last)
-					<tr>
-						@endif
-						<td class="px-2 py-2 text-left md:w-full">
+				<tr class="border border-gray-200 dark:border-gray-800 flex flex-wrap justify-center sm:table-row sm:flex-nowrap">
+						<td class="px-2 py-2 text-center sm:text-left w-full border-b sm:border-0 border-gray-200 dark:border-gray-800">
 							{{date('l, F j', strtotime($date))}}
 						</td>
 						@foreach ($screeningDates as $screening)
@@ -34,7 +31,7 @@
 								@endforeach
 					</tr>
 					@endforeach
-			
+
 			</tbody>
 		</table>
 		<br>

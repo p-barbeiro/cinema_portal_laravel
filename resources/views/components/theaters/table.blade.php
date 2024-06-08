@@ -5,6 +5,11 @@
             <th class="px-2 py-2 text-center lg:table-cell">Photo</th>
             <th class="px-2 py-2 text-left lg:table-cell">Theater</th>
             <th class="px-2 py-2 text-left lg:table-cell">Capacity</th>
+            <th class="px-2 py-2 text-left lg:table-cell">Rows</th>
+            <th class="px-2 py-2 text-left lg:table-cell">Seats per row</th>
+            @if($showEdit)
+                <th></th>
+            @endif
             @if($showDelete)
                 <th></th>
             @endif
@@ -20,6 +25,19 @@
                 </td>
                 <td class="px-2 py-2 text-left lg:table-cell">{{ $theater->name }}</td>
                 <td class="px-2 py-2 text-left lg:table-cell">{{ $theater->seats->count() }}</td>
+                <td class="px-2 py-2 text-left lg:table-cell">{{ $theater->seats->pluck('row')->unique()->count() }}</td>
+                <td class="px-2 py-2 text-left lg:table-cell">{{ $theater->seats->pluck('seat_number')->unique()->count() }}</td>
+
+                @if($showEdit)
+                    @can('update', $theater)
+                        <td class="max-w-5">
+                            <x-table.icon-edit class="px-0.5 flex flex-row justify-center"
+                                               href="{{ route('theaters.edit', ['theater' => $theater]) }}"/>
+                        </td>
+                    @else
+                        <td></td>
+                    @endcan
+                @endif
 
                 @if($showDelete)
                     @can('delete', $theater)
