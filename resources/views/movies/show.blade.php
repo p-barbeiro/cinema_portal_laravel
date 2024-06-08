@@ -12,7 +12,7 @@
                     <x-button
                         href="{{ route('movies.edit', ['movie' => $movie]) }}"
                         text="Edit"
-                        type="secondary"/>
+                        type="dark"/>
                     @endcan
                     @can('delete', $movie)
                     <form method="POST" action="{{ route('movies.destroy', ['movie' => $movie]) }}">
@@ -21,12 +21,12 @@
                         <x-button
                             element="submit"
                             text="Delete"
-                            type="secondary"/>
+                            type="dark"/>
                     </form>
                     @endcan
                 </div>
                 <hr>
-                <div class="mt-6 space-y-4 mt-5">
+                <div class="space-y-4 mt-5">
                     @include('movies.shared.fields', ['mode' => 'show'])
                 </div>
             </section>

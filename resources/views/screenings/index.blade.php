@@ -23,7 +23,7 @@
                     <x-button
                         href="{{ route('screenings.create') }}"
                         text="Add Screenings"
-                        type="secondary"/>
+                        type="dark"/>
                 </div>
             @endcan
 {{--                        {{dd($screenings)}}--}}

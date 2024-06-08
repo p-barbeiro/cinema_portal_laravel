@@ -10,7 +10,7 @@
                     <x-button
                         href="{{ route('movies.show', ['movie' => $movie]) }}"
                         text="View"
-                        type="secondary"/>
+                        type="dark"/>
                     @endcan
 
                     @can('delete', $movie)
@@ -20,7 +20,7 @@
                         <x-button
                             element="submit"
                             text="Delete"
-                            type="secondary"/>
+                            type="dark"/>
                     </form>
                     @endcan
                 </div>

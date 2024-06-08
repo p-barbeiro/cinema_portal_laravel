@@ -13,7 +13,7 @@
                             <x-button
                                 href="{{ route('configurations.edit', ['configuration' => $configs]) }}"
                                 text="Edit"
-                                type="secondary"/>
+                                type="dark"/>
                         @endcan
                     </div>
                     <hr>

@@ -22,7 +22,7 @@
                     <x-button
                         href="{{ route('movies.create') }}"
                         text="Add movie"
-                        type="secondary"/>
+                        type="dark"/>
                 </div>
             @endcan
 

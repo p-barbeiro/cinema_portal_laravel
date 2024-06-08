@@ -38,7 +38,7 @@
                     </div>
                 </td>
 
-                <td class="px-2 py-2 text-left hidden sm:table-cell">{{ $movie->genre->name }}</td>
+                <td class="px-2 py-2 text-left hidden sm:table-cell">{{ $movie->genre?->name }}</td>
 
                 <td class="px-2 py-2 text-right hidden sm:table-cell">{{ $movie->year }}</td>
 

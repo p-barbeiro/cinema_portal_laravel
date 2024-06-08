@@ -52,7 +52,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::get('purchases', [CustomerController::class, 'purchases'])->name('customers.purchases');
 
-    Route::resource('theaters', TheaterController::class)->only('index', 'store', 'destroy', 'create');
+    Route::resource('theaters', TheaterController::class);
 
     Route::resource('screenings', ScreeningController::class);
 

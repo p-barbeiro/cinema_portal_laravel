@@ -37,6 +37,6 @@ class Screening extends Model
 
     public function isSoldOut()
     {
-        return $this->tickets->count() >= $this->theater->seats->count();
+        return $this->tickets->count() >= ($this?->theater?->seats->count() ?? 9999);
     }
 }
