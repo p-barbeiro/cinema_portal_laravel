@@ -2,14 +2,14 @@
     <div class="flex flex-col">
         @foreach ($cart->groupBy(['theater', 'date', 'start_time']) as $theater => $ticketsByTheater)
             <div class="mt-1"></div>
-            <div class="border border-gray-400 dark:border-gray-700">
-                <div class="px-2 py-2 font-bold border-b border-gray-400 bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div class="border-x border-t border-gray-300 dark:border-gray-700">
+                <div class="px-2 py-2 font-bold border-b border-gray-300 bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
                     Theater: {{ $theater }}
                 </div>
                 @foreach($ticketsByTheater as $date => $ticketsByDate)
-                    <div class="flex flex-col border-b border-gray-400 dark:border-gray-700">
+                    <div class="flex flex-col border-b border-gray-300 dark:border-gray-700">
                         <div
-                            class="px-2 py-2 font-bold border-b border-gray-400 dark:border-gray-700 bg-gray-200 dark:bg-gray-600">{{ date('l, F j', strtotime($date)) }}</div>
+                            class="px-2 py-2 font-bold border-b border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-600">{{ date('l, F j', strtotime($date)) }}</div>
                         @foreach($ticketsByDate as $session => $ticketsBySession)
                             <div class="dark:border-b-gray-700">
                                 <div class="flex flex-wrap px-2 py-2">

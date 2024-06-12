@@ -22,25 +22,40 @@ class CartConfirmationFormRequest extends FormRequest
      */
     public function rules(): array
     {
+        $rules = [
+            'payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
+            'payment_ref' => 'required',
+            'nif' => 'required|digits:9',
+        ];
+
+        if ($this->input('payment_type') === 'VISA') {
+            $rules['payment_ref'] .= '|digits:16';
+        } elseif ($this->input('payment_type') === 'PAYPAL') {
+            $rules['payment_ref'] .= '|email';
+        } elseif ($this->input('payment_type') === 'MBWAY') {
+            $rules['payment_ref'] .= '|digits:9';
+        }
+
+        return $rules;
+    }
+
+    public function messages(): array
+    {
+        $paymentType = $this->input('payment_type');
+        $digitMessage = '';
+        if ($paymentType === 'VISA') {
+            $digitMessage = 'The payment card must be a valid 16-digit credit card number.';
+        } elseif ($paymentType === 'MBWAY') {
+            $digitMessage = 'The mobile phone must be a valid 9-digit number.';
+        }
+
         return [
-            'student_number' => 'required|exists:students,number'
+            'payment_ref.required' => 'Payment reference is required.',
+            'payment_ref.digits' => $digitMessage,
+            'payment_ref.email' => 'The Paypal email must be a valid email address.',
         ];
     }
 
-    public function after(): array
-    {
-        return [
-            function (Validator $validator) {
-                if ($this->user()) {
-                    if ($this->user()->type == 'S') {
-                        // When the user is a student, the student_number must be his number
-                        $userStudentNumber = $this->user()?->student?->number;
-                        if ($this->student_number != $userStudentNumber) {
-                            $validator->errors()->add('student_number', "Your student number is $userStudentNumber");
-                        }
-                    }
-                }
-            }
-        ];
-    }
+
+
 }

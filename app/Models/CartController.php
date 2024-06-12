@@ -123,9 +123,13 @@ class CartController extends Controller
             ->with('alert-msg', 'Shopping Cart has been cleared');
     }
 
+    public function payment(){
+        $cart = session('cart', null);
+        $cart = collect($cart);
+        return view('cart.payment', compact('cart',));
+    }
 
-    public
-    function confirm(CartConfirmationFormRequest $request): RedirectResponse
+    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
     {
         $cart = session('cart', null);
         if (!$cart || ($cart->count() == 0)) {

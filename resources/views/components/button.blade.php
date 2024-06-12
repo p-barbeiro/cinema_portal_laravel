@@ -74,7 +74,7 @@
             @if(($element == 'submit') && ($attributes->has('form')))
                 {{ $attributes->merge(['form' => '#']) }}
             @endif
-            class="px-4 py-2 inline-block border border-transparent rounded-md
+            class="px-4 py-2 inline-block border dark:border-gray-600 rounded-md
                     font-medium text-sm tracking-widest
                     focus:outline-none focus:ring-2
                     focus:ring-indigo-500 dark:focus:ring-indigo-400

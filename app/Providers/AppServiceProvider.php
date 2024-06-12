@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Movie;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Gate;
 use App\Models\User;
 use App\Policies\AdministrativePolicy;
-use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,16 +19,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, AdministrativePolicy::class);
 
         Gate::define('use-cart', function (?User $user) {
-            return $user === null || $user->type == 'A' || $user->type == 'E';
+            return $user === null || $user->type == 'A' || $user->type == 'E' || $user->type == 'C';
         });
 
         Gate::define('confirm-cart', function (User $user) {
-            return $user->type == 'A' || $user->type == 'E';
+            return $user->type == 'A' || $user->type == 'E' || $user->type == 'C';
         });
-
-        try {
-
-        } catch (\Exception $e) {
-        }
     }
 }

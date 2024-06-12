@@ -105,19 +105,22 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
 */
 
     // Confirm (store) the cart and save disciplines registration on the database:
-    Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
 });
 
 /* ----- CART ROUTES ----- */
 
 // Use Cart routes should be accessible to the public */
 Route::middleware('can:use-cart')->group(function () {
-    // Add a discipline to the cart:
+    // Add a screening to the cart:
     Route::post('cart/{screening}', [CartController::class, 'addToCart'])->name('cart.add');
-    // Remove a discipline from the cart:
+    // Remove a screening from the cart:
     Route::delete('cart/{screening}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     // Show the cart:
     Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+    // Payment
+    Route::get('cart/payment', [CartController::class, 'payment'])->name('cart.payment');
+    // Confirm cart
+    Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
     // Clear the cart:
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
 });
