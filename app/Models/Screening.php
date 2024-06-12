@@ -11,7 +11,7 @@ class Screening extends Model
 {
     use HasFactory;
 
-    protected $with = ['theater.seats'];
+//    protected $with = ['theater.seats', 'theater'];
 
     protected $fillable = [
         'theater_id',

@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ScreeningController extends \Illuminate\Routing\Controller
@@ -107,6 +106,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
                 $errorMessage .= "<li> * <b>$failedScreening</b></li>";
             }
             $errorMessage .= "</ul>";
+            $alertType = 'warning';
         }
 
         $sucessMessage = "";
@@ -116,24 +116,23 @@ class ScreeningController extends \Illuminate\Routing\Controller
                 $sucessMessage .= "<li> * <b>" . $createdScreening->date . ' : ' . $createdScreening->start_time . "</b></li>";
             }
             $sucessMessage .= "</ul>";
+            $alertType = 'success';
         }
 
         $htmlMessage = $sucessMessage . $errorMessage;
 
         return redirect()->route('screenings.index')
-            ->with('alert-type', 'success')
+            ->with('alert-type', $alertType ?? 'success')
             ->with('alert-msg', $htmlMessage);
     }
 
     public function show(Screening $screening): View
     {
-
-        $seatsTaken = Seat::leftJoin('tickets', 'tickets.seat_id', '=', 'seats.id')
+        $seatsTaken = Seat::query()
+            ->leftJoin('tickets', 'tickets.seat_id', '=', 'seats.id')
             ->where('tickets.screening_id', $screening->id)
-            ->selectRaw("CONCAT(seats.row, seats.seat_number) as seat_label")
-            ->pluck('seat_label')
+            ->pluck('seats.id')
             ->toArray();
-//        dd($seatsTaken);
 
         $rows = Seat::where('theater_id', $screening->theater_id)
             ->get()
@@ -146,38 +145,41 @@ class ScreeningController extends \Illuminate\Routing\Controller
             ->unique('seat_number')
             ->count();
 
+        $seats = Seat::where('theater_id', $screening->theater_id)
+            ->get();
+
+        $seatsInCart = session('cart', collect())->where('id', $screening->id)->pluck('seat_id')->toArray();
+
         $seatMap = [];
-        for ($col = 0; $col < $cols; $col++) {
+        for ($col = 1; $col <= $cols; $col++) {
             for ($row = 'A'; $row < $maxRow; $row++) {
+                //find id in seats
+                $seat = $seats->where('row', $row)->where('seat_number', $col)->first();
+
                 $seatMap[$row][$col] = [
-                    'id' => "{$row}{$col}",
+                    'id' => $seat->id,
+                    'label' => "{$row}{$col}",
                     'status' => 'available'
                 ];
             }
         }
 
+        // check if seat is taken
         foreach ($seatMap as &$seats) {
-            $seats = array_map(function ($seat) use ($seatsTaken) {
+            $seats = array_map(function ($seat) use ($seatsTaken, $seatsInCart) {
                 if (in_array($seat['id'], $seatsTaken)) {
                     $seat['status'] = 'occupied';
                 }
+                if (in_array($seat['id'], $seatsInCart)) {
+                    $seat['status'] = 'in-cart';
+                }
+
                 return $seat;
             }, $seats);
         }
+        unset($seats);
 
-        $screeningId = $screening->id;
-
-//        $soldOutScreenings = DB::table('tickets')
-//        ->select('screening_id')
-//        ->where('screening_id', $screeningId)
-//        ->where('status', 'valid') // Consider only valid tickets
-//        ->groupBy('screening_id')
-//        ->havingRaw('COUNT(seat_id) >= ?', [Seat::where('theater_id', $screening->theater_id)->count()])
-//        ->get();
-//        dd($soldOutScreenings);
-//        dd($seatMap);
-
-        return view('screenings.show', compact('screening', 'seatMap', 'cols'));
+        return view('screenings.show', compact('screening', 'seatMap'));
     }
-
 }
+

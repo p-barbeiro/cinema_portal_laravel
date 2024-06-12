@@ -98,7 +98,7 @@
                                 :href="route('cart.show')"
                                 selectable="1"
                                 selected="{{ Route::currentRouteName() == 'cart.show'}}"
-                                :total="session('cart')->count()"/>
+                                :total="count(session('cart'))"/>
                         @endcan
                     @endif
 
@@ -159,7 +159,6 @@
                             selected="{{ Route::currentRouteName() == 'register'}}"
                         />
                     @endauth
-                    @include('components.darkmode_switch')
                 </div>
                 <!-- Hamburger -->
                 <div class="absolute right-0 top-0 flex sm:hidden pt-3 pe-3 text-black dark:text-gray-50">
@@ -191,6 +190,14 @@
 
     <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            @if (session('alert-msg'))
+                <x-alert type="{{ session('alert-type') ?? 'info' }}">
+                    {!! session('alert-msg') !!}
+                </x-alert>
+            @endif
+            @if (!$errors->isEmpty())
+                <x-alert type="warning" message="Operation failed because there are validation errors!"/>
+            @endif
             @yield('main')
         </div>
     </main>

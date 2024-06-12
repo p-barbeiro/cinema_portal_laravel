@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GenreController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
+use App\Models\CartController;
 use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
@@ -55,7 +55,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('theaters', TheaterController::class);
 
     Route::resource('screenings', ScreeningController::class);
-
+    Route::post('/submit-form', [ScreeningController::class, 'submitForm'])->name('submit.form');
 
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
@@ -108,14 +108,14 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
     Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
 });
 
-/* ----- OTHER PUBLIC ROUTES ----- */
+/* ----- CART ROUTES ----- */
 
 // Use Cart routes should be accessible to the public */
 Route::middleware('can:use-cart')->group(function () {
     // Add a discipline to the cart:
-    Route::post('cart/{discipline}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('cart/{screening}', [CartController::class, 'addToCart'])->name('cart.add');
     // Remove a discipline from the cart:
-    Route::delete('cart/{discipline}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::delete('cart/{screening}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     // Show the cart:
     Route::get('cart', [CartController::class, 'show'])->name('cart.show');
     // Clear the cart:

@@ -43,8 +43,8 @@ class MovieController extends \Illuminate\Routing\Controller
         $movies = $moviesQuery
             ->whereHas('screenings', function ($query) {
                 $query
-                    ->where('date', '>=', now())
-                    ->where('date', '<=', now()->addWeeks(2));
+                    ->where('date', '>=', today())
+                    ->where('date', '<=', today()->addWeeks(2));
             })
             ->orderBy('title')
             ->with('screenings', 'genre', 'screenings.theater', 'screenings.tickets', 'screenings.theater.seats')
@@ -114,7 +114,7 @@ class MovieController extends \Illuminate\Routing\Controller
             $movie->save();
         }
 
-        $htmlMessage = "Movie <span class='font-bold'>'{$movie->title}'</span> has been updated successfully!";
+        $htmlMessage = "Movie <u>$movie->title</u> has been updated successfully!";
         return redirect()->route('movies.show', ['movie' => $movie])
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
@@ -151,15 +151,15 @@ class MovieController extends \Illuminate\Routing\Controller
                     Storage::delete("public/posters/{$movie->poster_filename}");
                 }
                 $alertType = 'success';
-                $alertMsg = "Movie {$movie->title} has been deleted successfully!";
+                $alertMsg = "Movie <u>$movie->title</u> has been deleted successfully!";
             } else {
                 $alertType = 'warning';
-                $alertMsg = "Movie '{$movie->title}' cannot be deleted because there are screenings associated.";
+                $alertMsg = "Movie <u>$movie->title</u> cannot be deleted because there are screenings associated.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the course
-                            '{$movie->title}'
+            $alertMsg = "It was not possible to delete the movie
+                            <u>$movie->title</u>
                             because there was an error with the operation!";
         }
         return redirect()->route('movies.index')
@@ -174,6 +174,6 @@ class MovieController extends \Illuminate\Routing\Controller
         }
         return redirect()->back()
             ->with('alert-type', 'success')
-            ->with('alert-msg', "{$movie->title} poster has been deleted.");
+            ->with('alert-msg', "<u>$movie->title</u> poster has been deleted.");
     }
 }

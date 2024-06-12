@@ -101,8 +101,7 @@ class TheaterController extends \Illuminate\Routing\Controller
             }
         } catch (Exception) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete theater
-                            <u>$theater->name</u>'
+            $alertMsg = "It was not possible to delete theater <u>$theater->name</u>'
                             because there was an error with the operation!";
         }
         return redirect()->route('theaters.index')
@@ -124,7 +123,7 @@ class TheaterController extends \Illuminate\Routing\Controller
             $path = $request->photo_filename->store('public/theaters');
             $theater->photo_filename = basename($path);
             $theater->save();
-            $htmlMessage = "<p>The photo of the theater has been updated.</p>";
+            $htmlMessage = "<p>The photo of the theater <u>$theater->name</u> has been updated.</p>";
         }
 
         //if rows and cols are different from the current ones,
@@ -166,14 +165,14 @@ class TheaterController extends \Illuminate\Routing\Controller
                 $htmlMessage = "<p>The number of rows and/or columns has been changed.
                         The seats have been updated accordingly.</p>";
             } else {
-                $htmlMessage = "<p>The number of rows and/or columns <b>cannot</b> be changed because there are screenings associated in the future.</p>";
+                $htmlMessage = "<p>The number of rows and/or columns <u>cannot</u> be changed because there are screenings associated in the future.</p>";
                 $alertType = 'warning';
             }
         }
 
         //if name is the same, do nothing
         if ($request->name != $theater->name) {
-            $htmlMessage = "<p>The name of the theater has been changed from <b>$theater->name</b> to <b>$request->name</b>.</p>";
+            $htmlMessage = "<p>The name of the theater has been changed from <u>$theater->name</u> to <u>$request->name</u>.</p>";
         }
 
         return redirect()->route('theaters.index')

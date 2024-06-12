@@ -14,6 +14,7 @@ class IconMinus extends Component
     public function __construct(
         public string $action = '#',
         public string $method = 'DELETE',
+        public string $value = '',
     )
     {
         //

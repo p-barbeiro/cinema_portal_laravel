@@ -51,7 +51,7 @@ class GenreController extends \Illuminate\Routing\Controller
         $newGenre->code = strtoupper($newGenre->code);
         $newGenre->save();
 
-        $htmlMessage = "Genre '{$newGenre->name}' has been created successfully!";
+        $htmlMessage = "Genre <u>$newGenre->name</u> has been created successfully!";
         return redirect()->route('genres.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
@@ -66,7 +66,7 @@ class GenreController extends \Illuminate\Routing\Controller
     {
         $genre->update($request->validated());
 
-        $htmlMessage = "Genre '{$genre->name}' has been updated successfully!";
+        $htmlMessage = "Genre <u>$genre->name</u> has been updated successfully!";
         return redirect()->route('genres.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
@@ -84,16 +84,14 @@ class GenreController extends \Illuminate\Routing\Controller
             if ($screenings == 0) {
                 $genre->delete();
                 $alertType = 'success';
-                $alertMsg = "Genre {$genre->name} has been deleted successfully!";
+                $alertMsg = "Genre <u>$genre->name</u> has been deleted successfully!";
             } else {
                 $alertType = 'warning';
-                $alertMsg = "Genre '{$genre->name}' cannot be deleted because there are movies with upcoming screenings associated.";
+                $alertMsg = "Genre <u>$genre->name</u> cannot be deleted because there are movies with upcoming screenings associated.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "$error It was not possible to delete the course
-                            '{$genre->name}'
-                            because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the genre <u>$genre->name</u> because there was an error with the operation!";
         }
         return redirect()->route('genres.index')
             ->with('alert-type', $alertType)

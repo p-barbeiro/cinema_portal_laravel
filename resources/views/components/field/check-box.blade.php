@@ -30,7 +30,7 @@
 <div {{ $attributes->merge(['class' => "$widthClass"]) }}>
     <div class="flex py-5">
         <input name="{{ $name }}" type="hidden" value="0">
-        <input id="id_{{ $name }}" name="{{ $name }}" type="checkbox"
+        <input id="{{ $value }}" name="{{ $name }}" type="checkbox"
             {{ $value ? 'checked' : '' }}
             value="1"
             class="appearance-none mt-0.5 w-5 h-5

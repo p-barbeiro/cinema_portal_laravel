@@ -1,5 +1,6 @@
 <div {{ $attributes }}>
 	@foreach ($screenings->groupBy('theater_id') as $screeningTheaters)
+
 		<table class="table-auto border-collapse dark:text-gray-200 rounded w-full">
 			<thead>
 			<tr>
@@ -22,18 +23,25 @@
 									<p class="text-sm">{{date('H:i', strtotime($screening->start_time))}}</p>
 									<p class="text-xs">SOLD OUT</p>
 							@else
-								<td class="px-2 py-2 text-center dark:text-gray-400 md:min-w-20 hover:underline underline-offset-2">
+                                @if($screening->start_time < now()->format('H:i') && $screening->date == now()->format('Y-m-d'))
+                                    <td class="px-2 py-2 text-center dark:text-gray-400 md:min-w-20">
+                                        <p class="text-sm">{{date('H:i', strtotime($screening->start_time))}}</p>
+                                        <p class="text-xs">Closed</p>
+								@else
+                                <td class="px-2 py-2 text-center dark:text-gray-400 md:min-w-20 hover:underline underline-offset-2">
 									<x-button element="a" type="light" text="{{date('H:i', strtotime($screening->start_time))}}" class="uppercase"
 											  href="{{ route('screenings.show', ['screening' => $screening]) }}"
 									/>
-									@endif
-								</td>
-								@endforeach
+                                @endif
+                            @endif
+                        </td>
+                        @endforeach
 					</tr>
-					@endforeach
+            @endforeach
+            </tbody>
 
-			</tbody>
-		</table>
-		<br>
-	@endforeach
+        </table>
+    <br>
+  @endforeach
+
 </div>

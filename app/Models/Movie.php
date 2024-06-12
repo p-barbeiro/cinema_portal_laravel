@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Movie extends Model
@@ -53,9 +52,9 @@ class Movie extends Model
 
     public function getScreenings()
     {
-        return $this->screenings
-            ->where('date', '>=', now())
-            ->where('date', '<=', now()->addWeeks(2))
-            ->sortBy('date');
+        $screenings = $this->screenings
+            ->where('date', '>=', date('Y-m-d', strtotime(today())))
+            ->where('date', '<=', date('Y-m-d', strtotime(today()->addWeeks(2))));
+        return $screenings;
     }
 }
