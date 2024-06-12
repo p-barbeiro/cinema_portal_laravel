@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CartConfirmationFormRequest;
+use App\Services\Payment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -76,7 +77,7 @@ class CartController extends Controller
             $seat = Seat::find($seat);
             $htmlMessage .= "<p>Seat <u>$seat->row$seat->seat_number</u> was added to the cart.</p>";
         }
-        $htmlMessage.= "<p class='text-lg'>If you wish to proceed to the checkout, click <u><a href='" . route('cart.show') . "'>here</a></u></p>";
+        $htmlMessage .= "<p class='text-lg'>If you wish to proceed to the checkout, click <u><a href='" . route('cart.show') . "'>here</a></u></p>";
         return back()
             ->with('alert-msg', $htmlMessage)
             ->with('alert-type', $alertType);
@@ -123,7 +124,8 @@ class CartController extends Controller
             ->with('alert-msg', 'Shopping Cart has been cleared');
     }
 
-    public function payment(){
+    public function payment(): View
+    {
         $cart = session('cart', null);
         $cart = collect($cart);
         return view('cart.payment', compact('cart',));
@@ -137,58 +139,97 @@ class CartController extends Controller
                 ->with('alert-type', 'danger')
                 ->with('alert-msg', "Cart was not confirmed, because cart is empty!");
         } else {
-            $student = Student::where('number', $request->validated()['student_number'])->first();
-            if (!$student) {
-                return back()
-                    ->with('alert-type', 'danger')
-                    ->with('alert-msg', "Student number does not exist on the database!");
-            }
-            $insertDisciplines = [];
-            $disciplinesOfStudent = $student->disciplines;
-            $ignored = 0;
-            foreach ($cart as $discipline) {
-                $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
-                if ($exist) {
-                    $ignored++;
+            if ($request->payment_type == "MBWAY" && $request->payment_ref != null) {
+//                dd(Payment::payWithMBway($request->payment_ref));
+                if (Payment::payWithMBway($request->payment_ref)) {
+                    $paymentType = 'MBWAY';
+                    $paymentRef = $request->payment_ref;
                 } else {
-                    $insertDisciplines[$discipline->id] = [
-                        "discipline_id" => $discipline->id,
-                        "repeating" => 0,
-                        "grade" => null,
-                    ];
+                    return back()
+                        ->with('alert-msg', 'MBWay Payment Failed')
+                        ->with('alert-type', 'danger');
                 }
             }
-            $ignoredStr = match ($ignored) {
-                0 => "",
-                1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
-                default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
-            };
-            $totalInserted = count($insertDisciplines);
-            $totalInsertedStr = match ($totalInserted) {
-                0 => "",
-                1 => "1 discipline registration was added to the student",
-                default => "$totalInserted disciplines registrations were added to the student",
+            if ($request->payment_type == "VISA" && $request->payment_ref != null) {
+//                dd(Payment::payWithMBway($request->payment_ref));
+                if (Payment::payWithVisa($request->payment_type, $request->payment_ref)) {
+                    $paymentType = 'MBWAY';
+                    $paymentRef = $request->payment_ref;
+                } else {
+                    return back()
+                        ->with('alert-msg', 'MBWay Payment Failed')
+                        ->with('alert-type', 'danger');
+                }
+            }
 
-            };
-            if ($totalInserted == 0) {
-                $request->session()->forget('cart');
-                return back()
-                    ->with('alert-type', 'danger')
-                    ->with('alert-msg', "No registration was added to the student!$ignoredStr");
+        }
+        //PAYPAL
+        if ($request->email != null) {
+            if (Payment::payWithPaypal($request->email)) {
+                $metodoPagamento = 'PAYPAL';
+                $ref_pagamento = $request->email;
+                $nif = $request->nif;
             } else {
-                DB::transaction(function () use ($student, $insertDisciplines) {
-                    $student->disciplines()->attach($insertDisciplines);
-                });
-                $request->session()->forget('cart');
-                if ($ignored == 0) {
-                    return redirect()->route('students.show', ['student' => $student])
-                        ->with('alert-type', 'success')
-                        ->with('alert-msg', "$totalInsertedStr.");
-                } else {
-                    return redirect()->route('students.show', ['student' => $student])
-                        ->with('alert-type', 'warning')
-                        ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
-                }
+                return back()
+                    ->with('alert-msg', 'Email Invalido')
+                    ->with('alert-type', 'danger');
+            }
+        }
+
+
+        $student = Student::where('number', $request->validated()['student_number'])->first();
+        if (!$student) {
+            return back()
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Student number does not exist on the database!");
+        }
+
+
+        $insertDisciplines = [];
+        $disciplinesOfStudent = $student->disciplines;
+        $ignored = 0;
+        foreach ($cart as $discipline) {
+            $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
+            if ($exist) {
+                $ignored++;
+            } else {
+                $insertDisciplines[$discipline->id] = [
+                    "discipline_id" => $discipline->id,
+                    "repeating" => 0,
+                    "grade" => null,
+                ];
+            }
+        }
+        $ignoredStr = match ($ignored) {
+            0 => "",
+            1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
+            default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
+        };
+        $totalInserted = count($insertDisciplines);
+        $totalInsertedStr = match ($totalInserted) {
+            0 => "",
+            1 => "1 discipline registration was added to the student",
+            default => "$totalInserted disciplines registrations were added to the student",
+
+        };
+        if ($totalInserted == 0) {
+            $request->session()->forget('cart');
+            return back()
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "No registration was added to the student!$ignoredStr");
+        } else {
+            DB::transaction(function () use ($student, $insertDisciplines) {
+                $student->disciplines()->attach($insertDisciplines);
+            });
+            $request->session()->forget('cart');
+            if ($ignored == 0) {
+                return redirect()->route('students.show', ['student' => $student])
+                    ->with('alert-type', 'success')
+                    ->with('alert-msg', "$totalInsertedStr.");
+            } else {
+                return redirect()->route('students.show', ['student' => $student])
+                    ->with('alert-type', 'warning')
+                    ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
             }
         }
     }
