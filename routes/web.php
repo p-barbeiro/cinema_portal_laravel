@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::redirect('/', 'movies/showcase');
 
 // Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])->name('movies.showcase');
+
 
 
 /* ----- Rotas para utilizadores autenticados e não verificados ------ */
@@ -52,12 +54,17 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])->name('users.photo.destroy')->can('update', 'user');
 
     Route::resource('customers', CustomerController::class);
-    Route::get('purchases', [CustomerController::class, 'purchases'])->name('customers.purchases');
 
     Route::resource('theaters', TheaterController::class);
 
     Route::resource('screenings', ScreeningController::class);
     Route::post('/submit-form', [ScreeningController::class, 'submitForm'])->name('submit.form');
+
+    Route::get('purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('purchases/{purchase}', [PurchaseController::class, 'showReceipt'])->name('purchases.show');
+    Route::get('/download-receipt/{purchase}', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
+
+    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
 
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
@@ -127,9 +134,6 @@ Route::middleware('can:use-cart')->group(function () {
     Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
     // Clear the cart:
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
-
-     Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
-
 
 });
 

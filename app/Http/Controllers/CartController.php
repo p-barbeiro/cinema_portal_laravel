@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CartConfirmationFormRequest;
-use App\Mail\ReceiptMail;
 use App\Models\Configuration;
 use App\Models\Purchase;
 use App\Models\Screening;
 use App\Models\Seat;
 use App\Models\Ticket;
+use App\Notifications\PurchaseReceipt;
 use App\Services\Payment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -134,7 +135,7 @@ class CartController extends Controller
         return view('cart.payment', compact('cart',));
     }
 
-    public function confirm(CartConfirmationFormRequest $request): \Illuminate\Http\Response
+    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
     {
         $cart = session('cart', null);
         if (!$cart || ($cart->count() == 0)) {
@@ -198,21 +199,6 @@ class CartController extends Controller
             //receipt filename
             $path = 'pdf_purchases/CM-' . $purchase->id . '.pdf';
 
-            $data = [
-                'purchase' => $purchase,
-                'cart' => $cart,
-            ];
-
-            $pdf = Pdf::loadView('pdf.receipt', $data);
-            Storage::put($path, $pdf->output());
-            //send the pdf via email to customer_email
-
-
-            //update receipt_pdf_filename
-            $purchase->update([
-                'receipt_pdf_filename' => $path,
-            ]);
-
             // Create tickets
             $ticketsCreated = collect();
             foreach ($cart as $ticket) {
@@ -228,52 +214,30 @@ class CartController extends Controller
             }
 
 
-//        $insertDisciplines = [];
-//        $disciplinesOfStudent = $student->disciplines;
-//        $ignored = 0;
-//        foreach ($cart as $discipline) {
-//            $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
-//            if ($exist) {
-//                $ignored++;
-//            } else {
-//                $insertDisciplines[$discipline->id] = [
-//                    "discipline_id" => $discipline->id,
-//                    "repeating" => 0,
-//                    "grade" => null,
-//                ];
-//            }
-//        }
-//        $ignoredStr = match ($ignored) {
-//            0 => "",
-//            1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
-//            default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
-//        };
-//        $totalInserted = count($insertDisciplines);
-//        $totalInsertedStr = match ($totalInserted) {
-//            0 => "",
-//            1 => "1 discipline registration was added to the student",
-//            default => "$totalInserted disciplines registrations were added to the student",
-//
-//        };
-//        if ($totalInserted == 0) {
-//            $request->session()->forget('cart');
-//            return back()
-//                ->with('alert-type', 'danger')
-//                ->with('alert-msg', "No registration was added to the student!$ignoredStr");
-//        } else {
-//            DB::transaction(function () use ($student, $insertDisciplines) {
-//                $student->disciplines()->attach($insertDisciplines);
-//            });
-//            $request->session()->forget('cart');
-//            if ($ignored == 0) {
-//                return redirect()->route('students.show', ['student' => $student])
-//                    ->with('alert-type', 'success')
-//                    ->with('alert-msg', "$totalInsertedStr.");
-//            } else {
-//                return redirect()->route('students.show', ['student' => $student])
-//                    ->with('alert-type', 'warning')
-//                    ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
-//            }
+            $data = [
+                'purchase' => $purchase,
+                'img'   => public_path()."/img/receipt_logo.png",
+            ];
+
+            $pdf = Pdf::loadView('purchases.receipt', $data);
+            Storage::put($path, $pdf->output());
+
+            //update receipt_pdf_filename
+            $purchase->update([
+                'receipt_pdf_filename' => $path,
+            ]);
+
+            $request->session()->forget('cart');
+
+            //send notification
+            Notification::route('mail', $purchase->customer_email)
+                ->notify(new PurchaseReceipt($purchase));
+
+
+            return redirect()->route('movies.showcase')
+                    ->with('alert-type', 'success')
+                    ->with('alert-msg', "Purchase completed successfully! The receipt was sent to your email.<p>You can open the receipt <a href='" . route('purchases.show', ['purchase' => $purchase->id]) . "'><u>here</u></a>.</p>");
+
         }
     }
 

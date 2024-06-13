@@ -128,7 +128,7 @@
                                 <x-menus.submenu-item
                                     content="Purchases"
                                     selectable="0"
-                                    href="{{ route('customers.purchases') }}"/>
+                                    href="{{ route('purchases.index') }}"/>
                                 <x-menus.submenu-item
                                     content="Change Password"
                                     selectable="0"

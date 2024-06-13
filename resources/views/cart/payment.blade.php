@@ -116,9 +116,6 @@
             });
         }
 
-        // Initial update on page load
-        updatePaymentDetails();
-
         // Event listener for radio button changes
         radioButtons.forEach(radio => {
             radio.addEventListener('change', updatePaymentDetails);

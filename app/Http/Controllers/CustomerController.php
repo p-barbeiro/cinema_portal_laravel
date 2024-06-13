@@ -65,15 +65,6 @@ class CustomerController extends \Illuminate\Routing\Controller
 //            ->with('alert-type', 'success');
 //    }
 
-    public function purchases(Request $request): View
-    {
-        $user = auth()->user();
-        $purchases = Purchase::where('customer_id', $user->id)
-            ->orderBy('id', 'desc')
-            ->with('tickets','tickets.screening','tickets.seat', 'tickets.screening.movie')
-            ->paginate(8);
-        return view('customers.purchases', compact('purchases'));
-    }
 }
 
 /*
