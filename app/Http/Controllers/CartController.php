@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CartConfirmationFormRequest;
+use App\Mail\ReceiptMail;
 use App\Models\Configuration;
 use App\Models\Purchase;
 use App\Models\Screening;
 use App\Models\Seat;
+use App\Models\Ticket;
 use App\Services\Payment;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CartController extends Controller
@@ -130,7 +134,7 @@ class CartController extends Controller
         return view('cart.payment', compact('cart',));
     }
 
-    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
+    public function confirm(CartConfirmationFormRequest $request): \Illuminate\Http\Response
     {
         $cart = session('cart', null);
         if (!$cart || ($cart->count() == 0)) {
@@ -191,16 +195,37 @@ class CartController extends Controller
                 'payment_ref' => $paymentRef,
                 'receipt_pdf_filename' => null,
             ]);
+            //receipt filename
+            $path = 'pdf_purchases/CM-' . $purchase->id . '.pdf';
 
             $data = [
                 'purchase' => $purchase,
                 'cart' => $cart,
             ];
-            //create tickets
-            $pdf = Pdf::loadView('pdf.receipt', $data)
-            ->download('invoice.pdf');
 
-            dd($pdf);
+            $pdf = Pdf::loadView('pdf.receipt', $data);
+            Storage::put($path, $pdf->output());
+            //send the pdf via email to customer_email
+
+
+            //update receipt_pdf_filename
+            $purchase->update([
+                'receipt_pdf_filename' => $path,
+            ]);
+
+            // Create tickets
+            $ticketsCreated = collect();
+            foreach ($cart as $ticket) {
+                $newTicket = Ticket::create(
+                    [
+                        'screening_id' => $ticket['id'],
+                        'seat_id' => $ticket['seat_id'],
+                        'purchase_id' => $purchase->id,
+                        'price' => $ticket_price,
+                    ]
+                );
+                $ticketsCreated->push($newTicket);
+            }
 
 
 //        $insertDisciplines = [];
