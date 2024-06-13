@@ -75,11 +75,30 @@
                             content="Staff"
                             selectable="0"
                             href="{{ route('users.index') }}"/>
+                    </x-menus.submenu>
+
+                    <!-- Menu Item: Statistics -->
+                    <x-menus.submenu
+                        selectable="0"
+                        uniqueName="submenu_movies"
+                        content="Statistics">
+                        <x-menus.submenu-item
+                            content="Overall"
+                            selectable="0"
+                            href="{{ route('statistics.overall') }}"/>
                         <hr>
                         <x-menus.submenu-item
-                            content="Statistics"
+                            content="By Category"
                             selectable="0"
-                            href="{{ route('statistics.index') }}"/>
+                            href="{{ route('statistics.category') }}"/>
+                        <x-menus.submenu-item
+                            content="By Movie"
+                            selectable="0"
+                            href="{{ route('statistics.movie') }}"/>
+                        <x-menus.submenu-item
+                            content="By Customer"
+                            selectable="0"
+                            href="{{ route('statistics.customer') }}"/>
                     </x-menus.submenu>
 
                     <!-- Menu Item: Settings-->

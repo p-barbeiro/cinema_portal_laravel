@@ -60,6 +60,12 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('screenings', ScreeningController::class);
     Route::post('/submit-form', [ScreeningController::class, 'submitForm'])->name('submit.form');
 
+    // Statistics */
+    Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
+    Route::get('/statistics/category', [StatisticsController::class, 'category'])->name('statistics.category');
+    Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+    Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
     Route::resource('courses', CourseController::class)->except(['show']);
@@ -129,12 +135,7 @@ Route::middleware('can:use-cart')->group(function () {
     // Clear the cart:
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
 
-     Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
-
-// Statistics */
-    Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
-
-
+    Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
 
 });
 
