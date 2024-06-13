@@ -1,14 +1,16 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
-use App\Models\CartController;
 use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
@@ -109,6 +111,8 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
 
 /* ----- CART ROUTES ----- */
 
+
+
 // Use Cart routes should be accessible to the public */
 Route::middleware('can:use-cart')->group(function () {
     // Add a screening to the cart:
@@ -123,6 +127,10 @@ Route::middleware('can:use-cart')->group(function () {
     Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
     // Clear the cart:
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+
+     Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
+
+
 });
 
 require __DIR__ . '/auth.php';

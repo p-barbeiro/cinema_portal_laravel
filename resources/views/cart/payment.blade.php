@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('main')
-    <div class="flex justify-center flex-col sm:flex-row">
+    <div class="flex justify-center flex-col">
         <div class="my-4 p-6 bg-white dark:bg-gray-900 overflow-hidden
                     shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50 w-full">
             @if($cart->isEmpty())
@@ -13,43 +13,77 @@
 
                     <div class="mt-2 flex flex-row justify-between">
                         <div>
-                            Tickets in Cart:
+                            Tickets:
                         </div>
                         <div>
-                            {{ $cart->count() }}
+                            {{ $cart->count() }} x {{\App\Models\Configuration::first()->ticket_price}} €
                         </div>
                     </div>
+                    @auth()
+                        <div class="mt-2 flex flex-row justify-between">
+                            <div>
+                                Discount:
+                            </div>
+                            <div>
+                                - {{number_format($cart->count() * \App\Models\Configuration::first()->registered_customer_ticket_discount, 2)}}
+                                €
+                            </div>
+                        </div>
+                        <hr class="my-3">
+                    @endauth
                     <div class="mt-2 flex flex-row justify-between">
                         <div class="font-bold">
                             Total:
                         </div>
                         <div>
-                            {{ $cart->sum('price') }} €
+                            {{ auth()->user()?number_format($cart->sum('price') - $cart->count() * \App\Models\Configuration::first()->registered_customer_ticket_discount, 2):number_format($cart->sum('price'), 2) }}
+                            €
+
                         </div>
                     </div>
                 </div>
         </div>
-        <div class="sm:my-4 sm:ms-5 p-6 bg-white dark:bg-gray-900 overflow-hidden
+        <div class="p-6 bg-white dark:bg-gray-900 overflow-hidden
                     shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50 w-full">
+            <form action="{{ route('cart.confirm') }}" method="post" class="flex flex-col sm:flex-row justify-between">
+                <div class="sm:border-r w-full sm:w-1/2 sm:pe-5">
+                    <div class="text-xl font-bold text-gray-800 dark:text-gray-100">Account Information</div>
+                    @csrf
+                    <x-field.input class="my-5" name="name" label="Name"
+                                   value="{{ old('name', Auth::User()?->name) }}"/>
 
-            <div class="text-xl font-bold text-gray-800 dark:text-gray-100">Payment Details</div>
-            <form action="{{ route('cart.confirm') }}" method="post">
-                @csrf
-                <x-field.input class="my-5" name="nif" label="NIF"
-                               value="{{ old('nif', Auth::User()?->customer?->nif) }}"/>
-                <x-field.radiogroup id="payment_type" name="payment_type" label="Payment Method"
-                                    value="{{ old('payment_type', Auth::User()?->customer?->payment_type) }}"
-                                    :options="['VISA'=>'VISA', 'MBWAY' => 'MBWAY','PAYPAL'=>'PAYPAL']"/>
+                    <x-field.input class="my-5" name="email" label="Email"
+                                   value="{{ old('name', Auth::User()?->email) }}"/>
 
-                <div class="flex flex-row">
-                    <x-field.input id="payment_info" class="mt-5" name="payment_ref" label="Payment Info"
-                                   value="{{ old('payment_ref', Auth::User()?->customer?->payment_ref) }}"/>
-                    <x-field.input id="cvv" class="mt-5 ms-5 w-1/6" name="cvv" label="CVV"/>
+                    <x-field.input class="mt-5" name="nif" label="NIF"
+                                   value="{{ old('nif', Auth::User()?->customer?->nif) }}"/>
                 </div>
 
-                <div class="flex flex-row justify-between">
-                    <x-button element="a" type="light" text="Cancel" class="mt-5" href="{{ route('cart.show') }}"/>
-                    <x-button element="submit" type="dark" text="Confirm" class="mt-5"/>
+                <div class="w-full sm:w-1/2 sm:ps-5 border-t sm:border-0 mt-5 sm:mt-0 flex flex-col justify-center">
+                    <div class="text-xl font-bold text-gray-800 dark:text-gray-100 mt-5 sm:mt-0">Payment Details</div>
+
+                    <x-field.radiogroup id="payment_type" name="payment_type" label="Payment Method"
+                                        value="{{ old('payment_type', Auth::User()?->customer?->payment_type) }}"
+                                        :options="['VISA'=>'VISA', 'MBWAY' => 'MBWAY','PAYPAL'=>'PAYPAL']"
+                                        class="my-5"/>
+                    @php
+                    $label = 'Card Number';
+                    if (old('payment_type', Auth::User()?->customer?->payment_type) === 'MBWAY') {
+                        $label = 'Phone Number';
+                    } elseif (old('payment_type', Auth::User()?->customer?->payment_type) === 'PAYPAL') {
+                        $label = 'Email Address';
+                    }
+                    @endphp
+                    <div class="flex flex-row">
+                        <x-field.input id="payment_info" name="payment_ref" label="{{$label}}"
+                                       value="{{ old('payment_ref', Auth::User()?->customer?->payment_ref) }}"/>
+                        <x-field.input id="cvv" class="ms-5 w-1/6 hidden" name="cvv" label="CVV"/>
+                    </div>
+
+                    <div class="flex flex-row space-x-5 justify-end">
+                        <x-button element="a" type="light" text="Cancel" class="mt-5" href="{{ route('cart.show') }}"/>
+                        <x-button element="submit" type="dark" text="Confirm" class="mt-5"/>
+                    </div>
                 </div>
             </form>
         </div>
@@ -57,4 +91,38 @@
         @endif
     </div>
 @endsection
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const radioButtons = document.querySelectorAll('input[name="payment_type"]');
+        const cvvDiv = document.getElementById('cvv');
+        const paymentRefLabel = document.querySelector('label[for="id_payment_ref"]');
+
+        function updatePaymentDetails() {
+            radioButtons.forEach(radio => {
+                if (radio.checked) {
+                    if (radio.value === 'VISA') {
+                        cvvDiv.classList.remove('hidden');
+                        paymentRefLabel.textContent = 'Card Number';
+                    } else if (radio.value === 'MBWAY') {
+                        cvvDiv.classList.add('hidden');
+                        paymentRefLabel.textContent = 'Phone Number';
+                    } else {
+                        cvvDiv.classList.add('hidden');
+                        paymentRefLabel.textContent = 'Email Address';
+                    }
+                }
+            });
+        }
+
+        // Initial update on page load
+        updatePaymentDetails();
+
+        // Event listener for radio button changes
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updatePaymentDetails);
+        });
+    });
+</script>
 

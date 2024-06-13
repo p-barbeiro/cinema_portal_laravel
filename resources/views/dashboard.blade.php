@@ -14,7 +14,7 @@
                         <div class="p-6 text-center text-gray-900 dark:text-gray-100">
                             Click
                             <a class="underline underline-offset-2 hover:font-bold"href="{{ route('movies.showcase') }}">here</a> if you are not redirected in <span
-                                    id="countdown">5</span> seconds.
+                                    id="countdown">2</span> seconds.
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
 @endsection
 
 <script>
-    redirect("{{ route('movies.showcase') }}", 5);
+    redirect("{{ route('movies.showcase') }}", 2);
 
     function redirect(page, seconds) {
         var timeleft = seconds;

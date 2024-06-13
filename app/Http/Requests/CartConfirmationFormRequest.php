@@ -25,9 +25,9 @@ class CartConfirmationFormRequest extends FormRequest
         $rules = [
             'payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
             'payment_ref' => 'required',
-            'cvv' => 'required_if:payment_type,VISA|digits:3',
-            'nif' => 'required|digits:9',
-        ];
+            'cvv' => 'required_if:payment_type,"VISA",digits:3',
+            'nif' => 'nullable|digits:9',
+            ];
 
         return $rules;
     }
