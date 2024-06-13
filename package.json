@@ -16,6 +16,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "node-php-server": "^0.1.2",
+        "php-serve": "^0.0.1",
         "puppeteer": "^22.11.0"
     }
 }
