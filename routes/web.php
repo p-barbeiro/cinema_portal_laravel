@@ -11,6 +11,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
@@ -129,6 +130,10 @@ Route::middleware('can:use-cart')->group(function () {
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
 
      Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
+
+// Statistics */
+    Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+
 
 
 });

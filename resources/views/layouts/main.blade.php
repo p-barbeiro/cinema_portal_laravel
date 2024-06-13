@@ -79,7 +79,7 @@
                         <x-menus.submenu-item
                             content="Statistics"
                             selectable="0"
-                            href="#"/>
+                            href="{{ route('statistics.index') }}"/>
                     </x-menus.submenu>
 
                     <!-- Menu Item: Settings-->
