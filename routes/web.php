@@ -12,6 +12,7 @@ use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
@@ -54,6 +55,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])->name('users.photo.destroy')->can('update', 'user');
 
     Route::resource('customers', CustomerController::class);
+    Route::get('purchases', [CustomerController::class, 'purchases'])->name('customers.purchases');
 
     Route::resource('theaters', TheaterController::class);
 
@@ -65,6 +67,21 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/download-receipt/{purchase}', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
 
     Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+
+    // Statistics */
+    Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
+    Route::get('/statistics/category', [StatisticsController::class, 'category'])->name('statistics.category');
+    Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+    Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+
+
+
+
+
+
+
+
+
 
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
