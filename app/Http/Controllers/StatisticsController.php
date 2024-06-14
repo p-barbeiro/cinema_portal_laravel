@@ -63,6 +63,48 @@ class StatisticsController extends Controller
         ));
     }
 
+    public function theater()
+    {
+        // Calculate total seats and occupied seats
+        $theaterSeats = DB::table('seats')
+            ->select('theater_id', DB::raw('COUNT(*) as total_seats'))
+            ->groupBy('theater_id');
+
+        $screeningOccupiedSeats = DB::table('tickets')
+            ->select('screening_id', DB::raw('COUNT(*) as occupied_seats'))
+            ->groupBy('screening_id');
+
+        $averageOccupiedSeats = DB::table('screenings')
+            ->joinSub($screeningOccupiedSeats, 'occupied', function ($join) {
+                $join->on('screenings.id', '=', 'occupied.screening_id');
+            })
+            ->select('screenings.theater_id', DB::raw('AVG(occupied.occupied_seats) as average_occupied_seats'))
+            ->groupBy('screenings.theater_id');
+
+        // Fetch data for theater statistics
+        $salesByTheater = DB::table('theaters')
+            ->leftJoinSub($theaterSeats, 'seats', function ($join) {
+                $join->on('theaters.id', '=', 'seats.theater_id');
+            })
+            ->leftJoinSub($averageOccupiedSeats, 'avg_occupied', function ($join) {
+                $join->on('theaters.id', '=', 'avg_occupied.theater_id');
+            })
+            ->leftJoin('screenings', 'theaters.id', '=', 'screenings.theater_id')
+            ->leftJoin('tickets', 'screenings.id', '=', 'tickets.screening_id')
+            ->select('theaters.name',
+                DB::raw('SUM(tickets.price) as total_value'),
+                DB::raw('COUNT(tickets.id) as total_quantity'),
+                'seats.total_seats',
+                'avg_occupied.average_occupied_seats',
+                DB::raw('(avg_occupied.average_occupied_seats / seats.total_seats) * 100 as percentage_occupancy')
+            )
+            ->groupBy('theaters.id', 'theaters.name', 'seats.total_seats', 'avg_occupied.average_occupied_seats')
+            ->orderBy('total_value', 'desc')
+            ->paginate(20);
+
+        return view('statistics.theater', compact('salesByTheater'));
+    }
+
     public function movie()
     {
         // Calculate total seats per theater
@@ -151,47 +193,5 @@ class StatisticsController extends Controller
             ->paginate(20);
 
         return view('statistics.screening', compact('salesByScreening'));
-    }
-
-    public function theater()
-    {
-        // Calculate total seats and occupied seats
-        $theaterSeats = DB::table('seats')
-            ->select('theater_id', DB::raw('COUNT(*) as total_seats'))
-            ->groupBy('theater_id');
-
-        $screeningOccupiedSeats = DB::table('tickets')
-            ->select('screening_id', DB::raw('COUNT(*) as occupied_seats'))
-            ->groupBy('screening_id');
-
-        $averageOccupiedSeats = DB::table('screenings')
-            ->joinSub($screeningOccupiedSeats, 'occupied', function ($join) {
-                $join->on('screenings.id', '=', 'occupied.screening_id');
-            })
-            ->select('screenings.theater_id', DB::raw('AVG(occupied.occupied_seats) as average_occupied_seats'))
-            ->groupBy('screenings.theater_id');
-
-        // Fetch data for theater statistics
-        $salesByTheater = DB::table('theaters')
-            ->leftJoinSub($theaterSeats, 'seats', function ($join) {
-                $join->on('theaters.id', '=', 'seats.theater_id');
-            })
-            ->leftJoinSub($averageOccupiedSeats, 'avg_occupied', function ($join) {
-                $join->on('theaters.id', '=', 'avg_occupied.theater_id');
-            })
-            ->leftJoin('screenings', 'theaters.id', '=', 'screenings.theater_id')
-            ->leftJoin('tickets', 'screenings.id', '=', 'tickets.screening_id')
-            ->select('theaters.name',
-                DB::raw('SUM(tickets.price) as total_value'),
-                DB::raw('COUNT(tickets.id) as total_quantity'),
-                'seats.total_seats',
-                'avg_occupied.average_occupied_seats',
-                DB::raw('(avg_occupied.average_occupied_seats / seats.total_seats) * 100 as percentage_occupancy')
-            )
-            ->groupBy('theaters.id', 'theaters.name', 'seats.total_seats', 'avg_occupied.average_occupied_seats')
-            ->orderBy('total_value', 'desc')
-            ->paginate(20);
-
-        return view('statistics.theater', compact('salesByTheater'));
     }
 }
