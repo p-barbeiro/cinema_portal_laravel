@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\TheaterController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::redirect('/', 'movies/showcase');
 
 // Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])->name('movies.showcase');
+
 
 
 /* ----- Rotas para utilizadores autenticados e não verificados ------ */
@@ -60,12 +62,24 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('screenings', ScreeningController::class);
     Route::post('/submit-form', [ScreeningController::class, 'submitForm'])->name('submit.form');
 
+    Route::get('purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('purchases/{purchase}', [PurchaseController::class, 'showReceipt'])->name('purchases.show');
+    Route::get('/download-receipt/{purchase}', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
+
+    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+
     // Statistics */
     Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
-    Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
+    Route::get('/statistics/category', [StatisticsController::class, 'category'])->name('statistics.category');
     Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
-    Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
     Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+
+
+
+
+
+
+
 
 
 

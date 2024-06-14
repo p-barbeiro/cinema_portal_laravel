@@ -28,12 +28,17 @@
                                 <td class="px-2 py-2 text-left">
                                     {{ $purchase->total_price }} €
                                 </td>
-                                <td class="px-2 py-2">
-                                    <x-table.icon-show></x-table.icon-show>
+                                <td class="px-2 py-2 w-10">
+                                    <x-table.icon-show class="px-0.5"
+                                                       href="{{ route('purchases.show', ['purchase' => $purchase]) }}"/>
+
                                 </td>
-                                <td class="px-2 py-2">
-{{--                                    TODO: ICON RECEIPT--}}
-                                    <x-table.icon-minus></x-table.icon-minus>
+                                <td class="px-2 py-2 w-10">
+
+                                    @if($purchase->receipt_pdf_filename)
+                                        <x-table.icon-download class="px-0.5"
+                                                           href="{{ route('purchases.download', ['purchase' => $purchase]) }}"/>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

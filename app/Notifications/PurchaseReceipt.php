@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Purchase;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,15 +14,17 @@ class PurchaseReceipt extends Notification
     use Queueable;
 
     protected $path;
+    public $id;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($path)
+    public function __construct(Purchase $purchase)
     {
-        $this->path = $path;
+        $this->path = $purchase->receipt_pdf_filename;
+        $this->id = $purchase->id;
     }
 
     /**
@@ -43,16 +46,18 @@ class PurchaseReceipt extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/invoice/' . $this->invoice->id);
-        $path = storage_path('app/'.$this->invoice->fileName);
+        $url = route('purchases.show', $this->id);
+        $path = storage_path('app/'.$this->path);
         return (new MailMessage)
+            ->from('noreply@cinemagic.com', 'Cinemagic')
+            ->subject('Cinemagic - Purchase Receipt')
             ->greeting('Hello!')
             ->line('One of your purchases has been paid!')
             ->line('It is available online')
             ->action('View Receipt', $url)
             ->line('The file is also available as an ' .
                 'attachment in this email')
-            ->line('Thank you for using Cinemagic!')
+            ->salutation('Thank you for choosing Cinemagic!')
             ->attach($path);
     }
 
