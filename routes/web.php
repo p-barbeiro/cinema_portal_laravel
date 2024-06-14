@@ -62,9 +62,12 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // Statistics */
     Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
-    Route::get('/statistics/category', [StatisticsController::class, 'category'])->name('statistics.category');
+    Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
     Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+    Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
     Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+
+
 
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)

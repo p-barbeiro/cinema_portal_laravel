@@ -1,9 +1,21 @@
 @extends('layouts.main')
 
-@section('header-title', 'CineMagic Overall Statistics')
+@section('header-title', 'Overall Statistics')
 
 @section('main')
-    <div class="container mt-5">
+    <div class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+
+{{--        <x-statistics.filter-card :filterAction="route('statistics.overall')"--}}
+{{--                                  :resetUrl="route('statistics.overall')"--}}
+{{--                                  :genre="old('genre', $filterByGenre)"--}}
+{{--                                  :theater="old('theater', $filterByTheater)"--}}
+{{--                                  :startDate="old('movie', $filterByStartDate)"--}}
+{{--                                  :endDate="old('movie', $filterByEndDate)"--}}
+{{--                                  class="mb-6"--}}
+{{--        />--}}
+
+        <hr>
+
         <div class="mb-4">
             <h2>Overall Sales</h2>
             <p>Total Ticket Sales Value: ${{ number_format($totalSalesValue, 2) }}</p>

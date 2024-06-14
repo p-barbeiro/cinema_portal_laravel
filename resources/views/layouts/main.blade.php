@@ -35,7 +35,7 @@
 
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
-                    invisible h-0 sm:visible sm:h-auto">
+                    invisible h-0 sm:visible sm:h-auto ml-4">
 
                     <!-- Menu Item: What's On -->
                     <x-menus.menu-item
@@ -83,20 +83,24 @@
                         uniqueName="submenu_movies"
                         content="Statistics">
                         <x-menus.submenu-item
-                            content="Overall"
+                            content="Overall Statistics"
                             selectable="0"
                             href="{{ route('statistics.overall') }}"/>
                         <hr>
                         <x-menus.submenu-item
-                            content="By Category"
+                            content="Statistics by Theater"
                             selectable="0"
-                            href="{{ route('statistics.category') }}"/>
+                            href="{{ route('statistics.theater') }}"/>
                         <x-menus.submenu-item
-                            content="By Movie"
+                            content="Statistics by Movie"
                             selectable="0"
                             href="{{ route('statistics.movie') }}"/>
                         <x-menus.submenu-item
-                            content="By Customer"
+                            content="Statistics by Screening"
+                            selectable="0"
+                            href="{{ route('statistics.screening') }}"/>
+                        <x-menus.submenu-item
+                            content="Statistics by Customer"
                             selectable="0"
                             href="{{ route('statistics.customer') }}"/>
                     </x-menus.submenu>
@@ -197,7 +201,7 @@
     <!-- Page Heading -->
     <header class="bg-white dark:bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h4 class="mb-1 text-base text-gray-500 dark:text-gray-400 leading-tight">
+            <h4 class="mb-1 text-base text-gray-500 dark:text-gray-400 leading-tight mb-4">
                 Cinemagic Theatres
             </h4>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
