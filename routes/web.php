@@ -70,8 +70,9 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // Statistics */
     Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
-    Route::get('/statistics/category', [StatisticsController::class, 'category'])->name('statistics.category');
+    Route::get('/statistics/theater', [StatisticsController::class, 'category'])->name('statistics.theater');
     Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+    Route::get('/statistics/screening', [StatisticsController::class, 'category'])->name('statistics.screening');
     Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
 
 
