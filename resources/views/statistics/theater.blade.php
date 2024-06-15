@@ -4,30 +4,38 @@
 
 @section('main')
     <div class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
-        <table class="table table-bordered">
+        <x-statistics.filter-card :filterAction="route('statistics.theater')"
+                                  :resetUrl="route('statistics.theater')"
+                                  :startDate="old('start_date', $filterByStartDate)"
+                                  :endDate="old('end_date', $filterByEndDate)"
+                                  :theaterShow="$theaterShow"
+                                  class="mb-6"
+        />
+        <hr>
+        <table class="table-auto border-collapse w-full">
             <thead>
-            <tr>
-                <th>Theater</th>
-                <th>Total Sales Value</th>
-                <th>Total Sales Quantity</th>
-                <th>Total Seats</th>
-                <th>Average Occupied Seats</th>
-                <th>Percentage Occupancy (%)</th>
+            <tr class="border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
+                <th class="px-2 py-2 text-center">Name</th>
+                <th class="px-2 py-2 text-center">Seats</th>
+                <th class="px-2 py-2 text-center">Tickets Sold</th>
+                <th class="px-2 py-2 text-center">Occupancy Rate (%)</th>
+                <th class="px-2 py-2 text-center">Total Sales</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($salesByTheater as $theater)
-                <tr>
-                    <td>{{ $theater->name }}</td>
-                    <td>${{ number_format($theater->total_value, 2) }}</td>
-                    <td>{{ $theater->total_quantity }}</td>
-                    <td>{{ $theater->total_seats }}</td>
-                    <td>{{ number_format($theater->average_occupied_seats, 2) }}</td>
-                    <td>{{ number_format($theater->percentage_occupancy, 2) }}%</td>
+            @foreach ($statistics as $statistic)
+                <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500">
+                    <td class="px-2 py-2 text-center">{{ $statistic->Theater_Name }}</td>
+                    <td class="px-2 py-2 text-center">{{ $statistic->Total_Seats }}</td>
+                    <td class="px-2 py-2 text-center">{{ $statistic->Total_Tickets_Sold }}</td>
+                    <td class="px-2 py-2 text-center">{{ number_format($statistic->Occupancy_Rate, 2) }}%</td>
+                    <td class="px-2 py-2 text-center">${{ number_format($statistic->Total_Sales_Value, 2) }}</td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-        {{ $salesByTheater->links() }}
+        <div class="mt-4">
+            {{ $statistics->appends(request()->query())->links() }}
+        </div>
     </div>
 @endsection
