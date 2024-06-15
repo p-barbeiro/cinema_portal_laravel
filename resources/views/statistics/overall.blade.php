@@ -8,6 +8,7 @@
 
         <x-statistics.filter-card :filterAction="route('statistics.overall')"
                                   :resetUrl="route('statistics.overall')"
+                                  :exportUrl="route('statistics.export.overall')"
                                   :genre="old('genre', $filterByGenre)"
                                   :theater="old('theater', $filterByTheater)"
                                   :startDate="old('start_date', $filterByStartDate)"

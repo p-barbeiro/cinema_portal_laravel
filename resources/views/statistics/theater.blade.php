@@ -6,9 +6,11 @@
     <div class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
         <x-statistics.filter-card :filterAction="route('statistics.theater')"
                                   :resetUrl="route('statistics.theater')"
+                                  :exportUrl="route('export.theater.statistics', request()->query())"
                                   :startDate="old('start_date', $filterByStartDate)"
                                   :endDate="old('end_date', $filterByEndDate)"
                                   :theaterShow="$theaterShow"
+                                  :genreShow="$genreShow"
                                   class="mb-6"
         />
         <hr>

@@ -210,7 +210,8 @@ class StatisticsController extends Controller
         $statistics = $theaterStatistics->paginate(20);
 
         return view('statistics.theater', compact('statistics',
-            'filterByStartDate', 'filterByEndDate', 'theaterShow', 'genreShow'));
+            'filterByStartDate', 'filterByEndDate', 'theaterShow',
+            'genreShow'));
     }
 
     public function movie(Request $request)
