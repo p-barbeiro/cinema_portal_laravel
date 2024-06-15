@@ -81,7 +81,7 @@
 
         #qrcode {
             height: auto;
-            margin-top: 0.1in;
+            margin-top: 0.2in;
 
         }
 

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
 use App\Models\Ticket;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Http\Request;
+
 
 class TicketController extends Controller
 {
@@ -36,9 +39,32 @@ class TicketController extends Controller
 
     public function download(Ticket $ticket): \Illuminate\Http\Response
     {
+        if($ticket->qrcode_url === null) {
+            $url = url()->route('tickets.show', ['ticket' => $ticket->obfuscatedId]);
+            $ticket->update([
+                'qrcode_url' => $url
+            ]);
+        }
+
         $qrcode = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate($ticket->qrcode_url));
         $pdf = Pdf::loadView('tickets.print', compact('ticket', 'qrcode'));
 
         return $pdf->download($ticket->id . '.pdf');
+    }
+
+    public function index(Purchase $purchase): View
+    {
+        $ticketsQuery = Ticket::query();
+        if ($purchase !== null) {
+            $ticketsQuery
+                ->where('purchase_id', $purchase->id);
+        }
+
+        $tickets = $ticketsQuery
+            ->orderBy('purchase_id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('tickets.index', compact('tickets', 'purchase'));
     }
 }

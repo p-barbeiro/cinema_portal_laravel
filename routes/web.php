@@ -58,11 +58,11 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('theaters', TheaterController::class);
 
     Route::resource('screenings', ScreeningController::class);
-    Route::post('/submit-form', [ScreeningController::class, 'submitForm'])->name('submit.form');
 
-    Route::get('purchases', [PurchaseController::class, 'index'])->name('purchases.index');
-    Route::get('purchases/{purchase}', [PurchaseController::class, 'showReceipt'])->name('purchases.show');
-    Route::get('/download-receipt/{purchase}', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
+    Route::get('purchases/{customer}', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('purchases/{purchase}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.show');
+    Route::get('purchases/{purchase}/download', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
+    Route::get('purchases/{purchase}/tickets', [TicketController::class, 'index'])->name('tickets.index');
 
     Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');

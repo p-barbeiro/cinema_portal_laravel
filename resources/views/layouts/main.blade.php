@@ -151,7 +151,7 @@
                                 <x-menus.submenu-item
                                     content="Purchases"
                                     selectable="0"
-                                    href="{{ route('purchases.index') }}"/>
+                                    href="{{ route('purchases.index', ['customer' => auth()->user()]) }}"/>
                                 <x-menus.submenu-item
                                     content="Change Password"
                                     selectable="0"

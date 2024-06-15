@@ -7,6 +7,7 @@
             <th class="px-2 py-2 text-left hidden md:table-cell">Email</th>
             <th class="px-2 py-2 text-center hidden md:table-cell">NIF</th>
             <th class="px-2 py-2 text-center hidden md:table-cell">Payment Type</th>
+            <th class="px-2 py-2 md:table-cell">Purchases</th>
             @if($showEdit)
                 <th></th>
             @endif
@@ -33,6 +34,13 @@
                 <td class="px-2 py-2 text-center hidden md:table-cell">{{ $customer->nif ?? 'Without NIF' }}</td>
 
                 <td class="px-2 py-2 text-center hidden md:table-cell">{{ $customer->payment_type ?? 'Unknown Payment Type' }}</td>
+
+                <td class="px-2 py-2 h-full text-center align-middle">
+                    <div class="inline-block">
+                        <x-table.icon-open href="{{ route('purchases.index', ['customer' => $customer]) }}"/>
+                    </div>
+                </td>
+
 
                 @if($showView)
                     @can('view', $customer)

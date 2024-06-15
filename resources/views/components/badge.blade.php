@@ -12,7 +12,7 @@
     }
 @endphp
 
-<span class="flex flex-row justify-center rounded-md px-2 py-1 w-full text-xl ring-1 ring-inset transition ease-in-out duration-150 {{ $colors }}">
+<span class="flex flex-row justify-center rounded-md px-2 py-1 w-full ring-1 ring-inset transition ease-in-out duration-150 {{ $colors }}">
     {{ $text }}
 </span>
 

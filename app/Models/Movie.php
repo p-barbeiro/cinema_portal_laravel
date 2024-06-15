@@ -57,4 +57,13 @@ class Movie extends Model
             ->where('date', '<=', date('Y-m-d', strtotime(today()->addWeeks(2))));
         return $screenings;
     }
+
+    public function getTrailerEmbedUrl()
+    {
+        $fullUrl = $this->trailer_url;
+        $videoID = substr($fullUrl, strpos($fullUrl, "watch?v=") + 8, 11);
+
+        return "https://www.youtube.com/embed/" . $videoID . "?";
+    }
+
 }
