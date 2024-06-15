@@ -36,7 +36,7 @@
                                 <td class="px-2 py-2 w-10">
 
                                     @if($purchase->receipt_pdf_filename)
-                                        <x-table.icon-download class="px-0.5"
+                                        <x-table.icon-download class="px-0.5" text=""
                                                            href="{{ route('purchases.download', ['purchase' => $purchase]) }}"/>
                                     @endif
                                 </td>

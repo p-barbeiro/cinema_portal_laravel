@@ -28,7 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+//        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('movies.showcase')
+            ->with('alert-msg', 'Welcome back <u>'.Auth::user()->name.'</u>!')
+            ->with('alert-type', 'success');
     }
 
     /**
