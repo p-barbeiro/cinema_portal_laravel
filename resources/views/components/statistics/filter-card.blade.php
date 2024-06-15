@@ -28,6 +28,9 @@
                 <div>
                     <x-button element="a" type="light" text="Reset" :href="$resetUrl"/>
                 </div>
+                <div>
+                    <x-button element="a" type="success" text="Excel" :href="$exportUrl"/>
+                </div>
             </div>
         </div>
     </form>

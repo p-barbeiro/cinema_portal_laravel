@@ -15,6 +15,7 @@ class FilterCard extends Component
     public function __construct(
         public string  $filterAction,
         public string  $resetUrl,
+        public string  $exportUrl,
         public ?string $genre = null,
         public ?int    $theater = null,
         public ?string $startDate = null,

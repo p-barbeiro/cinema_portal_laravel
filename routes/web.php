@@ -13,6 +13,7 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExportController;
 
 /* ----- Public Routes ----- */
 
@@ -68,13 +69,19 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 
-    // Statistics */
+    /* Statistics routes */
     Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
     Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
     Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
     Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
     Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
 
+    /* Export routes */
+    Route::get('statistics/export/overall', [ExportController::class, 'exportOverallStatistics'])->name('statistics.export.overall');
+    Route::get('export/theater-statistics', [ExportController::class, 'exportTheaterStatistics'])->name('export.theater.statistics');
+    Route::get('export/movie-statistics', [ExportController::class, 'exportMoviesStatistics'])->name('export.movie.statistics');
+    Route::get('export/screening-statistics', [ExportController::class, 'exportScreeningsStatistics'])->name('export.screening.statistics');
+    Route::get('export/customer-statistics', [ExportController::class, 'exportCustomerStatistics'])->name('export.customer.statistics');
 
     /*//Course resource routes are protected by CoursePolicy on the controller
     // The route 'show' is public (for anonymous user)
