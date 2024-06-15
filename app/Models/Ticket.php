@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use EvoMark\LaravelIdObfuscator\Traits\Obfuscatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,12 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Ticket extends Model
 {
     use HasFactory;
+    use Obfuscatable;
 
     protected $fillable = [
         'purchase_id',
         'seat_id',
         'screening_id',
         'price',
+        'qrcode_url',
+        'status'
     ];
 
     public function purchase(): BelongsTo

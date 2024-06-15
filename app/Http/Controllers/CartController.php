@@ -14,10 +14,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CartController extends Controller
 {
@@ -200,7 +200,6 @@ class CartController extends Controller
             $path = 'pdf_purchases/CM-' . $purchase->id . '.pdf';
 
             // Create tickets
-            $ticketsCreated = collect();
             foreach ($cart as $ticket) {
                 $newTicket = Ticket::create(
                     [
@@ -210,13 +209,16 @@ class CartController extends Controller
                         'price' => $ticket_price,
                     ]
                 );
-                $ticketsCreated->push($newTicket);
+                $url = url()->route('tickets.show', ['ticket' => $newTicket->obfuscatedId]);
+                $newTicket->update([
+                    'qrcode_url' => $url,
+                ]);
             }
 
 
             $data = [
                 'purchase' => $purchase,
-                'img'   => public_path()."/img/receipt_logo.png",
+                'img' => public_path() . "/img/receipt_logo.png",
             ];
 
             $pdf = Pdf::loadView('purchases.receipt', $data);
@@ -229,14 +231,15 @@ class CartController extends Controller
 
             $request->session()->forget('cart');
 
+
             //send notification
             Notification::route('mail', $purchase->customer_email)
                 ->notify(new PurchaseReceipt($purchase));
 
 
             return redirect()->route('movies.showcase')
-                    ->with('alert-type', 'success')
-                    ->with('alert-msg', "Purchase completed successfully! The receipt was sent to your email.<p>You can open the receipt <a href='" . route('purchases.show', ['purchase' => $purchase->id]) . "'><u>here</u></a>.</p>");
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Purchase completed successfully! The receipt was sent to your email.<p>You can open the receipt <a href='" . route('purchases.show', ['purchase' => $purchase->id]) . "'><u>here</u></a>.</p>");
 
         }
     }

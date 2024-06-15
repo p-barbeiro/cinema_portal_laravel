@@ -5,14 +5,13 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\MovieController;
-use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ScreeningController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /* ----- Public Routes ----- */
@@ -23,7 +22,6 @@ Route::redirect('/', 'movies/showcase');
 
 // Movies showcase
 Route::get('movies/showcase', [MovieController::class, 'showCase'])->name('movies.showcase');
-
 
 
 /* ----- Rotas para utilizadores autenticados e não verificados ------ */
@@ -67,6 +65,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/download-receipt/{purchase}', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
 
     Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
+    Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 
     // Statistics */
     Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
@@ -74,14 +74,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
     Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
     Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
-
-
-
-
-
-
-
-
 
 
     /*//Course resource routes are protected by CoursePolicy on the controller
@@ -137,7 +129,6 @@ Route::resource('disciplines', DisciplineController::class)->only(['index', 'sho
 /* ----- CART ROUTES ----- */
 
 
-
 // Use Cart routes should be accessible to the public */
 Route::middleware('can:use-cart')->group(function () {
     // Add a screening to the cart:
@@ -152,8 +143,6 @@ Route::middleware('can:use-cart')->group(function () {
     Route::post('cart', [CartController::class, 'confirm'])->name('cart.confirm')->can('confirm-cart');
     // Clear the cart:
     Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
-
-    Route::get('generate-receipt', [PDFController::class, 'generateReceipt'])->name('pdf.generate-receipt');
 
 });
 
