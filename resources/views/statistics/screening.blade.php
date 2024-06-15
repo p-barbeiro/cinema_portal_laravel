@@ -9,6 +9,7 @@
                                   :resetUrl="route('statistics.screening')"
                                   :exportUrl="route('export.screening.statistics', request()->query())"
                                   :genre="old('genre', $filterByGenre)"
+                                  :theater="old('theater', $filterByTheater)"
                                   :startDate="old('start_date', $filterByStartDate)"
                                   :endDate="old('end_date', $filterByEndDate)"
                                   :theaterShow="$theaterShow"
