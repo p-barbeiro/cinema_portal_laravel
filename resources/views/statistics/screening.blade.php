@@ -1,16 +1,17 @@
 @extends('layouts.main')
 @php
+    $txt = "";
     if(isset($filterByStartDate)){
         //calc days between start and now()
         $days = (strtotime(date('Y-m-d')) - strtotime($filterByStartDate)) / (60 * 60 * 24);
         $txt = $days==30?' - Last 30 days':'';
     }
 @endphp
-@section('header-title', 'Statistics by Screening' . $txt)
+@section('header-title', 'Statistics by Screening' . $txt??'')
 
 @section('main')
     <div
-        class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+            class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
         <x-statistics.filter-card :filterAction="route('statistics.screening')"
                                   :resetUrl="route('statistics.screening')"
                                   :exportUrl="route('export.screening.statistics', request()->query())"
@@ -24,7 +25,7 @@
         <hr class="dark:border-gray-700">
         @if($statistics->isEmpty())
             <div
-                class="text-center mt-4 border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
+                    class="text-center mt-4 border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
                 <p class="text-lg">No screenings found.</p>
             </div>
         @else

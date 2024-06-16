@@ -18,9 +18,9 @@
 <div class="min-h-[calc(100vh-68.8px)] bg-gray-100 dark:bg-gray-800">
 
     <!-- Navigation Menu -->
-    <nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow">
         <!-- Navigation Menu Full Container -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
             <!-- Logo + Menu Items + Hamburger -->
             <div class="relative flex flex-col sm:flex-row px-6 sm:px-0 grow justify-between">
                 <!-- Logo -->
@@ -31,7 +31,6 @@
                         </div>
                     </a>
                 </div>
-
 
                 <!-- Menu Items -->
                 <div id="menu-container" class="grow flex flex-col sm:flex-row items-stretch
@@ -283,21 +282,14 @@
 <footer
         class="left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-900 dark:border-gray-600">
     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="{{route('home')}}"
-                                                                                    class="hover:underline">Cinemagic</a>. Diogo Abegão, João Parreira, Pedro Barbeiro.
+                                                                                    class="hover:underline">Cinemagic</a>.
+        <a href="https://www.linkedin.com/in/diogo-abegao/" class="hover:font-bold">Diogo Abegão</a>,
+        <a href="https://www.linkedin.com/in/joao-parreira-dev/" class="hover:font-bold">João Parreira</a>,
+        <a href="https://www.linkedin.com/in/pedrobarbeiro/" class="hover:font-bold">Pedro Barbeiro</a>
     </span>
     <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
         <li>
-
-            <a href="#" class="hover:underline me-4 md:me-6">About</a>
-        </li>
-        <li>
-            <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
-        </li>
-        <li>
-            <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
-        </li>
-        <li>
-            <a href="#" class="hover:underline">Contact</a>
+            <a href="{{asset('LICENSE.txt')}}" class="hover:underline me-4 md:me-6">Licensing</a>
         </li>
     </ul>
 </footer>

@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @php
+    $txt = "";
     if(isset($filterByStartDate)){
         //calc days between start and now()
         $days = (strtotime(date('Y-m-d')) - strtotime($filterByStartDate)) / (60 * 60 * 24);
@@ -8,11 +9,11 @@
     }
 @endphp
 
-@section('header-title', 'Statistics by Movie' . $txt)
+@section('header-title', 'Statistics by Movie' . $txt??'')
 
 @section('main')
     <div
-        class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
+            class="my-4 p-6 bg-white w-full dark:bg-gray-900 overflow-hidden shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
         <x-statistics.filter-card :filterAction="route('statistics.movie')"
                                   :resetUrl="route('statistics.movie')"
                                   :exportUrl="route('export.movie.statistics', request()->query())"

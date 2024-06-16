@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @php
+    $txt = "";
     if(isset($filterByStartDate)){
         //calc days between start and now()
         $days = (strtotime(date('Y-m-d')) - strtotime($filterByStartDate)) / (60 * 60 * 24);
@@ -8,7 +9,7 @@
     }
 @endphp
 
-@section('header-title', 'Overall Statistics' . $txt)
+@section('header-title', 'Overall Statistics' . $txt??'')
 
 @section('main')
 
