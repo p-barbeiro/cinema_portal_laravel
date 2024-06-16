@@ -4,30 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFormRequest;
 use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends \Illuminate\Routing\Controller
 {
     use AuthorizesRequests;
+
 
     public function __construct()
     {
         $this->authorizeResource(User::class);
     }
 
-    public function index(Request $request): View
+    public function index(Request $request)
     {
-        $users = User::query()
+        $filterByName = $request->input('name');
+        $filterByType = $request->input('type');
+        $usersQuery = User::query();
+        if ($filterByType !== null) {
+            $usersQuery->where('type', $filterByType);
+        }
+        if ($filterByName !== null) {
+            $usersQuery->where('name', 'LIKE', '%' . $filterByName . '%');
+        }
+
+        $users = $usersQuery
             ->orderBy('name')
             ->where('type', '!=', 'C')
             ->paginate(10)
             ->withQueryString();
 
-        return view('users.index', ['users' => $users]);
+            return view('users.index', compact('users','filterByName','filterByType'));
     }
 
     public function edit(User $user)
@@ -80,5 +94,45 @@ class UserController extends \Illuminate\Routing\Controller
         return redirect()->back();
     }
 
-    //TODO: CREATE/ STORE
+    public function create(): View
+    {
+        $newUser = new User();
+        return view('users.create')->with('users', $newUser);
+    }
+    public function store(Request $request): RedirectResponse
+    {
+        $validatedData = $request->validate([
+            'name' => ['required','string','max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'photo_filename' => 'nullable|image|max:10240', // Example validation for image upload //TODO
+            'type' => ['required', 'in:E,A']
+        ]);
+
+        $user = new User();
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        $user->password = Hash::make($validatedData['password']);
+        $user->type = $validatedData['type'];
+        $user->blocked = 0;
+
+        if ($request->hasFile('photo_filename')) {
+            $path = $request->photo_filename->store('public/photos');
+            $user->photo_filename = basename($path);
+        }
+
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'User created successfully.'); //TODO mostrar que fez com sucesso
+    }
+    public function destroy(User $user): RedirectResponse
+    {
+        $user->delete();
+
+        return redirect()->route('users.index')
+            ->with('alert-msg', 'User "' . $user->name . '" was deleted successfully.')
+            ->with('alert-type', 'success');
+    }
+
+
 }

@@ -50,7 +50,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('configurations', ConfigurationController::class)->only(['show', 'update', 'edit']);
 
     /* Users routes */
-    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'show']);
+    Route::resource('users', UserController::class);
     Route::delete('users/{user}/photo', [UserController::class, 'destroyPhoto'])->name('users.photo.destroy')->can('update', 'user');
 
     Route::resource('customers', CustomerController::class);
@@ -154,4 +154,3 @@ Route::middleware('can:use-cart')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
-

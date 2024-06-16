@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'New Teacher')
+@section('header-title', 'New User')
 
 @section('main')
     <div class="flex flex-col space-y-6">
@@ -9,7 +9,7 @@
                 <section>
                     <header>
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            New teacher
+                            New User
                         </h2>
                         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300  mb-6">
                             Click on "Save" button to store the information.
@@ -19,9 +19,11 @@
                     <form method="POST" action="{{ route('users.store') }}"
                           enctype="multipart/form-data">
                         @csrf
-                        @include('users.shared.fields', ['mode' => 'create'])
+                        <div>
+                            @include('users.shared.fields', ['mode' => 'create'])
+                        </div>
                         <div class="flex mt-6">
-                            <x-button element="submit" type="dark" text="Save new teacher" class="uppercase"/>
+                            <x-button element="submit" type="dark" text="Save new user" class="uppercase"/>
                         </div>
                     </form>
                 </section>

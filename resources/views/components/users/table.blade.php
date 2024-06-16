@@ -75,9 +75,12 @@
                 @if($showDelete)
                     @can('delete', $user)
                         <td>
-                            <x-table.icon-delete class="px-0.5"
-                                                 action="#"/>
-{{--                            TODO:SOFTDELETE--}}
+                            <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('users.destroy', ['user' => $user]) }}" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                            <x-table.icon-delete class="px-0.5" href="#"
+                                                 onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this user?')) document.getElementById('delete-form-{{ $user->id }}').submit();" />
                         </td>
                     @else
                         <td></td>
