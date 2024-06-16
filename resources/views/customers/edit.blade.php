@@ -10,19 +10,9 @@
                     <div class="flex flex-wrap justify-end items-center gap-4 mb-4">
                         @can('view', $customer)
                             <x-button
-                                href="{{ route('customers.show', ['customer' => $customer]) }}"
-                                text="View"
-                                type="info"/>
-                        @endcan
-                        @can('delete', $customer)
-                            <form method="POST" action="{{ route('customers.destroy', ['customer' => $customer]) }}">
-                                @csrf
-                                @method('DELETE')
-                                <x-button
-                                    element="submit"
-                                    text="Delete"
-                                    type="danger"/>
-                            </form>
+                                    href="{{ route('customers.show', ['customer' => $customer]) }}"
+                                    text="View"
+                                    type="info"/>
                         @endcan
                     </div>
                     <header>
@@ -38,7 +28,7 @@
                           enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-{{--                        @include('administratives.shared.fields', ['mode' => 'edit'])--}}
+                        @include('customers.shared.fields', ['mode' => 'edit'])
                         <div class="flex mt-6">
                             <x-button element="submit" type="dark" text="Save" class="uppercase"/>
                             <x-button element="a" type="light" text="Cancel" class="uppercase ms-4"

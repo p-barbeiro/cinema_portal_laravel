@@ -11,7 +11,6 @@ use Illuminate\View\View;
 
 class ConfigurationController extends Controller
 {
-
     public function show(Configuration $config): View
     {
         $config = Configuration::first();

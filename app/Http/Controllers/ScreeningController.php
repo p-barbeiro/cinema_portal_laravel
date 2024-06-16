@@ -49,12 +49,6 @@ class ScreeningController extends \Illuminate\Routing\Controller
         return view('screenings.index', compact('screenings', 'filterByDate', 'filterByMovie', 'filterByTheater'));
     }
 
-    public function create(): View
-    {
-        $newScreenings = new Screening();
-        return view('screenings.create')->with('screenings', $newScreenings);
-    }
-
     public function store(ScreeningFormRequest $request): RedirectResponse
     {
 
@@ -180,6 +174,12 @@ class ScreeningController extends \Illuminate\Routing\Controller
         unset($seats);
 
         return view('screenings.show', compact('screening', 'seatMap'));
+    }
+
+    public function create(): View
+    {
+        $newScreenings = new Screening();
+        return view('screenings.create')->with('screenings', $newScreenings);
     }
 }
 

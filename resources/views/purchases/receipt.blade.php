@@ -1,6 +1,7 @@
 @php
     use App\Models\Configuration;
 
+    //atual prices
     $full_price = Configuration::first()->ticket_price;
     if (auth()->check()) {
         $ticket_discount = Configuration::first()->registered_customer_ticket_discount;
@@ -321,6 +322,7 @@
                 <th>Total</th>
             </tr>
             @foreach($purchase->tickets as $ticket)
+{{--                {{dd($ticket)}}--}}
                 <tr>
                     <td>{{$ticket->id}} | {{$ticket->screening->movie?->title ?? "Unknown Movie"}}
                         | {{$ticket->screening->date}} | {{date('H:i',strtotime($ticket->screening->start_time))}} |
@@ -341,7 +343,7 @@
             <table>
                 <tr>
                     <td>Total</td>
-                    <td>{{number_format($purchase->tickets()->count() * $full_price,2)}} €</td>
+                    <td>{{number_format($purchase->tickets()->sum('price'),2)}} €</td>
                 </tr>
                 <tr>
                     <td>Discount</td>

@@ -35,7 +35,7 @@
                                 </td>
 
                                 <td class="px-2 py-2 text-center align-middle">
-                                    <div class="inline-block">
+                                    <div class="flex justify-center items-center h-full">
                                         <x-table.icon-open class="px-0.5"
                                                            href="{{ route('tickets.index', ['purchase' => $purchase ]) }}"/>
                                     </div>
@@ -43,22 +43,24 @@
                                 </td>
 
                                 <td class="px-2 py-2 text-center align-middle">
-                                    <div class="inline-block">
+                                    <div class="flex justify-center items-center h-full">
                                         <x-table.icon-open :version=2 class="px-0.5"
                                                            href="{{ route('purchases.show', ['purchase' => $purchase]) }}"/>
                                     </div>
                                 </td>
 
                                 <td class="px-2 py-2 text-center align-middle">
-                                    <div class="inline-block">
+                                    <div class="flex justify-center items-center h-full">
                                         @if($purchase->receipt_pdf_filename)
                                             <x-table.icon-download class="px-0.5" text=""
                                                                    href="{{ route('purchases.download', ['purchase' => $purchase]) }}"/>
                                         @else
-                                            <x-table.icon-trailer class="px-0.5" :trailer="false"/>
+                                            <x-table.icon-download class="px-0.5" text=""
+                                                                   href=""/>
                                         @endif
                                     </div>
                                 </td>
+
                             </tr>
                         @endforeach
                         </tbody>

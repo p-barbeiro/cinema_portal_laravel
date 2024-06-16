@@ -8,19 +8,22 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Http\Request;
 
 
 class TicketController extends Controller
 {
-
-    public function show(Ticket $ticket): View
+    public function updateTicketStatus(Ticket $ticket)
     {
         if ($ticket->screening->date < now() && $ticket->screening->start_time < now()->addMinutes(5)->format('H:i')) {
             $ticket->update([
                 'status' => 'invalid'
             ]);
         }
+    }
+
+    public function show(Ticket $ticket): View
+    {
+        $this->updateTicketStatus($ticket);
 
         return view('tickets.show', compact('ticket'));
     }
@@ -39,7 +42,7 @@ class TicketController extends Controller
 
     public function download(Ticket $ticket): \Illuminate\Http\Response
     {
-        if($ticket->qrcode_url === null) {
+        if ($ticket->qrcode_url === null) {
             $url = url()->route('tickets.show', ['ticket' => $ticket->obfuscatedId]);
             $ticket->update([
                 'qrcode_url' => $url
@@ -64,6 +67,10 @@ class TicketController extends Controller
             ->orderBy('purchase_id', 'desc')
             ->paginate(10)
             ->withQueryString();
+
+        foreach ($tickets as $ticket) {
+            $this->updateTicketStatus($ticket);
+        }
 
         return view('tickets.index', compact('tickets', 'purchase'));
     }

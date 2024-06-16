@@ -23,6 +23,8 @@ class CartConfirmationFormRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
             'payment_type' => 'required|in:VISA,PAYPAL,MBWAY',
             'payment_ref' => 'required',
             'cvv' => 'required_if:payment_type,"VISA",digits:3',

@@ -7,36 +7,43 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        $request->session()->regenerate();
+            if ($user->blocked) {
+                Auth::logout();
+                return redirect()->route('login')
+                    ->with('alert-msg', 'Your account has been blocked. Please contact support.')
+                    ->with('alert-type', 'danger');
+            }
 
-//        return redirect()->intended(route('dashboard', absolute: false));
-        return redirect()->route('movies.showcase')
-            ->with('alert-msg', 'Welcome back <u>'.Auth::user()->name.'</u>!')
-            ->with('alert-type', 'success');
+            $request->session()->regenerate();
+
+            return redirect()->route('movies.showcase')
+                ->with('alert-msg', 'Welcome back <u>' . Auth::user()->name . '</u>!')
+                ->with('alert-type', 'success');
+        }
+
+        throw ValidationException::withMessages([
+            'email' => [trans('auth.failed')],
+        ]);
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();

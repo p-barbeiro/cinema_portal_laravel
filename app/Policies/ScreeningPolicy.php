@@ -20,14 +20,17 @@ class ScreeningPolicy
         return true;
     }
 
-    public function view(User $user, Screening $screening): bool
+    public function view(?User $user, Screening $screening): bool
     {
+        if ($screening->start_time < now()->addMinutes(5)->format('H:i') && $screening->date == now()->format('Y-m-d') || $screening->isSoldOut()) {
+            return false;
+        }
         return true;
     }
 
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     public function update(User $user, Screening $screening): bool
