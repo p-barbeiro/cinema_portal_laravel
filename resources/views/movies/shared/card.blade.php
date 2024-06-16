@@ -2,8 +2,8 @@
     <figure
         class="flex flex-col lg:flex-row-reverse h-auto border border-gray-200 shadow rounded-none sm:rounded-xl bg-white dark:bg-gray-900 dark:border-gray-700 my-5 p-5 md:p-0">
 
-        <div class="place-content-center h-auto p-5 md:p-5 md:ps-0 mx-auto md:m-0">
-            <img class="object-center aspect-auto mx-auto rounded-md md:min-h-96 md:min-w-80 md:max-w-64"
+        <div class="place-content-start h-auto p-5 md:p-5 md:ps-0 mx-auto md:m-0">
+            <img class="object-center mt-8 aspect-auto mx-auto rounded-md md:min-h-80 md:min-w-64 md:max-w-64"
                  src="{{ $movie->getPoster() }}">
         </div>
 
