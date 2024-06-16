@@ -17,7 +17,6 @@ class UserController extends \Illuminate\Routing\Controller
 {
     use AuthorizesRequests;
 
-
     public function __construct()
     {
         $this->authorizeResource(User::class);
@@ -99,6 +98,7 @@ class UserController extends \Illuminate\Routing\Controller
         $newUser = new User();
         return view('users.create')->with('user', $newUser);
     }
+
     public function store(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
@@ -125,6 +125,7 @@ class UserController extends \Illuminate\Routing\Controller
 
         return redirect()->route('users.index')->with('success', 'User created successfully.'); //TODO mostrar que fez com sucesso
     }
+
     public function destroy(User $user): RedirectResponse
     {
         $user->delete();
@@ -133,6 +134,5 @@ class UserController extends \Illuminate\Routing\Controller
             ->with('alert-msg', 'User "' . $user->name . '" was deleted successfully.')
             ->with('alert-type', 'success');
     }
-
 
 }
