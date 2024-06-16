@@ -50,6 +50,11 @@
                                 href="{{ route('screenings.index', ['date' => now()->format('Y-m-d')]) }}"
                                 selected="{{ Route::currentRouteName() == 'screenings.index'}}"
                         />
+                        <x-menus.menu-item
+                                content="Find Ticket"
+                                href="{{ route('tickets.search') }}"
+                                selected="{{ Route::currentRouteName() == 'tickets.search'}}"
+                        />
                     @endif
                     @if(Auth::user()?->type == 'A')
                         <!-- Menu Item: Admin -->

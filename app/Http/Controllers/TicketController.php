@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
@@ -26,6 +27,25 @@ class TicketController extends Controller
         $this->updateTicketStatus($ticket);
 
         return view('tickets.show', compact('ticket'));
+    }
+    public function showSearchForm(): View
+    {
+        return view('tickets.search');
+    }
+    public function findTicket(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'ticket_id' => 'required|integer'
+        ]);
+
+        $ticket = Ticket::find($request->input('ticket_id'));
+
+        if ($ticket) {
+            return redirect()->route('tickets.show', ['ticket' => $ticket->id]);
+        } else {
+            return redirect()->route('tickets.search') //TODO invalid?
+                ->with('error', 'Ticket not found.');
+        }
     }
 
     public function invalidateTicket(Ticket $ticket): RedirectResponse
