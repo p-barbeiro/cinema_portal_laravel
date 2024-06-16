@@ -40,7 +40,7 @@ class ScreeningPolicy
         return $user?->type === 'A';
     }
 
-    public function verify(User $user, Screening $screening): bool
+    public function verify(User $user): bool
     {
         if($user->type === 'E') {
             return true;

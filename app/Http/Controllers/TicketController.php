@@ -13,7 +13,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TicketController extends Controller
 {
-    public function updateTicketStatus(Ticket $ticket)
+    public static function updateTicketStatus(Ticket $ticket)
     {
         if ($ticket->screening->date < now() && $ticket->screening->start_time < now()->addMinutes(5)->format('H:i')) {
             $ticket->update([
