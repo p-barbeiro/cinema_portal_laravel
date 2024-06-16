@@ -5,8 +5,7 @@
         <div class="p-4 sm:p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg">
             <div class="max-full">
                 <section>
-                    <div
-                        class="relative z-10 flex flex-col md:flex-row space-y-4 md:space-y-0 p-3 bg-gray-50 border dark:bg-gray-900 rounded-lg shadow-lg">
+                    <div class="relative z-10 flex flex-col md:flex-row space-y-4 md:space-y-0 p-3 bg-gray-50 border dark:bg-gray-900 rounded-lg shadow-lg">
                         <div class="md:w-1/6">
                             @if($screening->movie->poster_filename)
                                 <img src="{{ $screening->movie->getPoster() }}" alt="{{ $screening->movie->title }}"
