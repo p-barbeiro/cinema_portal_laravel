@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StatisticsFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Theater;
 use App\Models\Seat;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
-    public function overall(Request $request)
+    public function overall(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -167,7 +168,7 @@ class StatisticsController extends Controller
         ));
     }
 
-    public function theater(Request $request)
+    public function theater(StatisticsFormRequest $request)
     {
         $filterByStartDate = $request->input('start_date');
         $filterByEndDate = $request->input('end_date');
@@ -212,11 +213,12 @@ class StatisticsController extends Controller
 
         $statistics = $theaterStatistics->paginate(20);
 
-        return view('statistics.theater', compact('statistics', 'filterByStartDate', 'filterByEndDate', 'theaterShow', 'genreShow'));
+        return view('statistics.theater', compact('statistics',
+            'filterByStartDate', 'filterByEndDate', 'theaterShow',
+            'genreShow'));
     }
 
-
-    public function movie(Request $request)
+    public function movie(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -302,7 +304,8 @@ class StatisticsController extends Controller
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
 
-    public function screening(Request $request)
+
+    public function screening(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -363,7 +366,8 @@ class StatisticsController extends Controller
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
 
-    public function customer(Request $request)
+
+    public function customer(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -405,5 +409,6 @@ class StatisticsController extends Controller
             'filterByGenre', 'filterByTheater', 'filterByStartDate',
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
+
 
 }
