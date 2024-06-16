@@ -45,7 +45,7 @@
                     />
 
                     <!-- Menu Item: Admin -->
-                    <x-menus.submenu
+                    <x-menus.submenu class="relative z-20"
                         selectable="0"
                         uniqueName="submenu_movies"
                         content="Administration">
@@ -78,7 +78,7 @@
                     </x-menus.submenu>
 
                     <!-- Menu Item: Statistics -->
-                    <x-menus.submenu
+                    <x-menus.submenu class="relative z-20"
                         selectable="0"
                         uniqueName="submenu_movies"
                         content="Statistics">
@@ -126,7 +126,7 @@
                     @endif
 
                     @auth
-                        <x-menus.submenu
+                        <x-menus.submenu class="relative z-20"
                             selectable="0"
                             uniqueName="submenu_user"
                         >

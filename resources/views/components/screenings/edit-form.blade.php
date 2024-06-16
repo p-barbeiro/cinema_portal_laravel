@@ -14,7 +14,6 @@
         </div>
         <div class="flex flex-row space-x-2">
             <x-field.input name="date" type="date" label="Screening Date" value="{{ old('date', $screening->date ?? '') }}"/>
-            <x-field.input name="date_final" type="date" label="Last Date" value="{{ old('date_final', $screening->date_final ?? '') }}"/>
             <x-field.input name="start_time" type="time" label="Hour" value="{{ old('start_time', $screening->start_time ?? '') }}"/>
         </div>
     </div>
