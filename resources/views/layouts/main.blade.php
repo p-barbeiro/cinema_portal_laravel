@@ -50,6 +50,11 @@
                                 href="{{ route('screenings.index', ['date' => now()->format('Y-m-d')]) }}"
                                 selected="{{ Route::currentRouteName() == 'screenings.index'}}"
                         />
+                        <x-menus.menu-item
+                                content="Find Ticket"
+                                href="{{ route('tickets.search') }}"
+                                selected="{{ Route::currentRouteName() == 'tickets.search'}}"
+                        />
                     @endif
                     @if(Auth::user()?->type == 'A')
                         <!-- Menu Item: Admin -->
@@ -83,7 +88,7 @@
                                         href="{{ route('screenings.index') }}"/>
                             @endcan
                             @can('viewAny', App\Models\Customer::class)
-                                <hr>
+                                    <hr class="dark:border-gray-700">
                                 <x-menus.submenu-item
                                         content="Customers"
                                         selectable="0"
@@ -107,7 +112,7 @@
                                         content="Overall Statistics"
                                         selectable="0"
                                         href="{{ route('statistics.overall', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
-                                <hr>
+                                <hr class="dark:border-gray-700">
                                 <x-menus.submenu-item
                                         content="Statistics by Theater"
                                         selectable="0"
@@ -166,7 +171,7 @@
                                 </div>
                             </x-slot:content>
                             @auth
-                                <hr>
+                                <hr class="dark:border-gray-700">
                                 @if(Auth::user()->type == 'C')
                                     <x-menus.submenu-item
                                             content="My Profile"
@@ -191,7 +196,7 @@
                                         selectable="0"
                                         href="{{ route('profile.edit.password') }}"/>
                             @endauth
-                            <hr>
+                            <hr class="dark:border-gray-700">
                             <x-menus.submenu-item
                                     content="Log Out"
                                     selectable="0"

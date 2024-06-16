@@ -14,7 +14,7 @@
                                 text="Edit"
                                 type="dark"/>
                     </div>
-                    <hr>
+                    <hr class="dark:border-gray-700">
                     <div class="space-y-4 mt-5">
                         @include('configurations.shared.fields', ['mode' => 'show'])
                     </div>

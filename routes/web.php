@@ -54,6 +54,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('purchases/{purchase}/download', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
     Route::get('purchases/{purchase}/tickets', [TicketController::class, 'index'])->name('tickets.index');
     Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::get('tickets/search', [TicketController::class, 'showSearchForm'])->name('tickets.search');
+    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result'); //TODO
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 

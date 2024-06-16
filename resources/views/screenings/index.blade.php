@@ -16,7 +16,7 @@
                                       class="mb-6"
             />
 
-            <hr>
+            <hr class="dark:border-gray-700">
 
             @can('create', App\Models\Screening::class)
                 <div class="flex justify-end gap-4 my-4">

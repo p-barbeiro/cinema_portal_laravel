@@ -1,5 +1,5 @@
 <div {{ $attributes->merge(['class' => 'hover:text-red-600']) }}>
-    <form method="POST" action="{{ $action }}"  class="w-6 h-6">
+    <form method="POST" action="{{ $action }}"  class="w-6 h-6" onsubmit="return confirm('Are you sure you want to delete?');">
         @csrf
         @method('DELETE')
         <button type="submit" name="delete" class="w-6 h-6">

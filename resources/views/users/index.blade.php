@@ -13,13 +13,12 @@
                                     :type="old('type',$filterByType)"
                                     class="mb-6"
             />
-            <hr>
-
+            <hr class="dark:border-gray-700">
             @can('create', App\Models\User::class)
-                <div class="flex items-center gap-4 mb-4">
+                <div class="flex justify-end gap-4 my-4">
                     <x-button
                         href="{{ route('users.create') }}"
-                        text="Create a new user"
+                        text="Add new user"
                         type="dark"/>
                 </div>
             @endcan
