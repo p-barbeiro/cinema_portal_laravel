@@ -52,12 +52,14 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('purchases/{customer}', [PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('purchases/{purchase}/receipt', [PurchaseController::class, 'show'])->name('purchases.show');
     Route::get('purchases/{purchase}/download', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
-    Route::get('purchases/{purchase}/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('purchases/{purchase}/tickets', [PurchaseController::class, 'indexTickets'])->name('tickets.index');
+
     Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('tickets/search', [TicketController::class, 'showSearchForm'])->name('tickets.search');
-    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result'); //TODO
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
+
+    Route::get('find-tickets', [TicketController::class, 'showSearchForm'])->name('tickets.search');
+    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result'); //TODO
 
     Route::resource('screenings', ScreeningController::class)->except(['show']);
     Route::post('screenings/{screening}/verify', [ScreeningController::class, 'verify'])->name('screenings.verify');
@@ -65,13 +67,12 @@ Route::middleware('auth', 'verified')->group(function () {
 
 
     Route::middleware('can:viewStatistics')->group(function () {
-
         /* Statistics routes */
-        Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
-         Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
-        Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
-        Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
-        Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+        Route::get('statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
+        Route::get('statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
+        Route::get('statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+        Route::get('statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
+        Route::get('statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
 
         /* Export routes */
         Route::get('statistics/export/overall', [ExportController::class, 'exportOverallStatistics'])->name('statistics.export.overall');

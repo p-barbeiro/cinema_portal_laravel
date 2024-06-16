@@ -239,11 +239,13 @@
 
     <!-- Page Heading -->
     <header class="bg-white dark:bg-gray-900 shadow">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                @yield('header-title')
-            </h2>
-        </div>
+        @hasSection('header-title')
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    @yield('header-title')
+                </h2>
+            </div>
+        @endif
 
         @php
             $validating = session('screening', null);
@@ -285,6 +287,7 @@
     </span>
     <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
         <li>
+
             <a href="#" class="hover:underline me-4 md:me-6">About</a>
         </li>
         <li>

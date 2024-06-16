@@ -28,10 +28,12 @@ class TicketController extends Controller
 
         return view('tickets.show', compact('ticket'));
     }
+
     public function showSearchForm(): View
     {
         return view('tickets.search');
     }
+
     public function findTicket(Request $request): RedirectResponse
     {
         $request->validate([
@@ -44,7 +46,7 @@ class TicketController extends Controller
             return redirect()->route('tickets.show', ['ticket' => $ticket->id]);
         } else {
             return redirect()->route('tickets.search') //TODO invalid?
-                ->with('error', 'Ticket not found.');
+            ->with('error', 'Ticket not found.');
         }
     }
 
@@ -75,23 +77,5 @@ class TicketController extends Controller
         return $pdf->download($ticket->id . '.pdf');
     }
 
-    public function index(Purchase $purchase): View
-    {
-        $ticketsQuery = Ticket::query();
-        if ($purchase !== null) {
-            $ticketsQuery
-                ->where('purchase_id', $purchase->id);
-        }
 
-        $tickets = $ticketsQuery
-            ->orderBy('purchase_id', 'desc')
-            ->paginate(10)
-            ->withQueryString();
-
-        foreach ($tickets as $ticket) {
-            $this->updateTicketStatus($ticket);
-        }
-
-        return view('tickets.index', compact('tickets', 'purchase'));
-    }
 }

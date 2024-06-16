@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Purchase;
 use App\Models\Screening;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -48,5 +49,25 @@ class PurchaseController extends \Illuminate\Routing\Controller
             abort(404);
         }
         return Storage::download($path);
+    }
+
+    public function indexTickets(Purchase $purchase): View
+    {
+        $ticketsQuery = Ticket::query();
+        if ($purchase !== null) {
+            $ticketsQuery
+                ->where('purchase_id', $purchase->id);
+        }
+
+        $tickets = $ticketsQuery
+            ->orderBy('purchase_id', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        foreach ($tickets as $ticket) {
+            $this->updateTicketStatus($ticket);
+        }
+
+        return view('tickets.index', compact('tickets', 'purchase'));
     }
 }
