@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerFormRequest;
-use App\Http\Requests\UserFormRequest;
 use App\Models\Customer;
-use App\Models\Screening;
-use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -66,12 +63,12 @@ class CustomerController extends \Illuminate\Routing\Controller
     public function block(Customer $customer): RedirectResponse
     {
         $user = $customer->user;
-        if($user->blocked == 1){
+        if ($user->blocked == 1) {
             $user->update(['blocked' => 0]);
             return redirect()->route('customers.index')
                 ->with('alert-type', 'success')
                 ->with('alert-msg', "Customer <u>$user->name</u> has been unblocked successfully!");
-        }else{
+        } else {
             $user->update(['blocked' => 1]);
             return redirect()->route('customers.index')
                 ->with('alert-type', 'success')
@@ -96,10 +93,11 @@ class CustomerController extends \Illuminate\Routing\Controller
             $user->update(
                 ['email' => $validated['email']]);
         }
-
-        $user->update([
-            'name' => $validated['name'],
-        ]);
+        if ($request->has('name')) {
+            $user->update([
+                'name' => $validated['name'],
+            ]);
+        }
 
         if ($request->hasFile('photo_filename')) {
             if ($user->photo_filename &&

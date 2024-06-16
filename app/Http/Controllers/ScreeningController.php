@@ -6,7 +6,6 @@ use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Movie;
 use App\Models\Screening;
 use App\Models\Seat;
-use App\Models\Theater;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -183,6 +182,11 @@ class ScreeningController extends \Illuminate\Routing\Controller
         return view('screenings.create')->with('screenings', $newScreenings);
     }
 
+    public function edit(Screening $screening): View
+    {
+        return view('screenings.edit')->with('screening', $screening);
+    }
+
     public function update(ScreeningFormRequest $request, Screening $screening): RedirectResponse
     {
         $currentDateTime = Carbon::now();
@@ -231,5 +235,30 @@ class ScreeningController extends \Illuminate\Routing\Controller
         return redirect()->route('screenings.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', 'Screening deleted successfully');
+    }
+
+    public function verify(Screening $screening): RedirectResponse
+    {
+        $validating = session('screening', collect());
+
+        if (!$validating) {
+            session()->put('screening', $screening);
+        } else {
+            session()->forget('screening');
+            session()->put('screening', $screening);
+        }
+
+        return back()
+            ->with('alert-type', 'info')
+            ->with('alert-msg', "Tickets validation for screening <u>{$screening->id}</u> | {$screening->movie->title} | $screening->date | $screening->start_time started");
+    }
+
+    public function cancelVerify(Screening $screening): RedirectResponse
+    {
+        session()->forget('screening');
+
+        return back()
+            ->with('alert-type', 'info')
+            ->with('alert-msg', "Tickets validation for screening <u>{$screening->id}</u> | {$screening->movie->title} | $screening->date | $screening->start_time closed");
     }
 }

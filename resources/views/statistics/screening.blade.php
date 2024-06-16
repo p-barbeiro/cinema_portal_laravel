@@ -1,6 +1,12 @@
 @extends('layouts.main')
-
-@section('header-title', 'Statistics by Screening')
+@php
+    if(isset($filterByStartDate)){
+        //calc days between start and now()
+        $days = (strtotime(date('Y-m-d')) - strtotime($filterByStartDate)) / (60 * 60 * 24);
+        $txt = $days==30?' - Last 30 days':'';
+    }
+@endphp
+@section('header-title', 'Statistics by Screening' . $txt)
 
 @section('main')
     <div

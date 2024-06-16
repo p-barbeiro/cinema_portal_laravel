@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 // Homepage
 Route::view('/', 'home')->name('home');
-Route::redirect('/', 'movies/showcase');
 
 Route::get('movies/showcase', [MovieController::class, 'showCase'])->name('movies.showcase');
 
@@ -50,8 +49,6 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::resource('theaters', TheaterController::class);
 
-    Route::resource('screenings', ScreeningController::class)->except(['show']);
-
     Route::get('purchases/{customer}', [PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('purchases/{purchase}/receipt', [PurchaseController::class, 'show'])->name('purchases.show');
     Route::get('purchases/{purchase}/download', [PurchaseController::class, 'downloadReceipt'])->name('purchases.download');
@@ -60,19 +57,27 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 
-    /* Statistics routes */
-    Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
-    Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
-    Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
-    Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
-    Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+    Route::resource('screenings', ScreeningController::class)->except(['show']);
+    Route::post('screenings/{screening}/verify', [ScreeningController::class, 'verify'])->name('screenings.verify');
+    Route::delete('screenings/{screening}/cancel-verify', [ScreeningController::class, 'cancelVerify'])->name('screenings.cancel-verify');
 
-    /* Export routes */
-    Route::get('statistics/export/overall', [ExportController::class, 'exportOverallStatistics'])->name('statistics.export.overall');
-    Route::get('export/theater-statistics', [ExportController::class, 'exportTheaterStatistics'])->name('export.theater.statistics');
-    Route::get('export/movie-statistics', [ExportController::class, 'exportMoviesStatistics'])->name('export.movie.statistics');
-    Route::get('export/screening-statistics', [ExportController::class, 'exportScreeningsStatistics'])->name('export.screening.statistics');
-    Route::get('export/customer-statistics', [ExportController::class, 'exportCustomerStatistics'])->name('export.customer.statistics');
+
+    Route::middleware('can:viewStatistics')->group(function () {
+
+        /* Statistics routes */
+        Route::get('/statistics/overall', [StatisticsController::class, 'overall'])->name('statistics.overall');
+         Route::get('/statistics/theater', [StatisticsController::class, 'theater'])->name('statistics.theater');
+        Route::get('/statistics/movie', [StatisticsController::class, 'movie'])->name('statistics.movie');
+        Route::get('/statistics/screening', [StatisticsController::class, 'screening'])->name('statistics.screening');
+        Route::get('/statistics/customer', [StatisticsController::class, 'customer'])->name('statistics.customer');
+
+        /* Export routes */
+        Route::get('statistics/export/overall', [ExportController::class, 'exportOverallStatistics'])->name('statistics.export.overall');
+        Route::get('export/theater-statistics', [ExportController::class, 'exportTheaterStatistics'])->name('export.theater.statistics');
+        Route::get('export/movie-statistics', [ExportController::class, 'exportMoviesStatistics'])->name('export.movie.statistics');
+        Route::get('export/screening-statistics', [ExportController::class, 'exportScreeningsStatistics'])->name('export.screening.statistics');
+        Route::get('export/customer-statistics', [ExportController::class, 'exportCustomerStatistics'])->name('export.customer.statistics');
+    });
 
     /* Configurations routes */
     Route::resource('configurations', ConfigurationController::class)->only(['show', 'update', 'edit'])->middleware('can:manageConfiguration,App\Models\Configuration');

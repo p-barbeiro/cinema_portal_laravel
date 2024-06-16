@@ -44,68 +44,88 @@
                             selected="{{ Route::currentRouteName() == 'movies.showcase'}}"
                     />
 
+                    @if(Auth::user()?->type == 'E')
+                        <x-menus.menu-item
+                                content="Screenings"
+                                href="{{ route('screenings.index', ['date' => now()->format('Y-m-d')]) }}"
+                                selected="{{ Route::currentRouteName() == 'screenings.index'}}"
+                        />
+                    @endif
                     @if(Auth::user()?->type == 'A')
-
                         <!-- Menu Item: Admin -->
                         <x-menus.submenu class="relative z-20"
-                                selectable="0"
-                                uniqueName="submenu_movies"
-                                content="Administration">
-                            <x-menus.submenu-item
-                                    content="Theaters"
-                                    selectable="0"
-                                    href="{{ route('theaters.index') }}"/>
-                            <x-menus.submenu-item
-                                    content="Movies"
-                                    selectable="0"
-                                    href="{{ route('movies.index') }}"
-                            />
-                            <x-menus.submenu-item
-                                    content="Genres"
-                                    selectable="0"
-                                    href="{{ route('genres.index') }}"/>
-                            <x-menus.submenu-item
-                                    content="Screenings"
-                                    selectable="0"
-                                    href="{{ route('screenings.index') }}"/>
-                            <hr>
-                            <x-menus.submenu-item
-                                    content="Customers"
-                                    selectable="0"
-                                    href="{{ route('customers.index') }}"/>
-                            <x-menus.submenu-item
-                                    content="Staff"
-                                    selectable="0"
-                                    href="{{ route('users.index') }}"/>
+                                         selectable="0"
+                                         uniqueName="submenu_movies"
+                                         content="Administration">
+                            @can('viewAny', App\Models\Theater::class)
+                                <x-menus.submenu-item
+                                        content="Theaters"
+                                        selectable="0"
+                                        href="{{ route('theaters.index') }}"/>
+                            @endcan
+                            @can('viewAny', App\Models\Movie::class)
+                                <x-menus.submenu-item
+                                        content="Movies"
+                                        selectable="0"
+                                        href="{{ route('movies.index') }}"
+                                />
+                            @endcan
+                            @can('viewAny', App\Models\Genre::class)
+                                <x-menus.submenu-item
+                                        content="Genres"
+                                        selectable="0"
+                                        href="{{ route('genres.index') }}"/>
+                            @endcan
+                            @can('viewAny', App\Models\Screening::class)
+                                <x-menus.submenu-item
+                                        content="Screenings"
+                                        selectable="0"
+                                        href="{{ route('screenings.index') }}"/>
+                            @endcan
+                            @can('viewAny', App\Models\Customer::class)
+                                <hr>
+                                <x-menus.submenu-item
+                                        content="Customers"
+                                        selectable="0"
+                                        href="{{ route('customers.index') }}"/>
+                            @endcan
+                            @can('viewAny', App\Models\User::class)
+                                <x-menus.submenu-item
+                                        content="Staff"
+                                        selectable="0"
+                                        href="{{ route('users.index') }}"/>
+                            @endcan
                         </x-menus.submenu>
 
-                    <!-- Menu Item: Statistics -->
-                    <x-menus.submenu class="relative z-20"
-                        selectable="0"
-                        uniqueName="submenu_movies"
-                        content="Statistics">
-                        <x-menus.submenu-item
-                            content="Overall Statistics"
-                            selectable="0"
-                            href="{{ route('statistics.overall') }}"/>
-                        <hr>
-                        <x-menus.submenu-item
-                            content="Statistics by Theater"
-                            selectable="0"
-                            href="{{ route('statistics.theater') }}"/>
-                        <x-menus.submenu-item
-                            content="Statistics by Movie"
-                            selectable="0"
-                            href="{{ route('statistics.movie') }}"/>
-                        <x-menus.submenu-item
-                            content="Statistics by Screening"
-                            selectable="0"
-                            href="{{ route('statistics.screening') }}"/>
-                        <x-menus.submenu-item
-                            content="Statistics by Customer"
-                            selectable="0"
-                            href="{{ route('statistics.customer') }}"/>
-                    </x-menus.submenu>
+                        <!-- Menu Item: Statistics -->
+                        @can('viewStatistics', App\Models\User::class)
+                            <x-menus.submenu class="relative z-20"
+                                             selectable="0"
+                                             uniqueName="submenu_movies"
+                                             content="Statistics">
+                                <x-menus.submenu-item
+                                        content="Overall Statistics"
+                                        selectable="0"
+                                        href="{{ route('statistics.overall', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
+                                <hr>
+                                <x-menus.submenu-item
+                                        content="Statistics by Theater"
+                                        selectable="0"
+                                        href="{{ route('statistics.theater', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
+                                <x-menus.submenu-item
+                                        content="Statistics by Movie"
+                                        selectable="0"
+                                        href="{{ route('statistics.movie', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
+                                <x-menus.submenu-item
+                                        content="Statistics by Screening"
+                                        selectable="0"
+                                        href="{{ route('statistics.screening', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
+                                <x-menus.submenu-item
+                                        content="Statistics by Customer"
+                                        selectable="0"
+                                        href="{{ route('statistics.customer', ['start_date' => now()->subDays(30)->format('Y-m-d')]) }}"/>
+                            </x-menus.submenu>
+                        @endcan
 
                         <!-- Menu Item: Settings-->
                         <x-menus.menu-item
@@ -130,9 +150,9 @@
                     @endif
 
                     @auth
-                        <x-menus.submenu  class="relative z-20"
-                            selectable="0"
-                            uniqueName="submenu_user"
+                        <x-menus.submenu class="relative z-20"
+                                         selectable="0"
+                                         uniqueName="submenu_user"
                         >
                             <x-slot:content>
                                 <div class="pe-1">
@@ -215,14 +235,30 @@
     <!-- Page Heading -->
     <header class="bg-white dark:bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h4 class="mb-1 text-base text-gray-500 dark:text-gray-400 leading-tight mb-4">
+            <h4 class="text-base text-gray-500 dark:text-gray-400 leading-tight mb-4">
                 Cinemagic Theatres
             </h4>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 @yield('header-title')
             </h2>
-
         </div>
+
+        @php
+            $validating = session('screening', null);
+        @endphp
+
+        @if(Auth::user()?->type == 'E' && $validating)
+            <div class="flex flex-row shadow border-t dark:border-t-gray-600 bg-slate-100 dark:bg-gray-700 justify-center">
+                <h2 class="p-3 text-gray-800 dark:text-gray-200 leading-tight">
+                    Validating Tickets for screening : {{$validating['id']}} | {{$validating['movie']->title}} | {{$validating['date']}} | {{$validating['start_time']}}
+                </h2>
+                <form action="{{ route('screenings.cancel-verify', ['screening' => $validating])}}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <x-button element="submit" type="light" text="Stop Validation" class="p-1"/>
+                </form>
+            </div>
+        @endif
     </header>
 
     <main>

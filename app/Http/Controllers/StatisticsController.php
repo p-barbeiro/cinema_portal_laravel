@@ -177,11 +177,13 @@ class StatisticsController extends Controller
         // Calculate total seats and occupied seats
         $theaterSeats = DB::table('seats')
             ->select('theater_id', DB::raw('COUNT(*) as total_seats'))
+            ->whereNull('deleted_at')
             ->groupBy('theater_id');
 
         // Calculate occupied seats per screening
         $screeningOccupiedSeats = DB::table('tickets')
             ->select('screening_id', DB::raw('COUNT(*) as occupied_seats'))
+            ->whereNull('deleted_at')
             ->groupBy('screening_id');
 
         // Fetch data for theater statistics
@@ -196,6 +198,7 @@ class StatisticsController extends Controller
                 DB::raw('COUNT(tickets.id) as Total_Tickets_Sold'),
                 'seats.total_seats as Total_Seats',
                 DB::raw('ROUND((COUNT(tickets.id) / (seats.total_seats * COUNT(DISTINCT screenings.id))) * 100, 2) as Occupancy_Rate'))
+            ->whereNull('theaters.deleted_at')
             ->groupBy('theaters.id', 'theaters.name', 'seats.total_seats')
             ->orderBy('Total_Sales_Value', 'desc');
 
@@ -209,10 +212,9 @@ class StatisticsController extends Controller
 
         $statistics = $theaterStatistics->paginate(20);
 
-        return view('statistics.theater', compact('statistics',
-            'filterByStartDate', 'filterByEndDate', 'theaterShow',
-            'genreShow'));
+        return view('statistics.theater', compact('statistics', 'filterByStartDate', 'filterByEndDate', 'theaterShow', 'genreShow'));
     }
+
 
     public function movie(Request $request)
     {

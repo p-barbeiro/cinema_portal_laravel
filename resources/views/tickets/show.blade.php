@@ -1,19 +1,24 @@
 @extends('layouts.main')
 
-
-
 @section('main')
     <!-- Ticket Status -->
-    @if($ticket->status == 'valid')
-        <div class="p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg w-full mb-5">
-            <div class="flex items-center justify-center">
-                <form action="{{ route('tickets.invalidate', ['ticket' => $ticket]) }}" method="POST">
-                    @csrf
-                    <x-button element="submit" type="dark" text="Invalidate Ticket"/>
-                </form>
-            </div>
-        </div>
-    @endif
+    @can('verify', $ticket->screening)
+        @can('verifyTicket', $ticket->screening)
+            @if($ticket->status == 'valid')
+                <div class="p-8 bg-white dark:bg-gray-900 shadow sm:rounded-lg w-full mb-5">
+                    <div class="flex items-center justify-center">
+                        <form action="{{ route('tickets.invalidate', ['ticket' => $ticket]) }}" method="POST">
+                            @csrf
+                            <x-button element="submit" type="dark" text="Invalidate Ticket"/>
+                        </form>
+                    </div>
+                </div>
+            @endif
+        @endcan
+        @if($ticket->status == 'valid' && session('screening',null) && session('screening',null)['id'] != $ticket->screening->id)
+            <x-alert type="warning" message="Ticket is valid for a different screening."/>
+        @endif
+    @endcan
 
     <div class="flex flex-col sm:flex-row sm:space-x-5">
 
@@ -63,7 +68,7 @@
 
                     @if($ticket->purchase->customer)
                         <div class="mt-4 sm:flex sm:items-center sm:justify-between">
-                            <div class="flex flex-col items-center sm:items-center sm:gap-4">
+                            <div class="flex flex-col items-center sm:items-center sm:gap-4 me-10">
                                 <img src="{{ $ticket->purchase->customer->user->getPhotoFullUrlAttribute() }}"
                                      alt="{{ $ticket->purchase->customer->user->name }}"
                                      class="w-20 h-20 rounded-full">

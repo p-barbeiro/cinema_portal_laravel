@@ -6,12 +6,17 @@
                     @if ($seat['status'] == 'available')
                         <div class="cursor-pointer flex justify-center items-center text-sm m-0.5">
                             <input type="checkbox" id="seat-{{ $seat['label'] }}" name="seats[]" value="{{ $seat['id'] }}" class="hidden">
-                            <label for="seat-{{ $seat['label'] }}"
-                                   class="dark:border-gray-800 border border-gray-400 text-green-500 cursor-pointer text-xs min-w-4 min-h-4 md:w-6 md:h-6 bg-green-200 hover:bg-orange-200 hover:text-orange-500 flex items-center justify-center rounded">
-                                <div class="text-xs hidden md:contents">
-                                    {{ $seat['label'] }}
-                                </div>
-                            </label>
+                            @if(Auth::user()->type == 'A' || Auth::user()->type == 'E')
+                                <label for="seat-{{ $seat['label'] }}"
+                                       class="dark:border-gray-800 border border-gray-400 text-green-500 cursor-pointer text-xs min-w-4 min-h-4 md:w-6 md:h-6 bg-green-200 flex items-center justify-center rounded">
+                                    @else
+                                        <label for="seat-{{ $seat['label'] }}"
+                                               class="dark:border-gray-800 border border-gray-400 text-green-500 cursor-pointer text-xs min-w-4 min-h-4 md:w-6 md:h-6 bg-green-200 hover:bg-orange-200 hover:text-orange-500 flex items-center justify-center rounded">
+                                            @endif
+                                            <div class="text-xs hidden md:contents">
+                                                {{ $seat['label'] }}
+                                            </div>
+                                        </label>
                         </div>
 
                     @elseif($seat['status'] == 'occupied')
@@ -42,19 +47,22 @@
     <div class="border border-gray-400 mt-10 mb-2 mx-10 bg-gray-100 uppercase rounded text-sm text-center text-gray-400 dark:border-gray-600 dark:text-gray-600">Screen</div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (this.checked) {
-                    this.nextElementSibling.classList.remove('bg-green-200', 'hover:bg-orange-200', 'text-green-500');
-                    this.nextElementSibling.classList.add('bg-orange-300', 'text-orange-500');
-                } else {
-                    this.nextElementSibling.classList.remove('bg-orange-300');
-                    this.nextElementSibling.classList.add('bg-green-200', 'hover:bg-orange-200');
-                }
+@can('use-cart')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        this.nextElementSibling.classList.remove('bg-green-200', 'hover:bg-orange-200', 'text-green-500');
+                        this.nextElementSibling.classList.add('bg-orange-300', 'text-orange-500');
+                    } else {
+                        this.nextElementSibling.classList.remove('bg-orange-300', 'text-orange-500');
+                        this.nextElementSibling.classList.add('bg-green-200', 'hover:bg-orange-200', 'text-green-500');
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
+@endcan

@@ -21,7 +21,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, AdministrativePolicy::class);
 
         Gate::define('use-cart', function (?User $user) {
-            return $user === null || $user->type == 'A' || $user->type == 'E' || $user->type == 'C';
+            return $user === null || $user->type == 'C';
+        });
+
+        Gate::define('viewStatistics', function (User $user) {
+            return $user->type == 'A';
         });
 
         Gate::define('confirm-cart', function (?User $user) {
