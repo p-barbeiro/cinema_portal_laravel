@@ -17,7 +17,7 @@
                 />
             </div>
 
-            <hr>
+            <hr class="dark:border-gray-700">
 
             @can('create', App\Models\Theater::class)
                 <div class="flex justify-end gap-4 my-4">

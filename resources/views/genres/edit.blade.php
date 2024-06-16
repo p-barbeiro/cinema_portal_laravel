@@ -18,7 +18,7 @@
                         @endcan
                     </div>
 
-                    <hr>
+                    <hr class="dark:border-gray-700">
 
                     <header>
                         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-5">

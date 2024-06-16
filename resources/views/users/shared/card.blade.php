@@ -25,7 +25,7 @@
 
                     </div>
                 </div>
-                <hr>
+                <hr class="dark:border-gray-700">
                 <figcaption class="font-medium">
                     <div class="flex justify-center md:justify-start font-base text-base space-x-6 text-gray-700 dark:text-gray-300 md:mb-5">
                         <div>Email: {{ $user->email }}</div>

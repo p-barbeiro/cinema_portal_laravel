@@ -19,8 +19,8 @@
             @else
             <tr class="border-b border-b-gray-400 dark:border-b-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
             @endif
-                <td class="px-2 py-2 text-left w-24 h-24 rounded-full">
-                    <img class="rounded-full" src="{{ $customer->user->getPhotoFullUrlAttribute()}}">
+                <td class="px-2 py-2 text-left w-24 h-24">
+                    <img class="object-center object-cover w-full h-full aspect-square rounded-full" src="{{ $customer->user->getPhotoFullUrlAttribute()}}">
                 </td>
 
                 <td class="px-2 py-2 text-left">{{ $customer->user->name ?? 'No Name' }}</td>
@@ -45,9 +45,8 @@
                     <div class="flex justify-center items-center h-full">
                         <x-table.icon-blocked
                                 :blocked="$customer->user->blocked"
-                                action="{{ route('customers.block', ['customer' => $customer]) }}"
+                                action="{{ route('customers.block', ['customer' => $customer]) }} "
                         />
-{{--                        <x-table.icon-blocked method="POST" :blocked="$customer->user->blocked" action="{{ route('customers.block', ['customer' => $customer]) }}"/>--}}
                     </div>
                 </td>
 

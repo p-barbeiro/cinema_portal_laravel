@@ -138,7 +138,7 @@
         <span class="label">THEATER</span>
         <span class="value">{{ $ticket->screening->theater->name }}</span>
         <br>
-        <hr>
+        <hr class="dark:border-gray-700">
         <span class="label">DATE AND TIME</span>
         <span
             class="value">{{ $ticket->screening->date }} | {{ date('H:i', strtotime($ticket->screening->start_time)) }}</span>

@@ -8,13 +8,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CustomerPolicy
 {
-    public function before(?User $user, string $ability): bool|null
-    {
-        if ($user?->type === 'A') {
-            return true;
-        }
-        return null;
-    }
 
     public function viewAny(User $user): bool
     {

@@ -97,7 +97,7 @@ class UserController extends \Illuminate\Routing\Controller
     public function create(): View
     {
         $newUser = new User();
-        return view('users.create')->with('users', $newUser);
+        return view('users.create')->with('user', $newUser);
     }
     public function store(Request $request): RedirectResponse
     {

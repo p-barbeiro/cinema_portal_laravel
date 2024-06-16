@@ -13,7 +13,7 @@
                 :payment="old('payment_type', $filterByPayment)"
                 class="mb-6"
             />
-            <hr>
+            <hr class="dark:border-gray-700">
             <br>
             @if($customers->count() > 0)
                 <div class="font-base text-sm text-gray-700 dark:text-gray-300">
@@ -22,7 +22,6 @@
                                       :showEdit="false"
                                       :showDelete="true"
                     />
-{{--                    TODO: Block user--}}
                 </div>
                 <div class="mt-4">
                     {{ $customers->links() }}

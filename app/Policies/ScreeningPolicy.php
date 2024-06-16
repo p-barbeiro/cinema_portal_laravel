@@ -32,12 +32,12 @@ class ScreeningPolicy
 
     public function update(User $user, Screening $screening): bool
     {
-        return $user?->type === 'A' && $screening->date >= now()->format('Y-m-d') && $screening->start_time > now() || $user?->type === 'A' && $screening->tickets->count() === 0;;
+        return $user?->type === 'A' && $screening->date >= now()->format('Y-m-d');
     }
 
     public function delete(User $user, Screening $screening): bool
     {
-        return $user?->type === 'A' && $screening->date >= now()->format('Y-m-d') && $screening->start_time > now() || $user?->type === 'A' && $screening->tickets->count() === 0;
+        return $user?->type === 'A';
     }
 
     public function verify(User $user, Screening $screening): bool

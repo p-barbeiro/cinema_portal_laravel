@@ -15,7 +15,7 @@
         class="mb-6"
     />
     </div>
-    <hr>
+    <hr class="dark:border-gray-700">
     @if($movies->count() > 0)
         <div class="flex flex-col dark:text-gray-50">
             @each('movies.shared.card', $movies, 'movie')
