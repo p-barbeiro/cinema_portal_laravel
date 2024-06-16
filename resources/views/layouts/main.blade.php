@@ -47,7 +47,7 @@
                     @if(Auth::user()?->type == 'A')
 
                         <!-- Menu Item: Admin -->
-                        <x-menus.submenu
+                        <x-menus.submenu class="relative z-20"
                                 selectable="0"
                                 uniqueName="submenu_movies"
                                 content="Administration">
@@ -79,33 +79,33 @@
                                     href="{{ route('users.index') }}"/>
                         </x-menus.submenu>
 
-                        <!-- Menu Item: Statistics -->
-                        <x-menus.submenu
-                                selectable="0"
-                                uniqueName="submenu_movies"
-                                content="Statistics">
-                            <x-menus.submenu-item
-                                    content="Overall Statistics"
-                                    selectable="0"
-                                    href="{{ route('statistics.overall') }}"/>
-                            <hr>
-                            <x-menus.submenu-item
-                                    content="Statistics by Theater"
-                                    selectable="0"
-                                    href="{{ route('statistics.theater') }}"/>
-                            <x-menus.submenu-item
-                                    content="Statistics by Movie"
-                                    selectable="0"
-                                    href="{{ route('statistics.movie') }}"/>
-                            <x-menus.submenu-item
-                                    content="Statistics by Screening"
-                                    selectable="0"
-                                    href="{{ route('statistics.screening') }}"/>
-                            <x-menus.submenu-item
-                                    content="Statistics by Customer"
-                                    selectable="0"
-                                    href="{{ route('statistics.customer') }}"/>
-                        </x-menus.submenu>
+                    <!-- Menu Item: Statistics -->
+                    <x-menus.submenu class="relative z-20"
+                        selectable="0"
+                        uniqueName="submenu_movies"
+                        content="Statistics">
+                        <x-menus.submenu-item
+                            content="Overall Statistics"
+                            selectable="0"
+                            href="{{ route('statistics.overall') }}"/>
+                        <hr>
+                        <x-menus.submenu-item
+                            content="Statistics by Theater"
+                            selectable="0"
+                            href="{{ route('statistics.theater') }}"/>
+                        <x-menus.submenu-item
+                            content="Statistics by Movie"
+                            selectable="0"
+                            href="{{ route('statistics.movie') }}"/>
+                        <x-menus.submenu-item
+                            content="Statistics by Screening"
+                            selectable="0"
+                            href="{{ route('statistics.screening') }}"/>
+                        <x-menus.submenu-item
+                            content="Statistics by Customer"
+                            selectable="0"
+                            href="{{ route('statistics.customer') }}"/>
+                    </x-menus.submenu>
 
                         <!-- Menu Item: Settings-->
                         <x-menus.menu-item
@@ -130,9 +130,9 @@
                     @endif
 
                     @auth
-                        <x-menus.submenu
-                                selectable="0"
-                                uniqueName="submenu_user"
+                        <x-menus.submenu  class="relative z-20"
+                            selectable="0"
+                            uniqueName="submenu_user"
                         >
                             <x-slot:content>
                                 <div class="pe-1">

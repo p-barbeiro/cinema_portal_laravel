@@ -16,32 +16,39 @@
                                   class="mb-6"
         />
         <hr>
-        <table class="table-auto border-collapse w-full">
-            <thead>
-            <tr class="border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
-                <th class="px-2 py-2 text-center">Screening ID</th>
-                <th class="px-2 py-2 text-center">Movie</th>
-                <th class="px-2 py-2 text-center">Genre</th>
-                <th class="px-2 py-2 text-center">Theater</th>
-                <th class="px-2 py-2 text-center">Occupancy Rate (%)</th>
-                <th class="px-2 py-2 text-center">Total Sales</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($statistics as $statistic)
-                <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500">
-                    <td class="px-2 py-2 text-center">{{ $statistic->screening_id }}</td>
-                    <td class="px-2 py-2 text-center">{{ $statistic->movie_title }}</td>
-                    <td class="px-2 py-2 text-center">{{ $statistic->genre }}</td>
-                    <td class="px-2 py-2 text-center">{{ $statistic->theater_name }}</td>
-                    <td class="px-2 py-2 text-center">{{ number_format($statistic->occupancy_rate, 2) }}%</td>
-                    <td class="px-2 py-2 text-center">${{ number_format($statistic->total_sales, 2) }}</td>
+        @if($statistics->isEmpty())
+            <div
+                class="text-center mt-4 border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
+                <p class="text-lg">No screenings found.</p>
+            </div>
+        @else
+            <table class="table-auto border-collapse w-full">
+                <thead>
+                <tr class="border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">
+                    <th class="px-2 py-2 text-center">Screening ID</th>
+                    <th class="px-2 py-2 text-center">Movie</th>
+                    <th class="px-2 py-2 text-center">Genre</th>
+                    <th class="px-2 py-2 text-center">Theater</th>
+                    <th class="px-2 py-2 text-center">Occupancy Rate (%)</th>
+                    <th class="px-2 py-2 text-center">Total Sales</th>
                 </tr>
-            @endforeach
-            </tbody>
-        </table>
-        <div class="mt-4">
-            {{ $statistics->appends(request()->query())->links() }}
-        </div>
+                </thead>
+                <tbody>
+                @foreach ($statistics as $statistic)
+                    <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500">
+                        <td class="px-2 py-2 text-center">{{ $statistic->screening_id }}</td>
+                        <td class="px-2 py-2 text-center">{{ $statistic->movie_title }}</td>
+                        <td class="px-2 py-2 text-center">{{ $statistic->genre }}</td>
+                        <td class="px-2 py-2 text-center">{{ $statistic->theater_name }}</td>
+                        <td class="px-2 py-2 text-center">{{ number_format($statistic->occupancy_rate, 2) }}%</td>
+                        <td class="px-2 py-2 text-center">${{ number_format($statistic->total_sales, 2) }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            <div class="mt-4">
+                {{ $statistics->appends(request()->query())->links() }}
+            </div>
+        @endif
     </div>
 @endsection

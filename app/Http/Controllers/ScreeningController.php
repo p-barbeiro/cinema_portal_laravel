@@ -6,6 +6,7 @@ use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Movie;
 use App\Models\Screening;
 use App\Models\Seat;
+use App\Models\Theater;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -181,5 +182,54 @@ class ScreeningController extends \Illuminate\Routing\Controller
         $newScreenings = new Screening();
         return view('screenings.create')->with('screenings', $newScreenings);
     }
-}
 
+    public function update(ScreeningFormRequest $request, Screening $screening): RedirectResponse
+    {
+        $currentDateTime = Carbon::now();
+        $screeningDateTime = Carbon::parse($screening->date . ' ' . $screening->start_time);
+
+        if ($screeningDateTime < $currentDateTime) {
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', 'Screening cannot be updated because it has already finished.');
+        }
+
+        if ($screening->tickets()->whereNotNull('purchase_id')->count() > 0) {
+            $ticketCount = $screening->tickets()->whereNotNull('purchase_id')->count();
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Screening cannot be updated because there are {$ticketCount} tickets sold.");
+        }
+
+        $screening->update($request->validated());
+
+        return redirect()->route('screenings.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Screening updated successfully');
+    }
+
+    public function destroy(Screening $screening): RedirectResponse
+    {
+        $currentDateTime = Carbon::now();
+        $screeningDateTime = Carbon::parse($screening->date . ' ' . $screening->start_time);
+
+        if ($screeningDateTime < $currentDateTime) {
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', 'Screening cannot be deleted because it has already finished.');
+        }
+
+        if ($screening->tickets()->whereNotNull('purchase_id')->count() > 0) {
+            $ticketCount = $screening->tickets()->whereNotNull('purchase_id')->count();
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Screening cannot be deleted because there are {$ticketCount} tickets sold.");
+        }
+
+        $screening->delete();
+
+        return redirect()->route('screenings.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Screening deleted successfully');
+    }
+}
