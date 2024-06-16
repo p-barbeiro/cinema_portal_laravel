@@ -304,7 +304,6 @@ class StatisticsController extends Controller
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
 
-
     public function screening(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
@@ -366,7 +365,6 @@ class StatisticsController extends Controller
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
 
-
     public function customer(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
@@ -409,6 +407,5 @@ class StatisticsController extends Controller
             'filterByGenre', 'filterByTheater', 'filterByStartDate',
             'filterByEndDate', 'theaterShow', 'genreShow'));
     }
-
 
 }

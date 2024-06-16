@@ -28,10 +28,12 @@ class TicketController extends Controller
 
         return view('tickets.show', compact('ticket'));
     }
+
     public function showSearchForm(): View
     {
         return view('tickets.search');
     }
+
     public function findTicket(Request $request): RedirectResponse
     {
         $request->validate([
