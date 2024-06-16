@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StatisticsFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Theater;
 use App\Models\Seat;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
-    public function overall(Request $request)
+    public function overall(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -167,7 +168,7 @@ class StatisticsController extends Controller
         ));
     }
 
-    public function theater(Request $request)
+    public function theater(StatisticsFormRequest $request)
     {
         $filterByStartDate = $request->input('start_date');
         $filterByEndDate = $request->input('end_date');
@@ -177,11 +178,13 @@ class StatisticsController extends Controller
         // Calculate total seats and occupied seats
         $theaterSeats = DB::table('seats')
             ->select('theater_id', DB::raw('COUNT(*) as total_seats'))
+            ->whereNull('deleted_at')
             ->groupBy('theater_id');
 
         // Calculate occupied seats per screening
         $screeningOccupiedSeats = DB::table('tickets')
             ->select('screening_id', DB::raw('COUNT(*) as occupied_seats'))
+            ->whereNull('deleted_at')
             ->groupBy('screening_id');
 
         // Fetch data for theater statistics
@@ -196,6 +199,7 @@ class StatisticsController extends Controller
                 DB::raw('COUNT(tickets.id) as Total_Tickets_Sold'),
                 'seats.total_seats as Total_Seats',
                 DB::raw('ROUND((COUNT(tickets.id) / (seats.total_seats * COUNT(DISTINCT screenings.id))) * 100, 2) as Occupancy_Rate'))
+            ->whereNull('theaters.deleted_at')
             ->groupBy('theaters.id', 'theaters.name', 'seats.total_seats')
             ->orderBy('Total_Sales_Value', 'desc');
 
@@ -214,7 +218,7 @@ class StatisticsController extends Controller
             'genreShow'));
     }
 
-    public function movie(Request $request)
+    public function movie(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -301,7 +305,7 @@ class StatisticsController extends Controller
     }
 
 
-    public function screening(Request $request)
+    public function screening(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');
@@ -363,7 +367,7 @@ class StatisticsController extends Controller
     }
 
 
-    public function customer(Request $request)
+    public function customer(StatisticsFormRequest $request)
     {
         $filterByGenre = $request->input('genre');
         $filterByTheater = $request->input('theater');

@@ -9,12 +9,10 @@
                         <div class="font-bold dark:text-white">
                             Configuration Details
                         </div>
-                        @can('update', $configs)
-                            <x-button
+                        <x-button
                                 href="{{ route('configurations.edit', ['configuration' => $configs]) }}"
                                 text="Edit"
                                 type="dark"/>
-                        @endcan
                     </div>
                     <hr>
                     <div class="space-y-4 mt-5">

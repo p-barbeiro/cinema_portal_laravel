@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Purchase;
+use App\Models\Screening;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-class PurchaseController extends Controller
+class PurchaseController extends \Illuminate\Routing\Controller
 {
-    public function showReceipt(Purchase $purchase): View
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Purchase::class);
+    }
+
+    public function show(Purchase $purchase): View
     {
         $purchase = Purchase::where('id', $purchase->id)
             ->with('tickets', 'tickets.screening', 'tickets.seat', 'tickets.screening.movie')

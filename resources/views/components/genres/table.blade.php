@@ -22,9 +22,10 @@
 
                 @if($showEdit)
                     @can('update', $genre)
-                        <td>
-                            <x-table.icon-edit class="px-0.5"
-                                               href="{{ route('genres.edit', ['genre' => $genre]) }}"/>
+                        <td class="p-2 text-center align-middle">
+                            <div class="flex justify-center items-center h-full">
+                            <x-table.icon-edit href="{{ route('genres.edit', ['genre' => $genre]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td></td>
@@ -33,9 +34,10 @@
 
                 @if($showDelete)
                     @can('delete', $genre)
-                        <td>
-                            <x-table.icon-delete class="px-0.5"
-                                                 action="{{ route('genres.destroy', ['genre' => $genre]) }}"/>
+                        <td class="p-2 text-center align-middle">
+                            <div class="flex justify-center items-center h-full">
+                            <x-table.icon-delete action="{{ route('genres.destroy', ['genre' => $genre]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td></td>

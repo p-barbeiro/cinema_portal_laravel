@@ -49,12 +49,6 @@ class ScreeningController extends \Illuminate\Routing\Controller
         return view('screenings.index', compact('screenings', 'filterByDate', 'filterByMovie', 'filterByTheater'));
     }
 
-    public function create(): View
-    {
-        $newScreenings = new Screening();
-        return view('screenings.create')->with('screenings', $newScreenings);
-    }
-
     public function store(ScreeningFormRequest $request): RedirectResponse
     {
 
@@ -181,5 +175,90 @@ class ScreeningController extends \Illuminate\Routing\Controller
 
         return view('screenings.show', compact('screening', 'seatMap'));
     }
-}
 
+    public function create(): View
+    {
+        $newScreenings = new Screening();
+        return view('screenings.create')->with('screenings', $newScreenings);
+    }
+
+    public function edit(Screening $screening): View
+    {
+        return view('screenings.edit')->with('screening', $screening);
+    }
+
+    public function update(ScreeningFormRequest $request, Screening $screening): RedirectResponse
+    {
+        $currentDateTime = Carbon::now();
+        $screeningDateTime = Carbon::parse($screening->date . ' ' . $screening->start_time);
+
+        if ($screeningDateTime < $currentDateTime) {
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', 'Screening cannot be updated because it has already finished.');
+        }
+
+        if ($screening->tickets()->whereNotNull('purchase_id')->count() > 0) {
+            $ticketCount = $screening->tickets()->whereNotNull('purchase_id')->count();
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Screening cannot be updated because there are {$ticketCount} tickets sold.");
+        }
+
+        $screening->update($request->validated());
+
+        return redirect()->route('screenings.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Screening updated successfully');
+    }
+
+    public function destroy(Screening $screening): RedirectResponse
+    {
+        $currentDateTime = Carbon::now();
+        $screeningDateTime = Carbon::parse($screening->date . ' ' . $screening->start_time);
+
+        if ($screeningDateTime < $currentDateTime) {
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', 'Screening cannot be deleted because it has already finished.');
+        }
+
+        if ($screening->tickets()->whereNotNull('purchase_id')->count() > 0) {
+            $ticketCount = $screening->tickets()->whereNotNull('purchase_id')->count();
+            return redirect()->route('screenings.index')
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Screening cannot be deleted because there are {$ticketCount} tickets sold.");
+        }
+
+        $screening->delete();
+
+        return redirect()->route('screenings.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Screening deleted successfully');
+    }
+
+    public function verify(Screening $screening): RedirectResponse
+    {
+        $validating = session('screening', collect());
+
+        if (!$validating) {
+            session()->put('screening', $screening);
+        } else {
+            session()->forget('screening');
+            session()->put('screening', $screening);
+        }
+
+        return back()
+            ->with('alert-type', 'info')
+            ->with('alert-msg', "Tickets validation for screening <u>{$screening->id}</u> | {$screening->movie->title} | $screening->date | $screening->start_time started");
+    }
+
+    public function cancelVerify(Screening $screening): RedirectResponse
+    {
+        session()->forget('screening');
+
+        return back()
+            ->with('alert-type', 'info')
+            ->with('alert-msg', "Tickets validation for screening <u>{$screening->id}</u> | {$screening->movie->title} | $screening->date | $screening->start_time closed");
+    }
+}

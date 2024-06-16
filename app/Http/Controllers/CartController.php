@@ -239,7 +239,7 @@ class CartController extends Controller
 
             return redirect()->route('movies.showcase')
                 ->with('alert-type', 'success')
-                ->with('alert-msg', "Purchase completed successfully! The receipt was sent to your email.<p>You can open the receipt <a href='" . route('purchases.show', ['purchase' => $purchase->id]) . "'><u>here</u></a>.</p>");
+                ->with('alert-msg', "Purchase completed successfully! The receipt and your tickets were sent to your email.");
 
         }
     }

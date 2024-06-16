@@ -11,11 +11,11 @@
         <x-field.input name="rows" label="Rows"
                        required="true"
                        :readonly="$readonly"
-                       value="{{ old('rows', $theater->seats->pluck('row')->unique()->count()?0:'')}}"/>
+                       value="{{ old('rows', $theater->seats->pluck('row')->unique()->count()?:'')}}"/>
         <x-field.input name="cols" label="Seats per Row"
                        required="true"
                        :readonly="$readonly"
-                       value="{{ old('cols', $theater->seats->pluck('seat_number')->unique()->count()?0:'')}}"/>
+                       value="{{ old('cols', $theater->seats->pluck('seat_number')->unique()->count()?:'')}}"/>
     </div>
     <div>
         <x-field.image

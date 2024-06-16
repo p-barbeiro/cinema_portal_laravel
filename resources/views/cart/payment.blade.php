@@ -1,3 +1,9 @@
+@php
+    $ticket_price = \App\Models\Configuration::first()->ticket_price;
+    $discount = \App\Models\Configuration::first()->registered_customer_ticket_discount;
+    $tickets = $cart->count();
+@endphp
+
 @extends('layouts.main')
 
 @section('main')
@@ -16,7 +22,7 @@
                             Tickets:
                         </div>
                         <div>
-                            {{ $cart->count() }} x {{\App\Models\Configuration::first()->ticket_price}} €
+                            {{ $tickets }} x {{$ticket_price}} €
                         </div>
                     </div>
                     @auth()
@@ -25,8 +31,7 @@
                                 Discount:
                             </div>
                             <div>
-                                - {{number_format($cart->count() * \App\Models\Configuration::first()->registered_customer_ticket_discount, 2)}}
-                                €
+                                - {{number_format($tickets * $discount, 2)}} €
                             </div>
                         </div>
                         <hr class="my-3">
@@ -36,7 +41,7 @@
                             Total:
                         </div>
                         <div>
-                            {{ auth()->user()?number_format($cart->sum('price') - $cart->count() * \App\Models\Configuration::first()->registered_customer_ticket_discount, 2):number_format($cart->sum('price'), 2) }}
+                            {{ auth()->user()?number_format($tickets * ($ticket_price - $discount), 2):number_format($tickets*$ticket_price, 2) }}
                             €
 
                         </div>
@@ -67,12 +72,12 @@
                                         :options="['VISA'=>'VISA', 'MBWAY' => 'MBWAY','PAYPAL'=>'PAYPAL']"
                                         class="my-5"/>
                     @php
-                    $label = 'Card Number';
-                    if (old('payment_type', Auth::User()?->customer?->payment_type) === 'MBWAY') {
-                        $label = 'Phone Number';
-                    } elseif (old('payment_type', Auth::User()?->customer?->payment_type) === 'PAYPAL') {
-                        $label = 'Email Address';
-                    }
+                        $label = 'Card Number';
+                        if (old('payment_type', Auth::User()?->customer?->payment_type) === 'MBWAY') {
+                            $label = 'Phone Number';
+                        } elseif (old('payment_type', Auth::User()?->customer?->payment_type) === 'PAYPAL') {
+                            $label = 'Email Address';
+                        }
                     @endphp
                     <div class="flex flex-row">
                         <x-field.input id="payment_info" name="payment_ref" label="{{$label}}"

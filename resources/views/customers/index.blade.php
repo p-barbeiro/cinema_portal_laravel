@@ -10,6 +10,7 @@
                 :filterAction="route('customers.index')"
                 :resetUrl="route('customers.index')"
                 :search="old('search', $filterByName)"
+                :payment="old('payment_type', $filterByPayment)"
                 class="mb-6"
             />
             <hr>

@@ -6,7 +6,7 @@
             <th class="px-2 py-2 text-center">Name</th>
             <th class="px-2 py-2 text-center hidden sm:table-cell">Genre</th>
             <th class="px-2 py-2 text-center hidden sm:table-cell">Year</th>
-            <th class="hidden sm:table-cell"></th>
+            <th class="hidden sm:table-cell">Trailer</th>
             @if($showView)
                 <th class="hidden sm:table-cell"></th>
             @endif
@@ -23,14 +23,14 @@
             <tr class="border-b border-b-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:border-b-gray-500">
 
                 <td class="px-2 py-2 w-32">
-                    <img class="object-center aspect-auto w-32 h-40 rounded" src="{{ $movie->getPoster() }}"
-                         alt="{{ $movie->title }}">
+                    <img class="object-center aspect-auto w-32 h-40 rounded" src="{{ $movie->getPoster() }}" alt="{{ $movie->title }}">
                 </td>
 
                 <td class="px-2 py-2 text-left">
                     <div class="text-lg">
                         <a href="{{ route('movies.show', ['movie' => $movie]) }}" class="hover:font-bold hover:underline">
-                        {{ $movie->title }}</a>
+                            {{ $movie->title }}
+                        </a>
                     </div>
                     <br>
                     <div>
@@ -38,23 +38,31 @@
                     </div>
                 </td>
 
-                <td class="px-2 py-2 text-center hidden sm:table-cell">{{ $movie->genre?->name?? 'Unknown' }}</td>
+                <td class="px-2 py-2 text-center hidden sm:table-cell">
+                    {{ $movie->genre?->name?? 'Unknown' }}
+                </td>
 
-                <td class="px-2 py-2 text-center hidden sm:table-cell">{{ $movie->year }}</td>
+                <td class="px-2 py-2 text-center hidden sm:table-cell">
+                    {{ $movie->year }}
+                </td>
 
-                <td class="hidden sm:table-cell w-5 h-5">
-                    @if($movie?->trailer_url)
-                        <x-table.icon-trailer class="px-0.5" href="{{ $movie?->trailer_url }}"/>
-                    @else
-                        <x-table.icon-trailer class="px-0.5" :trailer="false" />
-                    @endif
+
+                <td class="px-2 py-2 text-center align-middle hidden sm:table-cell">
+                    <div class="flex justify-center items-center h-full">
+                        @if($movie?->trailer_url)
+                            <x-table.icon-trailer href="{{ $movie?->trailer_url }}"/>
+                        @else
+                            <x-table.icon-trailer :trailer="false"/>
+                        @endif
+                    </div>
                 </td>
 
                 @if($showView)
                     @can('view', $movie)
-                        <td class="hidden sm:table-cell w-5 h-5">
-                            <x-table.icon-show class="px-0.5"
-                                               href="{{ route('movies.show', ['movie' => $movie]) }}"/>
+                        <td class="px-2 py-2 text-center align-middle hidden sm:table-cell">
+                            <div class="flex justify-center items-center h-full">
+                                <x-table.icon-show href="{{ route('movies.show', ['movie' => $movie]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td class="hidden sm:table-cell"></td>
@@ -63,9 +71,10 @@
 
                 @if($showEdit)
                     @can('update', $movie)
-                        <td class="hidden sm:table-cell w-5 h-5">
-                            <x-table.icon-edit class="px-0.5"
-                                               href="{{ route('movies.edit', ['movie' => $movie]) }}"/>
+                        <td class="px-2 py-2 text-center align-middle hidden sm:table-cell">
+                            <div class="flex justify-center items-center h-full">
+                                <x-table.icon-edit href="{{ route('movies.edit', ['movie' => $movie]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td class="hidden sm:table-cell"></td>
@@ -74,9 +83,10 @@
 
                 @if($showDelete)
                     @can('delete', $movie)
-                        <td class="hidden sm:table-cell w-5 h-5">
-                            <x-table.icon-delete class="px-0.5"
-                                                 action="{{ route('movies.destroy', ['movie' => $movie]) }}"/>
+                        <td class="px-2 py-2 text-center align-middle hidden sm:table-cell">
+                            <div class="flex justify-center items-center h-full">
+                                <x-table.icon-delete action="{{ route('movies.destroy', ['movie' => $movie]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td class="hidden sm:table-cell"></td>

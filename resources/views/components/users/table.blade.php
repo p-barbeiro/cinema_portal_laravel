@@ -6,7 +6,7 @@
             <th class="px-2 py-2 text-left">Name</th>
             <th class="px-2 py-2 text-left hidden md:table-cell">Email</th>
             <th class="px-2 py-2 text-center hidden xl:table-cell">Type</th>
-            <th class="px-2 py-2 text-right hidden xl:table-cell">Blocked</th>
+            <th class="px-2 py-2 text-center hidden xl:table-cell">Blocked</th>
             @if($showView)
                 <th></th>
             @endif
@@ -34,7 +34,7 @@
                     </a>
                 </td>
 
-                <td class="px-2 py-2 text-left hidden xl:table-cell">
+                <td class="px-2 py-2 text-center hidden xl:table-cell">
                     @switch($user->type)
                         @case('A')
                             Admin
@@ -50,13 +50,15 @@
                     @endswitch
                 </td>
 
-                <td class="px-2 py-2 text-right hidden xl:table-cell">{{ ($user->blocked == 0 ? 'No' : 'Yes') ?? 'Unknown' }}</td>
+                <td class="px-2 py-2 text-center hidden xl:table-cell">{{ ($user->blocked == 0 ? 'No' : 'Yes') ?? 'Unknown' }}</td>
 
                 @if($showView)
                     @can('view', $user)
-                        <td>
-                            <x-table.icon-show class="ps-3 px-0.5"
-                                               href="{{ route('users.show', ['user' => $user]) }}"/>
+                        <td class="px-2 py-2 text-center align-middle">
+                            <div class="flex justify-center items-center h-full">
+                                <x-table.icon-show class="px-0.5"
+                                                   href="{{ route('users.show', ['user' => $user]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td></td>
@@ -64,9 +66,11 @@
                 @endif
                 @if($showEdit)
                     @can('update', $user)
-                        <td>
-                            <x-table.icon-edit class="px-0.5"
-                                               href="{{ route('users.edit', ['user' => $user]) }}"/>
+                        <td class="px-2 py-2 text-center align-middle">
+                            <div class="flex justify-center items-center h-full">
+                                <x-table.icon-edit class="px-0.5"
+                                                   href="{{ route('users.edit', ['user' => $user]) }}"/>
+                            </div>
                         </td>
                     @else
                         <td></td>
@@ -74,12 +78,13 @@
                 @endif
                 @if($showDelete)
                     @can('delete', $user)
-                        <td>
-                            <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('users.destroy', ['user' => $user]) }}" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                            <x-table.icon-delete class="px-0.5" href="#"
+                        <td class="px-2 py-2 text-center align-middle">
+                            <div class="flex justify-center items-center h-full">
+                                <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('users.destroy', ['user' => $user]) }}" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                                <x-table.icon-delete class="px-0.5" href="#"
                                                  onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this user?')) document.getElementById('delete-form-{{ $user->id }}').submit();" />
                         </td>
                     @else

@@ -56,7 +56,7 @@
                                 </td>
 
                                 <td class="px-2 py-2 text-center align-middle">
-                                    <div class="inline-block">
+                                    <div class="flex justify-center items-center h-full">
                                         <x-table.icon-open :version=1 class="px-0.5"
                                                            href="{{ route('tickets.show', ['ticket' => $ticket]) }}"/>
                                     </div>
