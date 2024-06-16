@@ -14,16 +14,6 @@
                                     text="Edit"
                                     type="info"/>
                         @endcan
-                        {{--                        @can('delete', $user)--}}
-                        {{--                            <form method="POST" action="{{ route('users.destroy', ['user' => $user]) }}">--}}
-                        {{--                                @csrf--}}
-                        {{--                                @method('DELETE')--}}
-                        {{--                                <x-button--}}
-                        {{--                                        element="submit"--}}
-                        {{--                                        text="Delete"--}}
-                        {{--                                        type="danger"/>--}}
-                        {{--                            </form>--}}
-                        {{--                        @endcan--}}
                     </div>
 
                     <div>

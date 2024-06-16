@@ -25,7 +25,7 @@
                     </form>
                     @endcan
                 </div>
-                <hr>
+                <hr class="dark:border-gray-700">
                 <div class="space-y-4 mt-5">
                     @include('movies.shared.fields', ['mode' => 'show'])
                 </div>

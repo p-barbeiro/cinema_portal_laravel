@@ -6,7 +6,6 @@
             <th class="px-2 py-2 text-left">Name</th>
             <th class="px-2 py-2 text-left hidden md:table-cell">Email</th>
             <th class="px-2 py-2 text-center hidden xl:table-cell">Type</th>
-            <th class="px-2 py-2 text-center hidden xl:table-cell">Blocked</th>
             @if($showView)
                 <th></th>
             @endif
@@ -22,8 +21,8 @@
         @foreach ($users as $user)
             <tr class="border-b border-b-gray-400 dark:border-b-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800">
 
-                <td class="px-2 py-2 text-left w-24 h-24 rounded-full">
-                    <img class="rounded-full" src="{{ $user->getPhotoFullUrlAttribute()}}">
+                <td class="px-2 py-2 text-left w-24 h-24">
+                    <img class="object-center object-cover w-full h-full aspect-square rounded-full" src="{{ $user->getPhotoFullUrlAttribute()}}">
                 </td>
 
                 <td class="px-2 py-2 text-left">{{ $user->name ?? 'No Name' }}</td>
@@ -49,8 +48,6 @@
                             Unknown
                     @endswitch
                 </td>
-
-                <td class="px-2 py-2 text-center hidden xl:table-cell">{{ ($user->blocked == 0 ? 'No' : 'Yes') ?? 'Unknown' }}</td>
 
                 @if($showView)
                     @can('view', $user)

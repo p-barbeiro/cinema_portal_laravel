@@ -23,7 +23,7 @@
                                   :theaterShow="$theaterShow"
                                   class="mb-6"
         />
-        <hr>
+        <hr class="dark:border-gray-700">
         @if($statistics->isEmpty())
             <div
                 class="text-center mt-4 border-b-2 border-b-gray-400 dark:border-b-gray-500 bg-gray-100 dark:bg-gray-800">

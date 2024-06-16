@@ -15,7 +15,7 @@
                                     type="info"/>
                         @endcan
                             @can('delete', $user)
-                                <form method="POST" action="{{ route('users.destroy', ['user' => $user]) }}" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <form method="POST" action="{{ route('users.destroy', ['user' => $user]) }}">
                                     @csrf
                                     @method('DELETE')
                                     <x-button

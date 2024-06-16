@@ -2,6 +2,8 @@
     $ticket_price = \App\Models\Configuration::first()->ticket_price;
     $discount = \App\Models\Configuration::first()->registered_customer_ticket_discount;
     $tickets = $cart->count();
+    $auth = auth()->user();
+    $customer = $auth?->customer;
 @endphp
 
 @extends('layouts.main')
@@ -25,7 +27,7 @@
                             {{ $tickets }} x {{$ticket_price}} €
                         </div>
                     </div>
-                    @auth()
+                    @auth
                         <div class="mt-2 flex flex-row justify-between">
                             <div>
                                 Discount:
@@ -41,7 +43,7 @@
                             Total:
                         </div>
                         <div>
-                            {{ auth()->user()?number_format($tickets * ($ticket_price - $discount), 2):number_format($tickets*$ticket_price, 2) }}
+                            {{ $auth?number_format($tickets * ($ticket_price - $discount), 2):number_format($tickets*$ticket_price, 2) }}
                             €
 
                         </div>
@@ -55,33 +57,33 @@
                     <div class="text-xl font-bold text-gray-800 dark:text-gray-100">Account Information</div>
                     @csrf
                     <x-field.input class="my-5" name="name" label="Name"
-                                   value="{{ old('name', Auth::User()?->name) }}"/>
+                                   value="{{ old('name', $auth?->name) }}"/>
 
                     <x-field.input class="my-5" name="email" label="Email"
-                                   value="{{ old('name', Auth::User()?->email) }}"/>
+                                   value="{{ old('name', $auth?->email) }}"/>
 
                     <x-field.input class="mt-5" name="nif" label="NIF"
-                                   value="{{ old('nif', Auth::User()?->customer?->nif) }}"/>
+                                   value="{{ old('nif', $customer?->nif) }}"/>
                 </div>
 
                 <div class="w-full sm:w-1/2 sm:ps-5 border-t sm:border-0 mt-5 sm:mt-0 flex flex-col justify-center">
                     <div class="text-xl font-bold text-gray-800 dark:text-gray-100 mt-5 sm:mt-0">Payment Details</div>
 
                     <x-field.radiogroup id="payment_type" name="payment_type" label="Payment Method"
-                                        value="{{ old('payment_type', Auth::User()?->customer?->payment_type) }}"
+                                        value="{{ old('payment_type', $customer?->payment_type) }}"
                                         :options="['VISA'=>'VISA', 'MBWAY' => 'MBWAY','PAYPAL'=>'PAYPAL']"
                                         class="my-5"/>
                     @php
                         $label = 'Card Number';
-                        if (old('payment_type', Auth::User()?->customer?->payment_type) === 'MBWAY') {
+                        if (old('payment_type', $customer?->payment_type) === 'MBWAY') {
                             $label = 'Phone Number';
-                        } elseif (old('payment_type', Auth::User()?->customer?->payment_type) === 'PAYPAL') {
+                        } elseif (old('payment_type', $customer?->payment_type) === 'PAYPAL') {
                             $label = 'Email Address';
                         }
                     @endphp
                     <div class="flex flex-row">
                         <x-field.input id="payment_info" name="payment_ref" label="{{$label}}"
-                                       value="{{ old('payment_ref', Auth::User()?->customer?->payment_ref) }}"/>
+                                       value="{{ old('payment_ref', $customer?->payment_ref) }}"/>
                         <x-field.input id="cvv" class="ms-5 w-1/6 hidden" name="cvv" label="CVV"/>
                     </div>
 
