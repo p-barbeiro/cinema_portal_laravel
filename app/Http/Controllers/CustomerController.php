@@ -114,6 +114,16 @@ class CustomerController extends \Illuminate\Routing\Controller
             ->with('alert-type', 'success');
     }
 
+    public function destroy(Customer $customer): RedirectResponse
+    {
+        $user = $customer->user;
+        $customer->delete();
+        $user->delete();
+        return redirect()->route('customers.index')
+            ->with('alert-msg', 'Customer "' . $user->name . '" has been deleted successfully!')
+            ->with('alert-type', 'success');
+    }
+
 
 //    public function update(UserFormRequest $request, User $user)
 //    {

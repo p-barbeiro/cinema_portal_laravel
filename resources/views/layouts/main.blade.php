@@ -235,9 +235,6 @@
     <!-- Page Heading -->
     <header class="bg-white dark:bg-gray-900 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h4 class="text-base text-gray-500 dark:text-gray-400 leading-tight mb-4">
-                Cinemagic Theatres
-            </h4>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 @yield('header-title')
             </h2>
