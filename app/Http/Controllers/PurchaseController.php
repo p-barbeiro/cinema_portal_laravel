@@ -65,7 +65,7 @@ class PurchaseController extends \Illuminate\Routing\Controller
             ->withQueryString();
 
         foreach ($tickets as $ticket) {
-            $this->updateTicketStatus($ticket);
+            TicketController::updateTicketStatus($ticket);
         }
 
         return view('tickets.index', compact('tickets', 'purchase'));

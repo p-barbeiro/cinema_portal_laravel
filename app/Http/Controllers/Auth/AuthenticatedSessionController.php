@@ -33,9 +33,7 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->route('movies.showcase')
-                ->with('alert-msg', 'Welcome back <u>' . Auth::user()->name . '</u>!')
-                ->with('alert-type', 'success');
+            return redirect()->intended(route('movies.showcase', absolute: false));
         }
 
         throw ValidationException::withMessages([
