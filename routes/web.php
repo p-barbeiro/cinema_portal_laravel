@@ -58,8 +58,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('tickets/{ticket}/invalidate', [TicketController::class, 'invalidateTicket'])->name('tickets.invalidate');
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 
-    Route::get('find-tickets', [TicketController::class, 'showSearchForm'])->name('tickets.search');
-    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result');
+    Route::get('find-tickets', [TicketController::class, 'showSearchForm'])->name('tickets.search')->can('verify', App\Models\Screening::class);
+    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result')->can('verify', App\Models\Screening::class);
 
     Route::resource('screenings', ScreeningController::class)->except(['show']);
     Route::post('screenings/{screening}/verify', [ScreeningController::class, 'verify'])->name('screenings.verify');
