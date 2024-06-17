@@ -22,7 +22,7 @@
                                 <x-button element="submit" type="dark" text="Enable Tickets Validation"/>
                             </form>
                         @endif
-                    @elseif($screening->date <= now()->format('Y-m-d') && $screening->start_time < now()->addMinutes(5)->format('H:i'))
+                    @elseif($screening->date < now()->format('Y-m-d'))
                         <div class="p-2 text-slate-800 dark:text-white">Tickets Validation is already closed!</div>
                     @else
                         <div class="p-2 text-slate-800 dark:text-white">Tickets Validation is not open yet! Return on {{date('l, d M Y', strtotime($screening->date))}}</div>

@@ -79,12 +79,14 @@
                 </div>
 
                 <hr class="my-5">
-                <div class="flex flex-row justify-center">
-                    @if($ticket->status=='valid')
-                        <x-table.icon-download text="Download Ticket" class="border cursor-pointer p-3 rounded text-gray-800 dark:text-gray-200 inline-flex"
-                                               href="{{ route('tickets.download', ['ticket' => $ticket]) }}"/>
-                    @endif
-                </div>
+                @can('downloadTicket', \App\Models\User::class)
+                    <div class="flex flex-row justify-center">
+                        @if($ticket->status=='valid')
+                            <x-table.icon-download text="Download Ticket" class="border cursor-pointer p-3 rounded text-gray-800 dark:text-gray-200 inline-flex"
+                                                   href="{{ route('tickets.download', ['ticket' => $ticket]) }}"/>
+                        @endif
+                    </div>
+                @endcan
             </div>
         </div>
     </div>

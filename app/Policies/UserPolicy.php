@@ -38,4 +38,9 @@ class UserPolicy
         return $user->type == 'A' && $user->id != $administrative->id;
     }
 
+    public function downloadTicket (User $user): bool
+    {
+        return $user->type == 'A' || $user->type == 'C';
+    }
+
 }
