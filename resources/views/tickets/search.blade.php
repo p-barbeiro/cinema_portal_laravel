@@ -9,13 +9,10 @@
                 @csrf
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                     <div class="mt-6 space-y-4">
-                        <x-field.input name="ticket_id" label="Ticket ID to find:"
-                                       value=""
-                                       required="true"/>
-                    </div>
-
-                    <div class="flex mt-6">
-                        <x-button element="submit" type="dark" text="Search" class="uppercase"/>
+                        <x-field.input  name="ticket_id" label="Ticket ID to find:"
+                                        value=""
+                                        required="true" />
+                       <x-button element="submit" type="dark" text="Search" class="uppercase"/>
                     </div>
                 </div>
             </form>
