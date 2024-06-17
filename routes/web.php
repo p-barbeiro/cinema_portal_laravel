@@ -59,7 +59,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 
     Route::get('find-tickets', [TicketController::class, 'showSearchForm'])->name('tickets.search');
-    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result'); //TODO
+    Route::post('tickets/search-result', [TicketController::class, 'findTicket'])->name('tickets.search-result');
 
     Route::resource('screenings', ScreeningController::class)->except(['show']);
     Route::post('screenings/{screening}/verify', [ScreeningController::class, 'verify'])->name('screenings.verify');

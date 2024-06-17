@@ -45,8 +45,9 @@ class TicketController extends Controller
         if ($ticket) {
             return redirect()->route('tickets.show', ['ticket' => $ticket->id]);
         } else {
-            return redirect()->route('tickets.search') //TODO invalid?
-            ->with('error', 'Ticket not found.');
+            return back()
+                ->with('alert-type', 'info')
+                ->with('alert-msg', 'Ticket not found.');
         }
     }
 
