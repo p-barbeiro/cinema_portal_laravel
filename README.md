@@ -1,3 +1,2 @@
-# CineMagic 
-
-### Laravel web application for cinema management
+# cinemagic 
+#### Laravel web application for cinema management
